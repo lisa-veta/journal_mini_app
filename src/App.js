@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AttendancePage, SchedulePage } from "./pages/index.jsx"
+
 function App() {
   return (
       <Router>
