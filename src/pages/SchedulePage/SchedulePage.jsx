@@ -17,9 +17,18 @@ const SchedulePage = ({ students = [], days = [] }) => {
                                 "name": "матанализ",
                                 "room": "666",
                                 "teacher": "мегуминова",
-                                "type_id": null,
+                                "type_id": 1,
                                 "building_id": 1,
                                 "start_time": "08:00",
+                                "end_time": "15:00"
+                            },
+                            {
+                                "name": "матанализ",
+                                "room": "666",
+                                "teacher": "мегуминова",
+                                "type_id": 2,
+                                "building_id": 1,
+                                "start_time": "15:10",
                                 "end_time": "21:20"
                             }
                         ]
@@ -31,7 +40,7 @@ const SchedulePage = ({ students = [], days = [] }) => {
                                 "name": "123",
                                 "room": "уаааа",
                                 "teacher": "534534",
-                                "type_id": null,
+                                "type_id": 1,
                                 "building_id": 5,
                                 "start_time": "08:00",
                                 "end_time": "14:55"
@@ -45,7 +54,7 @@ const SchedulePage = ({ students = [], days = [] }) => {
                                 "name": "среда чуваки",
                                 "room": "777",
                                 "teacher": "boba",
-                                "type_id": null,
+                                "type_id": 1,
                                 "building_id": 3,
                                 "start_time": "08:00",
                                 "end_time": "21:20"
@@ -59,7 +68,7 @@ const SchedulePage = ({ students = [], days = [] }) => {
                                 "name": "ggg",
                                 "room": "ggg",
                                 "teacher": "gggg",
-                                "type_id": null,
+                                "type_id": 2,
                                 "building_id": 1,
                                 "start_time": "15:00",
                                 "end_time": "15:30"
@@ -102,17 +111,17 @@ const SchedulePage = ({ students = [], days = [] }) => {
                                 "name": "aaaaaaaaaaaa",
                                 "room": "4234234324",
                                 "teacher": "aaaaaaaaaaa",
-                                "type_id": null,
+                                "type_id": 1,
                                 "building_id": 2,
                                 "start_time": "10:00",
-                                "end_time": "08:30"
+                                "end_time": "20:30"
                             },
                             {
                                 "name": "Add title",
                                 "room": "",
                                 "teacher": "",
-                                "type_id": null,
-                                "building_id": null,
+                                "type_id": 2,
+                                "building_id": 2,
                                 "start_time": "10:00",
                                 "end_time": "21:00"
                             }
@@ -126,8 +135,6 @@ const SchedulePage = ({ students = [], days = [] }) => {
             }
         ]
     };
-
-
 
     return (
         <div className="schedule-content">
