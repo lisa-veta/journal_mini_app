@@ -16,6 +16,15 @@
     white-space: nowrap;
 }
 
+@media {
+    .attendanceTable__vertical-header {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        text-align: center;
+        white-space: nowrap;
+    }
+}
+
 .attendanceTable th,
 .attendanceTable td {
     border: 1px solid var(--colorSilver);
