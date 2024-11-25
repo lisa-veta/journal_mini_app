@@ -16,6 +16,15 @@
     white-space: nowrap;
 }
 
+@media (max-width: 768px) {
+    .attendanceTable__vertical-header {
+        writing-mode: horizontal-tb;
+        transform: none;
+        text-align: center;
+        white-space: nowrap;
+    }
+}
+
 .attendanceTable th,
 .attendanceTable td {
     border: 1px solid var(--colorSilver);
