@@ -1,4 +1,7 @@
 /*  https://coolors.co/6c2d3a  --- названия цветов можно брать отсюда (тк у нас много серых) */
 :root {
-    --colorPlatinum: #d9d9d9;
+    --colorPlatinum: #ececec;
+    --colorBattleshipGray: #919191;
+    --colorSeasalt: #F6F6F6;
+    --colorSilver: #CCCCCC;
 }

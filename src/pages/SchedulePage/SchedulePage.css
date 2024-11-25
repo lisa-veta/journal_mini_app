@@ -1,0 +1,6 @@
+.schedulePage__subject {
+    font-size: 2rem;
+    padding: 2rem;
+    background-color: var(--colorPlatinum);
+    height: 6rem;
+}

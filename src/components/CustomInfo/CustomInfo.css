@@ -1,0 +1,22 @@
+.сustomInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 2rem;
+}
+
+.сustomInfo__caption {
+    color: var(--colorBattleshipGray);
+    margin-left: 1rem;
+}
+
+.сustomInfo__content {
+    border-radius: 2.5rem;
+    height: 7.125rem;
+    background-color: var(--colorSeasalt);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 500;
+    padding: 3rem;
+}
