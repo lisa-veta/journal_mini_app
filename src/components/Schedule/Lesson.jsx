@@ -1,6 +1,6 @@
 ﻿function Lesson(props) {
     return (
-    <div>lesson</div>
+        <div>lesson</div>
     );
 }
 

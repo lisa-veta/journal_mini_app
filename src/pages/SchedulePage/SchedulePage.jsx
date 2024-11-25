@@ -132,7 +132,7 @@ const SchedulePage = ({ students = [], days = [] }) => {
     return (
         <div className="schedule-content">
             <h1 className='schedule-header'>Расписание</h1>
-            <Schedule props={schedule}></Schedule>
+            <Schedule weeks={schedule.weeks}></Schedule>
             <Navigation></Navigation>
         </div>
     );
