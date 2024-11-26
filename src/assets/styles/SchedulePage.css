@@ -75,6 +75,10 @@ body {
     background-color: #F6F6F6;
 }
 
+.semi-transparent {
+    opacity: 50%;
+}
+
 .select-list__item {
     font-size: 16px;
 }
@@ -98,6 +102,7 @@ body {
     display: flex;
     background-color: #F6F6F6;
     background-image: url('../images/Schedule/Line.png');
+    background-size: 55%;
     background-repeat: no-repeat;
     background-position: center bottom;
 }

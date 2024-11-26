@@ -1,9 +1,13 @@
 ﻿import { useState } from 'react';
 import { Day } from "components/index.jsx";
+
 function Schedule(props) {
     const [week, setWeek] = useState(props.weeks[0]);
 
     const handleWeekChange = (event) => {
+
+        document.querySelector('.select-list').blur();
+
         const selectedWeekIndex = event.target.value;
         switch (selectedWeekIndex) {
             case '1':
@@ -14,10 +18,26 @@ function Schedule(props) {
         }
     };
 
+    const addTranstparentClass = () => {
+
+        document.querySelector('.schedule-days-container').classList.add('semi-transparent');
+        document.querySelector('.nav-container').classList.add('semi-transparent');
+    };
+
+    const removeTransparentClass = () => {
+
+        document.querySelector('.schedule-days-container').classList.remove('semi-transparent');
+        document.querySelector('.nav-container').classList.remove('semi-transparent');
+    };
+
     return (
         <div className='schedule-container'>
             <div className='week-select-container'>
-                <select className='select-list' onChange={handleWeekChange}>
+                <select className='select-list'
+                    onChange={handleWeekChange}
+                    onFocus={addTranstparentClass}
+                    onBlur={removeTransparentClass}
+                >
                     <option className='select-list__item' value='1'>1 неделя</option>
                     <option className='select-list__item' value='2'>2 неделя</option>
                 </select>
