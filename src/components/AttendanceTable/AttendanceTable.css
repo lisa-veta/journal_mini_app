@@ -1,7 +1,7 @@
 .attendanceTable-wrapper {
     overflow: auto;
-    max-width: 100%;
     max-height: 87.5rem;
+    max-width: 100%;
 }
 
 .attendanceTable {
