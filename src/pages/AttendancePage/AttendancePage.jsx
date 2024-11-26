@@ -43,7 +43,7 @@ const AttendancePage = () => {
                 <CustomInfo caption="Преподаватель" content="Лариса Гузеева" />
             </div>
             <div className="attendancePage__table">
-                <AttendanceTable students={students} schedule={schedule} currentLessonId={3} />
+                <AttendanceTable students={students} schedule={schedule} currentLessonId={2} />
             </div>
         </div>
     );

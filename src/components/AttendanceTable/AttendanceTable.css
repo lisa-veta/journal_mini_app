@@ -7,22 +7,21 @@
 .attendanceTable {
     font-size: 2rem;
 }
-
 .attendanceTable__vertical-header {
     writing-mode: vertical-rl;
-    text-align: center;
-    white-space: nowrap;
     transform: rotate(180deg);
-    padding: 4px;
-    height: auto;
-    width: 100%;
+    text-align: center;
+    padding: 0 4px;
+    white-space: nowrap;
 }
-@media {
+
+@media (max-width: 768px) {
     .attendanceTable__vertical-header {
         writing-mode: vertical-rl;
         transform: rotate(180deg);
         text-align: center;
-        white-space: nowrap;
+        height: auto;
+        width: auto;
     }
 }
 
