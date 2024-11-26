@@ -1,7 +1,7 @@
 .attendanceTable-wrapper {
     overflow: auto;
-    max-height: 87.5rem;
     max-width: 100%;
+    max-height: 87.5rem;
 }
 
 .attendanceTable {
@@ -9,8 +9,7 @@
 }
 
 .attendanceTable__vertical-header {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
+    writing-mode: sideways-lr;
     text-align: center;
     padding: 0 4px;
     white-space: nowrap;
@@ -18,9 +17,9 @@
 
 @media {
     .attendanceTable__vertical-header {
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
+        writing-mode: sideways-lr;
         text-align: center;
+        padding: 0 4px;
         white-space: nowrap;
     }
 }
