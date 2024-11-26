@@ -61,7 +61,7 @@ body {
 }
 
 .schedule-header {
-    font-size: 24px;
+    font-size: 3rem;
 }
 
 .week-select-container {
@@ -69,7 +69,7 @@ body {
 }
 
 .select-list {
-    font-size: 16px;
+    font-size: 2rem;
     width: 100%;
     height: 46px;
     background-color: #F6F6F6;
@@ -80,7 +80,7 @@ body {
 }
 
 .select-list__item {
-    font-size: 16px;
+    font-size: 2rem;
 }
 
 .schedule-day-container {
@@ -92,7 +92,7 @@ body {
 }
 
 .day-container__day-name {
-    font-size: 12px;
+    font-size: 1.5rem;
     margin: 0px 0px 7px 31px;
     color: #919191;
 }
@@ -102,7 +102,7 @@ body {
     display: flex;
     background-color: #F6F6F6;
     background-image: url('../images/Schedule/Line.png');
-    background-size: 55%;
+    background-size: 88.5%;
     background-repeat: no-repeat;
     background-position: center bottom;
 }
@@ -115,30 +115,30 @@ body {
 }
 
 .lesson-time-start {
-    font-size: 12px;
+    font-size: 1.5rem;
     width: 36px;
 }
 
 .lesson-name {
-    font-size: 13px;
+    font-size: 1.625rem;
 }
 
 .lesson-teacher {
     color: #919191;
-    font-size: 12px;
+    font-size: 1.5rem;
     width: 100px;
 }
 
 .lesson-time-end {
     color: #919191;
-    font-size: 12px;
+    font-size: 1.5rem;
     width: 36px;
 }
 
 .lesson-room-and-type {
     padding-left: 31px;
     color: #919191;
-    font-size: 12px;
+    font-size: 1.5rem;
 }
 
 .time-container {
