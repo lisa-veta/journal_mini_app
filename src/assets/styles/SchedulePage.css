@@ -16,17 +16,18 @@ body {
     letter-spacing: 0.25px;
     font-weight: 500;
 
-    width: 412px;
+    width: 100%;
 }
 
 
 .nav-container {
     display: flex;
+    justify-content: center;
     padding: 30px;
 }
 
 .nav-content {
-    width: 352px;
+    width: 85%;
     height: 57px;
     display: flex;
     justify-content: center;
@@ -66,6 +67,7 @@ body {
 
 .week-select-container {
     padding: 13px 0 6px 0;
+    width: 100%;
 }
 
 .select-list {
