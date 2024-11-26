@@ -9,20 +9,20 @@
 }
 
 .attendanceTable__vertical-header {
-    writing-mode: sideways-lr;
+    writing-mode: vertical-rl;
     text-align: center;
-    padding: 0 4px;
     white-space: nowrap;
+    transform: rotate(180deg);
+    padding: 4px;
+    height: auto;
+    width: 100%;
 }
-
 @media {
     .attendanceTable__vertical-header {
-        writing-mode: sideways-lr;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
         text-align: center;
-        padding: 0 4px;
         white-space: nowrap;
-        transform: rotate(-90deg);
-        transform-origin: center;
     }
 }
 
