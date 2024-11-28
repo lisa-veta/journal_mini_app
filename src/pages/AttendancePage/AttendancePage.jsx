@@ -1,5 +1,6 @@
 import { AttendanceTable } from "components/index.jsx";
 import { CustomInfo } from "components/index.jsx";
+import { Layout } from "../index.jsx";
 import "./AttendancePage.css"
 //groupId=5
 const AttendancePage = () => {
@@ -39,15 +40,17 @@ const AttendancePage = () => {
     ];
     //передаю группу, передаю айди предмета
     return (
-        <div className="attendancePage">
-            <p className="attendancePage__subject-name">Английский язык</p>
-            <div className="attendancePage__teacher">
-                <CustomInfo caption="Преподаватель" content="Лариса Гузеева" />
+        <Layout>
+            <div className="attendancePage">
+                <p className="attendancePage__subject-name">Английский язык</p>
+                <div className="attendancePage__teacher">
+                    <CustomInfo caption="Преподаватель" content="Лариса Гузеева"/>
+                </div>
+                <div className="attendancePage__table">
+                    <AttendanceTable students={students} schedule={schedule} currentLessonId={2}/>
+                </div>
             </div>
-            <div className="attendancePage__table">
-                <AttendanceTable students={students} schedule={schedule} currentLessonId={2} />
-            </div>
-        </div>
+        </Layout>
     );
 };
 
