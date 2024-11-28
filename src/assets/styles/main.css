@@ -1,7 +1,9 @@
 @import "./reset.css";
 @import "./palette.css";
 @import "./fonts.css";
-
+html {
+    font-size: 8px; /* Устанавливаем 1rem = 8px */
+}
 body {
     font-family: 'Montserrat', sans-serif;
 }

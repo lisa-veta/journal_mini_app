@@ -1,14 +1,15 @@
-//import { ArrowIcon } from "#assets/images/icons"; -- пока алиасы не хотят работать
-import { ArrowIcon } from "../../assets/images/icons/index.jsx";
+import { useNavigate } from "react-router-dom";
+import "./SchedulePage.css"
 const SchedulePage = ({ students = [], days =[] }) => {
+    const navigate = useNavigate();
+
+    const handleSubjectClick = (subjectId) => {
+        navigate(`/attendance/${subjectId}`);
+    };
     return (
-        <div className="">
-            <div className="">
-                Привет
-                {ArrowIcon}
-            </div>
-            <div className="">
-                Пока
+        <div className="schedulePage">
+            <div className="schedulePage__subject" onClick={() => handleSubjectClick(1)}>
+                Английский
             </div>
         </div>
     );
