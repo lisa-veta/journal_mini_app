@@ -1,7 +1,7 @@
 import { AttendanceTable } from "components/index.jsx";
 import { CustomInfo } from "components/index.jsx";
 import "./AttendancePage.css"
-
+//groupId=5
 const AttendancePage = () => {
     const students = [
         { id: 1, name: "Иван Иванов" },
@@ -25,6 +25,7 @@ const AttendancePage = () => {
         { id: 19, name: "Дмитрий Фролов" },
         { id: 20, name: "Татьяна Белова" },
     ];
+
     const schedule = [
         { id: 1, date: "01.12.2024", lesson: "1 пара" },
         { id: 2, date: "02.12.2024", lesson: "2 пара" },
@@ -36,6 +37,7 @@ const AttendancePage = () => {
         { id: 8, date: "04.12.2024", lesson: "4 пара" },
         { id: 9, date: "04.12.2024", lesson: "4 пара" },
     ];
+    //передаю группу, передаю айди предмета
     return (
         <div className="attendancePage">
             <p className="attendancePage__subject-name">Английский язык</p>

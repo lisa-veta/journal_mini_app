@@ -15,15 +15,12 @@
     white-space: nowrap;
 }
 
-@media (max-width: 768px) {
+@media {
     .attendanceTable__vertical-header {
         writing-mode: vertical-rl;
-        -moz-transform: scale(-1, -1);
-        -webkit-transform: scale(-1, -1);
-        -o-transform: scale(-1, -1);
-        -ms-transform: scale(-1, -1);
-        transform: scale(-1, -1);
-        text-orientation: mixed;
+        transform: rotate(180deg);
+        text-align: center;
+        white-space: nowrap;
     }
 }
 
