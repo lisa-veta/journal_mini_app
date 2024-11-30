@@ -2,30 +2,30 @@ import { AttendanceTable } from "components/index.jsx";
 import { CustomInfo } from "components/index.jsx";
 import { Layout } from "../index.jsx";
 import "./AttendancePage.css"
-//groupId=5
+import students from "../../services/api/send.js";
+import { useState } from "react";
+
 const AttendancePage = () => {
-    const students = [
-        { id: 1, name: "Иван Иванов" },
-        { id: 2, name: "Анна Смирнова" },
-        { id: 3, name: "Петр Сидоров" },
-        { id: 4, name: "Ольга Кузнецова" },
-        { id: 5, name: "Максим Захаров" },
-        { id: 6, name: "Светлана Воронцова" },
-        { id: 7, name: "Алексей Морозов" },
-        { id: 8, name: "Екатерина Иванова" },
-        { id: 9, name: "Дмитрий Фролов" },
-        { id: 10, name: "Татьяна Белова" },
-        { id: 11, name: "Иван Иванов" },
-        { id: 12, name: "Анна Смирнова" },
-        { id: 13, name: "Петр Сидоров" },
-        { id: 14, name: "Ольга Кузнецова" },
-        { id: 15, name: "Максим Захаров" },
-        { id: 16, name: "Светлана Воронцова" },
-        { id: 17, name: "Алексей Морозов" },
-        { id: 18, name: "Екатерина Иванова" },
-        { id: 19, name: "Дмитрий Фролов" },
-        { id: 20, name: "Татьяна Белова" },
-    ];
+
+    const [studentsList, setStudentsList] = useState([]);
+    const groupId = 5;
+
+    (async () => {
+        try {
+            const data = await students(groupId);
+
+            const parsedData = JSON.parse(JSON.stringify(data));
+            const tempStudents = parsedData.map(({ id, name }) => {
+                return { id: id, name: name };
+            });
+
+            setStudentsList(tempStudents);
+            console.log(studentsList);
+        } catch (error) {
+            console.error(error);
+        }
+    })();
+    console.error(studentsList);
 
     const schedule = [
         { id: 1, date: "01.12.2024", lesson: "1 пара" },
@@ -74,7 +74,7 @@ const AttendancePage = () => {
                     <CustomInfo caption="Преподаватель" content="Лариса Гузеева"/>
                 </div>
                 <div className="attendancePage__table">
-                    <AttendanceTable students={students} schedule={schedule} currentLessonId={currentLessonId}/>
+                    <AttendanceTable students={studentsList} schedule={schedule} currentLessonId={currentLessonId}/>
                 </div>
             </div>
         </Layout>
