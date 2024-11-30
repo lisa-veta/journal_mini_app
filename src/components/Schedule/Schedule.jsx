@@ -2,7 +2,11 @@
 import { Day } from "components/index.jsx";
 
 function Schedule(props) {
-    const [week, setWeek] = useState(props.weeks[0]);
+    const [week, setWeek] = useState(() => {
+        // Найти неделю, где is_even=true
+        const evenWeek = props.weeks.find(w => w.is_even === true);
+        return evenWeek || props.weeks[0];
+    });
 
     const handleWeekChange = (event) => {
 
@@ -21,19 +25,20 @@ function Schedule(props) {
     const addTranstparentClass = () => {
 
         document.querySelector('.schedule-days-container').classList.add('semi-transparent');
-        document.querySelector('.nav-container').classList.add('semi-transparent');
+        // document.querySelector('.nav-container').classList.add('semi-transparent');
     };
 
     const removeTransparentClass = () => {
 
         document.querySelector('.schedule-days-container').classList.remove('semi-transparent');
-        document.querySelector('.nav-container').classList.remove('semi-transparent');
+        //document.querySelector('.nav-container').classList.remove('semi-transparent');
     };
-
+    const selectedWeekIndex = props.weeks.indexOf(week) + 1;
     return (
         <div className='schedule-container'>
             <div className='week-select-container'>
                 <select className='select-list'
+                        value={selectedWeekIndex}
                     onChange={handleWeekChange}
                     onFocus={addTranstparentClass}
                     onBlur={removeTransparentClass}

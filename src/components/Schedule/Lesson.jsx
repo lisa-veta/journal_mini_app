@@ -1,5 +1,6 @@
-﻿function Lesson(props) {
-
+﻿import { useNavigate } from "react-router-dom";
+function Lesson(props) {
+    const navigate = useNavigate();
     if (!props.lesson) {
         return (
             <div className='lesson-container'>Занятий нет</div>
@@ -21,8 +22,11 @@
             lessonType = 'Другое'
     }
 
+    const handleSubjectClick = (subjectId) => {
+         navigate(`/attendance/${subjectId}`);
+     };
     return (
-        <div className='lesson-container'>
+        <div className='lesson-container' onClick={() => handleSubjectClick(1)}>
             <div className='time-container'>
                 <div className='lesson-time-start'>{props.lesson.start_time}</div>
                 <div className='lesson-time-end'>{props.lesson.end_time}</div>

@@ -7,9 +7,8 @@ function App() {
   return (
       <Router>
           <Routes>
-              <Route path="/schedule" element={<SchedulePage/>}/>
+              <Route path="/" element={<SchedulePage />} />
               <Route path="/attendance/:subjectId" element={<AttendancePage />} />
-              <Route path="/" element={<Navigation />} />
           </Routes>
       </Router>
   );

@@ -24,7 +24,7 @@ function Day(props) {
     }
 
     return (
-        <div className='day-container'>
+        <div className='day-container day-container_position'>
             <span className='day-container__day-name'>{dayName}</span>
 
             {props.day.subjects.map(lesson => (

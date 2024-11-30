@@ -1,0 +1,56 @@
+.attendanceTable-wrapper {
+    overflow: auto;
+    max-width: 100%;
+    max-height: 87.5rem;
+}
+
+.attendanceTable {
+    font-size: 2rem;
+}
+.attendanceTable__vertical-header {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+    padding: 0 4px;
+    white-space: nowrap;
+}
+
+@media {
+    .attendanceTable__vertical-header {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        text-align: center;
+        white-space: nowrap;
+    }
+}
+
+.attendanceTable th,
+.attendanceTable td {
+    border: 1px solid var(--colorSilver);
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    white-space: nowrap;
+}
+
+.attendanceTable td:hover {
+    background-color: var(--colorSeasalt);
+}
+
+.attendanceTable th {
+    position: sticky;
+    top: 0;
+    background-color: var(--colorSeasalt);
+    z-index: 2;
+}
+
+.attendanceTable td:first-child,
+.attendanceTable th:first-child {
+    position: sticky;
+    left: 0;
+    background-color: var(--colorSeasalt);
+    z-index: 3;
+}
+
+.attendanceTable td:first-child {
+    z-index: 1;
+}

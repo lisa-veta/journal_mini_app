@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Привет</title>
+</head>
+<body>
+
+    <h3>Предисловие</h3>
+
+    <div>Для корректного процесса отметки посещаемости надо: сперва поробовать открыть уже существующую посещаемость, если ошибка, значит её нет, создаем новую и вытягиваем список студентов, по итогу сохраняем.</div>
+
+    <h3>Запросы</h3>
+
+    <div>
+        <button id="dudes">get dudes</button>
+    </div>
+    <div>
+    <button id="authorization">authorization (headman-PrI-301, headman)</button>
+    </div>
+    <div>
+        <button id="createAttendance">create Attendance (1, 2024-11-18 17:40:00)</button>
+    </div>
+    <div>
+        <button id="openAttendance">open Attendance (1, 2024-11-18 16:40:00)</button>
+    </div>
+    <div>
+        <button id="doneAttendance">done Attendance (88, [{"condition": 1,"id": 5},{"condition": 2,"id": 6}])</button>
+    </div>
+    <div>
+        <button id="timetable">time table (5)</button>
+    </div>
+    <div>
+        <button id="students">students (5)</button>
+    </div>
+
+    <h3>Ответ сервера:</h3>
+    <div id="response"></div>
+
+    <script src="send.js"></script>
+</body>
+</html>
