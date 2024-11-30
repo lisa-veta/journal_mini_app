@@ -129,10 +129,10 @@ async function doneAttendance(attendanceId, students) {
     }
 ]
 Если его нет, то 404*/
-async function timeTable(groupId) {
+export async function timeTable(groupId) {
     const endPoint = '/time-table';
     const data = { groupId: groupId };
-    sendPost(endPoint, data);
+    return await sendPost(endPoint, data);
 }
 
 /* Студенты.
