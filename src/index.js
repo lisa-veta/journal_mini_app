@@ -2,7 +2,6 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.js';
 import './assets/styles/main.css';
-import './assets/styles/SchedulePage.css';
 import { miniApp, mockTelegramEnv, parseInitData } from '@telegram-apps/sdk';
 
 

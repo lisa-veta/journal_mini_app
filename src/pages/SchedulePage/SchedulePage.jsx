@@ -156,15 +156,17 @@ const SchedulePage = ({ students = [], days = [] }) => {
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
             <Schedule weeks={schedule.weeks}></Schedule>
             {/*<Navigation></Navigation>*/}
-            </div>
+
+            <div>
+                <div className="">
+                    Пока
+                </div>
+            </div >
+
             <div className="">
                 Пока
             </div>
-            </div>
-            <div className="">
-                Пока
-            </div>
-        </div>
+        </div >
     );
 };
 export default SchedulePage;
