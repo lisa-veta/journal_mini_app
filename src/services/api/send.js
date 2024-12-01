@@ -9,7 +9,7 @@
 //const btnStudents = document.getElementById('students');
 
 /* URL сервера */
-const url = 'http://185.104.249.229:3000';
+const url = 'https://cors-anywhere.herokuapp.com/http://185.104.249.229:3000;';
 
 /* Простой запрос get. Возвращается текст dudes. */
 async function getDudes() {
