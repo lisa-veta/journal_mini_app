@@ -6,4 +6,7 @@ html {
 }
 body {
     font-family: 'Montserrat', sans-serif;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    font-weight: 500;
 }
