@@ -1,12 +1,12 @@
 /* Привязка к html элементам */
-const responseDiv = document.getElementById('response');
-const btnDudes = document.getElementById('dudes');
-const btnAuthorization = document.getElementById('authorization');
-const btnCreateAttendance = document.getElementById('createAttendance');
-const btnOpenAttendance = document.getElementById('openAttendance');
-const btnDoneAttendance = document.getElementById('doneAttendance');
-const btnTimeTable = document.getElementById('timetable');
-const btnStudents = document.getElementById('students');
+//const responseDiv = document.getElementById('response');
+//const btnDudes = document.getElementById('dudes');
+//const btnAuthorization = document.getElementById('authorization');
+//const btnCreateAttendance = document.getElementById('createAttendance');
+//const btnOpenAttendance = document.getElementById('openAttendance');
+//const btnDoneAttendance = document.getElementById('doneAttendance');
+//const btnTimeTable = document.getElementById('timetable');
+//const btnStudents = document.getElementById('students');
 
 /* URL сервера */
 const url = 'http://185.104.249.229:3000';
@@ -129,10 +129,10 @@ async function doneAttendance(attendanceId, students) {
     }
 ]
 Если его нет, то 404*/
-async function timeTable(groupId) {
+export async function timeTable(groupId) {
     const endPoint = '/time-table';
     const data = { groupId: groupId };
-    sendPost(endPoint, data);
+    return await sendPost(endPoint, data);
 }
 
 /* Студенты.
@@ -161,13 +161,11 @@ async function timeTable(groupId) {
     }
 ]
 Если его нет, то 404*/
-async function students(groupId) {
+export default async function students(groupId) {
     const endPoint = '/students';
     const data = { groupId: groupId };
-    sendPost(endPoint, data);
+    return await sendPost(endPoint, data);
 }
-
-
 
 async function sendPost(endPoint, data) {
     try {
@@ -176,10 +174,12 @@ async function sendPost(endPoint, data) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            const jsonData = await response.json();
-            displayResponse(jsonData);
+        const jsonData = await response.json();
+        //console.log(jsonData);
+        return jsonData;
     } catch (error) {
-        displayResponse({ error: error.message });
+        console.log(error.message);
+        //displayResponse({ error: error.message });
     }
 }
 
@@ -209,14 +209,14 @@ async function sendGet(endPoint) {
 
 /* Вывод на экран результата */
 function displayResponse(data) {
-  responseDiv.innerText = JSON.stringify(data, null, 2);
+  //responseDiv.innerText = JSON.stringify(data, null, 2);
 }
 
 /* Привязка кнопок к методам */
-btnDudes.addEventListener('click', getDudes);
-btnAuthorization.addEventListener('click', () => authorization('headman-PrI-301', 'headman'));
-btnCreateAttendance.addEventListener('click', () => createAttendance(1, '2024-11-18 17:40:00'));
-btnOpenAttendance.addEventListener('click', () => openAttendance(1, '2024-11-18 16:40:00'));
-btnDoneAttendance.addEventListener('click', () => doneAttendance(88, [{"condition": 1,"id": 5},{"condition": 2,"id": 6}]));
-btnTimeTable.addEventListener('click', () => timeTable(5));
-btnStudents.addEventListener('click', () => students(5));
+//btnDudes.addEventListener('click', getDudes);
+//btnAuthorization.addEventListener('click', () => authorization('headman-PrI-301', 'headman'));
+//btnCreateAttendance.addEventListener('click', () => createAttendance(1, '2024-11-18 17:40:00'));
+//btnOpenAttendance.addEventListener('click', () => openAttendance(1, '2024-11-18 16:40:00'));
+//btnDoneAttendance.addEventListener('click', () => doneAttendance(88, [{"condition": 1,"id": 5},{"condition": 2,"id": 6}]));
+//btnTimeTable.addEventListener('click', () => timeTable(5));
+//btnStudents.addEventListener('click', () => students(5));
