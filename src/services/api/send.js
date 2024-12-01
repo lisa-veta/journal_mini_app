@@ -9,7 +9,7 @@
 //const btnStudents = document.getElementById('students');
 
 /* URL сервера */
-const url = 'https://cors-anywhere.herokuapp.com/http://185.104.249.229:3000;';
+const url = 'http://185.104.249.229:3000';
 
 /* Простой запрос get. Возвращается текст dudes. */
 async function getDudes() {
@@ -169,43 +169,47 @@ export default async function students(groupId) {
 
 async function sendPost(endPoint, data) {
     try {
-        const response = await fetch(url + endPoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+        const response = await fetch(`/api${endPoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
         const jsonData = await response.json();
-        //console.log(jsonData);
         return jsonData;
     } catch (error) {
-        console.log(error.message);
-        //displayResponse({ error: error.message });
+        console.error('sendPost error:', error.message);
     }
 }
+
 
 async function sendPostWithoutResult(endPoint, data) {
     try {
-        const response = await fetch(url + endPoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+        const response = await fetch(`/api${endPoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
     } catch (error) {
-        displayResponse({ error: error.message });
+        console.error('sendPostWithoutResult error:', error.message);
     }
 }
 
+
 async function sendGet(endPoint) {
     try {
-        const response = await fetch(url + endPoint, {
-                method: 'GET',
-            });
-            const jsonData = await response.json();
-            displayResponse(jsonData);
+        const response = await fetch(`/api${endPoint}`, {
+            method: 'GET',
+        });
+        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+        const jsonData = await response.json();
+        return jsonData;
     } catch (error) {
-        displayResponse({ error: error.message });
+        console.error('sendGet error:', error.message);
     }
 }
+
 
 /* Вывод на экран результата */
 function displayResponse(data) {

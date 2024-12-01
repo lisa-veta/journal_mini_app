@@ -15,10 +15,10 @@
     white-space: nowrap;
 }
 
-@media (max-width: 768px) {
+@media {
     .attendanceTable__vertical-header {
-        writing-mode: horizontal-tb;
-        transform: none;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
         text-align: center;
         white-space: nowrap;
     }
