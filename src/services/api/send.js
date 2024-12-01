@@ -4,6 +4,7 @@ const btnDudes = document.getElementById('dudes');
 const btnAuthorization = document.getElementById('authorization');
 const btnCreateAttendance = document.getElementById('createAttendance');
 const btnOpenAttendance = document.getElementById('openAttendance');
+const btnOpenFullAttendance = document.getElementById('openFullAttendance');
 const btnDoneAttendance = document.getElementById('doneAttendance');
 const btnTimeTable = document.getElementById('timetable');
 const btnStudents = document.getElementById('students');
@@ -70,6 +71,33 @@ async function createAttendance(classId, timedate) {
 async function openAttendance(classId, timedate) {
     const endPoint = '/open-attendance';
     const data = { classId: classId, timedate: timedate };
+    sendPost(endPoint, data);
+}
+
+/* Открыть все уже существующие посещаемости (общие).
+    classId - ид пары,
+Возващает список студентов с ид их состояния и времени пары
+[
+    {
+        "time_date": "2024-11-18T13:40:00.000Z",
+        "condition": "Н",
+        "name": "Елизавета",
+        "lastname": "Перникова",
+        "patronymic": "Олеговна"
+    },
+    {
+        "time_date": "2024-11-18T13:40:00.000Z",
+        "condition": "Н",
+        "name": "Анастасия",
+        "lastname": "Кузнецова",
+        "patronymic": "Александровна"
+    },
+]
+.*/
+
+async function openFullAttendance(classId) {
+    const endPoint = '/open-full-attendance';
+    const data = { classId: classId };
     sendPost(endPoint, data);
 }
 
@@ -217,6 +245,7 @@ btnDudes.addEventListener('click', getDudes);
 btnAuthorization.addEventListener('click', () => authorization('headman-PrI-301', 'headman'));
 btnCreateAttendance.addEventListener('click', () => createAttendance(1, '2024-11-18 17:40:00'));
 btnOpenAttendance.addEventListener('click', () => openAttendance(1, '2024-11-18 16:40:00'));
+btnOpenFullAttendance.addEventListener('click', () => openFullAttendance(1));
 btnDoneAttendance.addEventListener('click', () => doneAttendance(88, [{"condition": 1,"id": 5},{"condition": 2,"id": 6}]));
 btnTimeTable.addEventListener('click', () => timeTable(5));
 btnStudents.addEventListener('click', () => students(5));
