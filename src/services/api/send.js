@@ -75,7 +75,7 @@ async function openAttendance(classId, timedate) {
 }
 
 /* Открыть все уже существующие посещаемости (общие).
-    classId - ид пары,
+    lessonId - ид занятия,
 Возващает список студентов с ид их состояния и времени пары
 [
     {
@@ -95,9 +95,9 @@ async function openAttendance(classId, timedate) {
 ]
 .*/
 
-async function openFullAttendance(classId) {
+async function openFullAttendance(lessonId) {
     const endPoint = '/open-full-attendance';
-    const data = { classId: classId };
+    const data = { lessonId: lessonId };
     sendPost(endPoint, data);
 }
 
