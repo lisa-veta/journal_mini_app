@@ -1,12 +1,19 @@
-﻿import { useState } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Day } from "components/index.jsx";
 
 function Schedule(props) {
+
     const [week, setWeek] = useState(() => {
         // Найти неделю, где is_even=true
         const evenWeek = props.weeks.find(w => w.is_even === true);
         return evenWeek || props.weeks[0];
     });
+
+    // Для обновления локального состояния при обновлении недель во внешнем компоненте
+    useEffect(() => {
+        const evenWeek = props.weeks.find(w => w.is_even === true);
+        setWeek(evenWeek || props.weeks[0]);
+    }, [props.weeks]);
 
     const handleWeekChange = (event) => {
 

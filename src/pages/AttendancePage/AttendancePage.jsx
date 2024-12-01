@@ -28,18 +28,6 @@ const AttendancePage = () => {
         })();
     }, []);
 
-    // Такоежекратное получение расписания
-    //useEffect(() => {
-    //    (async () => {
-    //        try {
-    //            const data = await timeTable(groupId);
-
-    //            console.log(JSON.stringify(data));
-    //        } catch (error) {
-    //            console.error(error);
-    //        }
-    //    })();
-    //}, []);
 
     const schedule = [
         { id: 1, date: `${new Date().getDate()}.${new Date().getMonth() + 1}`, lesson: "1 пара" },
