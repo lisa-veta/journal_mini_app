@@ -4,8 +4,12 @@ import { Layout } from "../index.jsx";
 import "./AttendancePage.css"
 import students, { timeTable } from "../../services/api/send.js";
 import { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 
 const AttendancePage = () => {
+    const location = useLocation();
+    const lesson = location.state?.lesson;
+    //console.log(JSON.stringify(lesson));
 
     const [studentsList, setStudentsList] = useState([]);
     const groupId = 5;

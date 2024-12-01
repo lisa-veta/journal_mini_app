@@ -74,9 +74,10 @@ const SchedulePage = () => {
                                 type_id: (parsedData[i].type_lesson === "Лекция") ? 1 :
                                     (parsedData[i].type_lesson === "Практика") ? 2 :
                                         (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,
-                                building_id: 1,
+                                //building_id: 1,
                                 start_time: parsedData[i].lesson_start_time,
                                 end_time: parsedData[i].lesson_end_time,
+                                id: parsedData[i].id
                             }
                     );
                 }

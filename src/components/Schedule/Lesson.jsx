@@ -1,11 +1,6 @@
 ﻿import { useNavigate } from "react-router-dom";
 function Lesson(props) {
     const navigate = useNavigate();
-    if (!props.lesson) {
-        return (
-            <div className='lesson-container'>Занятий нет</div>
-        );
-    }
 
     let lessonType;
     switch (props.lesson.type_id) {
@@ -22,11 +17,12 @@ function Lesson(props) {
             lessonType = 'Другое'
     }
 
-    const handleSubjectClick = (subjectId) => {
-         navigate(`/attendance/${subjectId}`);
+    const handleSubjectClick = () => {
+        console.log(JSON.stringify(props));
+        navigate(`/attendance/${props.lesson.id}`, { state: { lesson: props.lesson } });
      };
     return (
-        <div className='lesson-container' onClick={() => handleSubjectClick(1)}>
+        <div className='lesson-container' onClick={() => handleSubjectClick()}>
             <div className='time-container'>
                 <div className='lesson-time-start'>{props.lesson.start_time}</div>
                 <div className='lesson-time-end'>{props.lesson.end_time}</div>
