@@ -220,3 +220,29 @@ function displayResponse(data) {
 //btnDoneAttendance.addEventListener('click', () => doneAttendance(88, [{"condition": 1,"id": 5},{"condition": 2,"id": 6}]));
 //btnTimeTable.addEventListener('click', () => timeTable(5));
 //btnStudents.addEventListener('click', () => students(5));
+
+/* Открыть все уже существующие посещаемости (общие).
+    lessonId - ид занятия,
+Возващает список студентов с ид их состояния и времени пары
+[
+    {
+        "time_date": "2024-11-18T13:40:00.000Z",
+        "condition": "Н",
+        "name": "Елизавета",
+        "lastname": "Перникова",
+        "patronymic": "Олеговна"
+    },
+    {
+        "time_date": "2024-11-18T13:40:00.000Z",
+        "condition": "Н",
+        "name": "Анастасия",
+        "lastname": "Кузнецова",
+        "patronymic": "Александровна"
+    },
+]
+.*/
+export async function openFullAttendance(lessonId) {
+    const endPoint = '/open-full-attendance';
+    const data = { lessonId: lessonId };
+    return await sendPost(endPoint, data);
+}

@@ -1,19 +1,3 @@
-//import { useNavigate } from "react-router-dom";
-//
-// const SchedulePage = ({ students = [], days =[] }) => {
-//     const navigate = useNavigate();
-//
-//     const handleSubjectClick = (subjectId) => {
-//         navigate(`/attendance/${subjectId}`);
-//     };
-//     return (
-//         <div className="schedulePage">
-//             <div className="schedulePage__subject" onClick={() => handleSubjectClick(1)}>
-//                 Английский
-//             </div>
-//         </div>
-//     );
-// };
 import "./SchedulePage.css"
 import { Navigation, Schedule } from "components/index.jsx";
 import { timeTable } from '../../services/api/send.js';
@@ -71,6 +55,9 @@ const SchedulePage = () => {
                                 name: parsedData[i].lesson,
                                 room: parsedData[i].classroom,
                                 teacher: `${parsedData[i].lastname} ${parsedData[i].name} ${parsedData[i].patronymic}`,
+                                teacher_lastName: parsedData[i].lastname,
+                                teacher_name: parsedData[i].name,
+                                teacher_patronymic: parsedData[i].patronymic,
                                 type_id: (parsedData[i].type_lesson === "Лекция") ? 1 :
                                     (parsedData[i].type_lesson === "Практика") ? 2 :
                                         (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,

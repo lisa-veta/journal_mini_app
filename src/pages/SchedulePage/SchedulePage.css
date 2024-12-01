@@ -57,7 +57,7 @@
 }
 
 .week-select-container {
-    padding: 13px 0 6px 0;
+    margin-top: 2rem;
 }
 
 .select-list {
@@ -85,7 +85,7 @@
 
 }
 .day-container_position {
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
 .day-container__day-name {
@@ -95,7 +95,7 @@
 }
 
 .lesson-container {
-    padding: 12px 16px 9px 13px;
+    padding: 1.5rem;
     display: flex;
     background-color: #F6F6F6;
     background-image: url('../../assets/images/Schedule/Line.svg');
