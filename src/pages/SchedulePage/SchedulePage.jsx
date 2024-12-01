@@ -226,16 +226,6 @@ const SchedulePage = () => {
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
             <Schedule weeks={weeks}></Schedule>
             {/*<Navigation></Navigation>*/}
-
-            <div>
-                <div className="">
-                    Пока
-                </div>
-            </div >
-
-            <div className="">
-                Пока
-            </div>
         </div >
     );
 };
