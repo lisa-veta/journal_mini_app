@@ -1,0 +1,14 @@
+.attendancePage {
+    margin-left: 2rem;
+}
+.attendancePage__subject-name {
+    font-weight: 600;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+.attendancePage__teacher {
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+}
