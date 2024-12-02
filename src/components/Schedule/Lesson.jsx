@@ -19,6 +19,7 @@ function Lesson(props) {
 
     const handleSubjectClick = () => {
         console.log(JSON.stringify(props));
+        console.debug("АЙДИ", props.lesson.id)
         navigate(`/attendance/${props.lesson.id}`, { state: { lesson: props.lesson } });
      };
     return (
