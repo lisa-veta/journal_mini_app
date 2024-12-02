@@ -18,6 +18,7 @@ import "./SchedulePage.css"
 import { Navigation, Schedule } from "components/index.jsx";
 import { timeTable } from '../../services/api/send.js';
 import { useEffect, useState } from 'react';
+import { IsLessonCurrent, GetWeekDayIndex } from '../../services/schedule/ScheduleService.js';
 
 const SchedulePage = () => {
 
@@ -28,23 +29,6 @@ const SchedulePage = () => {
         ]
     );
     const groupId = 5;
-
-    const GetWeekDayIndex = (day_name) => {
-        switch (day_name) {
-            case "Понедельник":
-                return 0;
-            case "Вторник":
-                return 1;
-            case "Среда":
-                return 2;
-            case "Четверг":
-                return 3;
-            case "Пятница":
-                return 4;
-            default:
-                return 5;
-        }
-    }
 
     useEffect(() => {
         (async () => {
@@ -83,6 +67,7 @@ const SchedulePage = () => {
                 }
                 
                 setWeeks(tempSchedule.weeks);
+                //IsLessonCurrent(7);
             } catch (error) {
                 console.error(error);
             }
