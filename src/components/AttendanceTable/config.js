@@ -3,16 +3,16 @@ export const getCellText = (state) => {
 
     switch (state) {
         case 1:
-            text = "н"; // Неявка
+            text = "н";
             break;
         case 2:
-            text = "б"; // Больничный
+            text = "б";
             break;
         case 3:
-            text = "уп"; // Упражнение
+            text = "уп";
             break;
-        default:
-            text = ''; // Пустое состояние
+        case 4:
+            text = '';
             break;
     }
 
@@ -26,13 +26,13 @@ export  const getCellStyle = (state, isActive) => {
         // Для активных ячеек
         switch (state) {
             case 1:
-                style = { backgroundColor: "rgba(230, 145, 145, 1)" }; // Яркий красный для неявки
+                style = { backgroundColor: "rgba(230, 145, 145, 1)" };
                 break;
             case 2:
-                style = { backgroundColor: "rgba(255, 236, 152, 1)" }; // Яркий желтый для больничного
+                style = { backgroundColor: "rgba(255, 236, 152, 1)" };
                 break;
             case 3:
-                style = { backgroundColor: "rgba(170, 234, 255, 1)" }; // Яркий голубой для упражнения
+                style = { backgroundColor: "rgba(170, 234, 255, 1)" };
                 break;
             default:
                 break;
@@ -41,16 +41,16 @@ export  const getCellStyle = (state, isActive) => {
         // Для неактивных ячеек
         switch (state) {
             case 1:
-                style = { backgroundColor: "rgba(230, 145, 145, 0.5)" }; // Полупрозрачный красный
+                style = { backgroundColor: "rgba(230, 145, 145, 0.5)" };
                 break;
             case 2:
-                style = { backgroundColor: "rgba(255, 236, 152, 0.5)" }; // Полупрозрачный желтый
+                style = { backgroundColor: "rgba(255, 236, 152, 0.5)" };
                 break;
             case 3:
-                style = { backgroundColor: "rgba(170, 234, 255, 0.5)" }; // Полупрозрачный голубой
+                style = { backgroundColor: "rgba(170, 234, 255, 0.5)" };
                 break;
             default:
-                style = { backgroundColor: "rgba(224, 224, 224, 0.5)" }; // Полупрозрачный стандартный фон
+                style = { backgroundColor: "rgba(224, 224, 224, 0.5)" };
                 break;
         }
 

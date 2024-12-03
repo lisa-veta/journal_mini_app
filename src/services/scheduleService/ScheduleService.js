@@ -14,7 +14,7 @@ export class ScheduleService {
     }
 
     // Метод для получения расписания на основе посещаемости
-    getSchedule(groupId) {
+    async getSchedule(groupId) {
         const schedule = Array.from(
             new Set(this.attendance.map((entry) => entry.form_time_date))
         ).map((uniqueDateTime, index) => {
@@ -35,6 +35,7 @@ export class ScheduleService {
 
         const now = new Date();
 
+        // Используем цикл с await для правильной обработки асинхронных вызовов
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -48,10 +49,13 @@ export class ScheduleService {
                 now.getDate(),
                 ...pair.end_time.split(":").map(Number)
             );
-            // console.debug(now, lessonStart, lessonEnd)
+            console.debug("ВРЕМЯ", lessonStart, now, lessonEnd);
             if (now >= lessonStart && now <= lessonEnd) {
-                this.IsLessonCurrent(this.lesson.id, groupId).then((isCurrentLesson) => {
+                try {
+                    const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
+                    //const isCurrentLesson = true;
                     console.debug("Is current lesson:", isCurrentLesson);
+                    //if (isCurrentLesson && (this.lesson.id === 7 || this.lesson.id === 8)) {
                     if (isCurrentLesson) {
                         const newEntry = {
                             id: schedule.length,
@@ -62,11 +66,16 @@ export class ScheduleService {
                             time: pair.start_time,
                             lesson: pair.lesson,
                         };
-
-                        schedule.push(newEntry);
+                        if(schedule) {
+                            schedule.push(newEntry);
+                        }
+                        else {
+                            return newEntry;
+                        }
                     }
-                });
-                break;
+                } catch (error) {
+                    console.error("Ошибка при вызове IsLessonCurrent:", error);
+                }
             }
         }
 

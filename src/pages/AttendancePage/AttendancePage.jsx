@@ -12,6 +12,8 @@ const AttendancePage = () => {
     const lesson = location.state?.lesson;
     const [attendance, setAttendance] = useState([]);
     const [studentsList, setStudentsList] = useState([]);
+    const [schedule, setSchedule] = useState([]);
+    const [currentLessonId, setCurrentLessonId] = useState(null);
     const groupId = 5;
     console.debug("lesson",lesson)
     // Однократное заполнение студентиков
@@ -32,8 +34,6 @@ const AttendancePage = () => {
         })();
     }, []);
 
-
-
     useEffect(() => {
         (async () => {
             try {
@@ -46,16 +46,40 @@ const AttendancePage = () => {
             }
         })();
     }, [lesson]);
+    useEffect(() => {
+        const fetchSchedule = async () => {
+            if (studentsList.length > 0 && attendance.length > 0) {
+                const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
+                try {
+                    const newSchedule = await scheduleService.getSchedule(groupId);
+                    setSchedule(newSchedule);
+
+                    console.debug("newSchedule", newSchedule);
+
+                    if (Array.isArray(newSchedule) && newSchedule.length > 0) {
+                        const currentLesson = newSchedule.find((entry) => entry.isLessonCurrent === true);
+                        setCurrentLessonId(currentLesson ? currentLesson.id : null);
+                    } else {
+                        console.error("newSchedule не является массивом:", newSchedule);
+                    }
+                } catch (error) {
+                    console.error("Ошибка при получении расписания:", error);
+                }
+            }
+        };
+
+        fetchSchedule();  // Вызываем асинхронную функцию
+    }, [studentsList, attendance]);
 
     const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
-    const schedule = scheduleService.getSchedule(groupId);
+    //const schedule = scheduleService.getSchedule(groupId);
     const attendStudents = scheduleService.getAttendStudents(schedule);
 
     //console.log("attendStudents", attendStudents);
     console.log("attendStudents", attendance);
-    const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
-    const currentLessonId = currentLesson ? currentLesson.id : null;
-    //console.debug("расписание", schedule);
+    //const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
+    //const currentLessonId = currentLesson ? currentLesson.id : null;
+    console.debug("currentLessonId!!!!!!!!!!!!!!!!!!", currentLessonId);
     return (
         <Layout>
             <div className="attendancePage">
@@ -64,7 +88,7 @@ const AttendancePage = () => {
                     <CustomInfo caption="Преподаватель" content={lesson.teacher}/>
                 </div>
                 <div className="attendancePage__table">
-                    <AttendanceTable students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents}/>
+                    <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents}/>
                 </div>
             </div>
         </Layout>

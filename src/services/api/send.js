@@ -42,10 +42,27 @@ async function authorization(nick, password) {
     classId - ид пары,
     timedate - дата пары и время начала пары, формат 2024-11-18 16:40:00
 Возващает id посещаемости (общей).*/
-async function createAttendance(classId, timedate) {
+// export async function createAttendance(classId, timedate) {
+//     const endPoint = '/create-attendance';
+//     const data = { classId: classId, timedate: timedate };
+//     await sendPost(endPoint, data);
+// }
+
+export async function createAttendance(classId, timedate) {
     const endPoint = '/create-attendance';
     const data = { classId: classId, timedate: timedate };
-    sendPost(endPoint, data);
+    try {
+        const response = await sendPost(endPoint, data);
+
+        if (response && response.id) {
+            return response.id;
+        } else {
+            throw new Error("ID посещаемости не найдено в ответе.");
+        }
+    } catch (error) {
+        console.error("Ошибка при создании посещаемости:", error);
+        throw error;
+    }
 }
 
 /* Открыть уже существующую посещаемость (общую).
@@ -90,7 +107,7 @@ async function openAttendance(classId, timedate) {
         ]
     }
 Возващает ничего. Если не прошло будет 404*/
-async function doneAttendance(attendanceId, students) {
+export async function doneAttendance(attendanceId, students) {
     const endPoint = '/attendancedone';
     const data = { attendanceId: attendanceId, students: students };
     sendPostWithoutResult(endPoint, data);

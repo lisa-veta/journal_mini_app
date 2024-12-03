@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
+import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents }) => {
+const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendStudents }) => {
     const [cellStates, setCellStates] = useState({});
 
     // Инициализация состояния на основе attendStudents
@@ -32,8 +33,34 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents }
             };
         });
     };
-
+    const getCurrentLessonData = () => {
+        return students.map((student) => {
+            const cellKey = `${student.id}-${currentLessonId}`;
+            const condition = cellStates[cellKey] || 0; // Учитываем состояние
+            return {
+                studentId: student.id,
+                condition,
+            };
+        });
+    };
     console.debug("currentLessonId", currentLessonId);
+    console.debug("attendStudents", attendStudents);
+    schedule.sort((a, b) => {
+        const [dayA, monthA] = a.date.split('.').map(Number);
+        const [dayB, monthB] = b.date.split('.').map(Number);
+
+        const dateA = new Date(2024, monthA - 1, dayA);
+        const dateB = new Date(2024, monthB - 1, dayB);
+
+        if (dateA - dateB !== 0) {
+            return dateA - dateB;
+        }
+
+        const lessonNumberA = parseInt(a.lesson.match(/\d+/));
+        const lessonNumberB = parseInt(b.lesson.match(/\d+/));
+
+        return lessonNumberA - lessonNumberB;
+    });
     return (
         <div className="attendanceTable-wrapper">
             <table className="attendanceTable">
@@ -76,6 +103,10 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents }
                 ))}
                 </tbody>
             </table>
+            <div>
+                <SaveAttendanceButton lesson={lesson} schedule={schedule}
+                                      currentLessonData={getCurrentLessonData()}></SaveAttendanceButton>
+            </div>
         </div>
     );
 };
