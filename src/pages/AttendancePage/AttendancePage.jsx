@@ -37,7 +37,7 @@ const AttendancePage = () => {
     useEffect(() => {
         (async () => {
             try {
-                const parsedData = await openFullAttendance(lesson.id);
+                const parsedData = await openFullAttendance(lesson.id_lesson);
                 const attendanceData = JSON.parse(JSON.stringify(parsedData));
                 //console.debug('!!!!!посещаемость с сервера!!!', attendanceData);
                 setAttendance(attendanceData);
@@ -47,11 +47,12 @@ const AttendancePage = () => {
         })();
     }, [lesson]);
 
-    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair);
-    const schedule = scheduleService.getSchedule(lesson.id, groupId);
+    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
+    const schedule = scheduleService.getSchedule(groupId);
     const attendStudents = scheduleService.getAttendStudents(schedule);
 
     //console.log("attendStudents", attendStudents);
+    console.log("attendStudents", attendance);
     const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
     const currentLessonId = currentLesson ? currentLesson.id : null;
     //console.debug("расписание", schedule);

@@ -53,6 +53,7 @@ const SchedulePage = () => {
                     tempSchedule.weeks[weekIndex].days[dayIndex].subjects.push(
                             {
                                 name: parsedData[i].lesson,
+                                id_lesson: parsedData[i].id_lesson,
                                 room: parsedData[i].classroom,
                                 teacher: `${parsedData[i].lastname} ${parsedData[i].name} ${parsedData[i].patronymic}`,
                                 teacher_lastName: parsedData[i].lastname,

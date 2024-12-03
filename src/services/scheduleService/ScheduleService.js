@@ -1,9 +1,10 @@
 import { timeTable } from '../api/send.js';
 export class ScheduleService {
-    constructor(studentsList, attendance, schedulePair) {
+    constructor(studentsList, attendance, schedulePair, lesson) {
         this.studentsList = studentsList;
         this.attendance = attendance;
         this.schedulePair = schedulePair;
+        this.lesson = lesson
         this.conditionMapping = {
             'Н': 1,
             'Б': 2,
@@ -13,7 +14,7 @@ export class ScheduleService {
     }
 
     // Метод для получения расписания на основе посещаемости
-    getSchedule(lessonId, groupId) {
+    getSchedule(groupId) {
         const schedule = Array.from(
             new Set(this.attendance.map((entry) => entry.form_time_date))
         ).map((uniqueDateTime, index) => {
@@ -21,7 +22,7 @@ export class ScheduleService {
             const [year, month, day] = fullDate.split("-");
             const formattedDate = `${day}.${month}`;
             const formattedTime = fullTime.slice(0, 5);
-            const lesson = this.getLesson(formattedTime);
+            const lesson = this.getPairNumber(formattedTime);
 
             return {
                 id: index,
@@ -49,7 +50,7 @@ export class ScheduleService {
             );
             // console.debug(now, lessonStart, lessonEnd)
             if (now >= lessonStart && now <= lessonEnd) {
-                this.IsLessonCurrent(lessonId, groupId).then((isCurrentLesson) => {
+                this.IsLessonCurrent(this.lesson.id, groupId).then((isCurrentLesson) => {
                     console.debug("Is current lesson:", isCurrentLesson);
                     if (isCurrentLesson) {
                         const newEntry = {
@@ -74,7 +75,7 @@ export class ScheduleService {
 
 
     // Метод для поиска занятия по времени
-    getLesson(time) {
+    getPairNumber(time) {
         const [hours, minutes] = time.split(":").map(Number);
         const currentTime = new Date(0, 0, 0, hours, minutes);
 
