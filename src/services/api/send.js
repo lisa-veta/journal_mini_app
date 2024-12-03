@@ -167,46 +167,86 @@ export default async function students(groupId) {
     return await sendPost(endPoint, data);
 }
 
+// async function sendPost(endPoint, data) {
+//     try {
+//         const response = await fetch(`/api${endPoint}`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(data),
+//         });
+//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+//         const jsonData = await response.json();
+//         return jsonData;
+//     } catch (error) {
+//         console.error('sendPost error:', error.message);
+//     }
+// }
+//
+//
+// async function sendPostWithoutResult(endPoint, data) {
+//     try {
+//         const response = await fetch(`/api${endPoint}`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(data),
+//         });
+//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+//     } catch (error) {
+//         console.error('sendPostWithoutResult error:', error.message);
+//     }
+// }
+//
+//
+// async function sendGet(endPoint) {
+//     try {
+//         const response = await fetch(`/api${endPoint}`, {
+//             method: 'GET',
+//         });
+//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+//         const jsonData = await response.json();
+//         return jsonData;
+//     } catch (error) {
+//         console.error('sendGet error:', error.message);
+//     }
+// }
+
 async function sendPost(endPoint, data) {
     try {
-        const response = await fetch(`/api${endPoint}`, {
+        const response = await fetch(url + endPoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data)
         });
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
         const jsonData = await response.json();
+        //console.log(jsonData);
         return jsonData;
     } catch (error) {
-        console.error('sendPost error:', error.message);
+        console.log(error.message);
+        //displayResponse({ error: error.message });
     }
 }
-
 
 async function sendPostWithoutResult(endPoint, data) {
     try {
-        const response = await fetch(`/api${endPoint}`, {
+        const response = await fetch(url + endPoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data)
         });
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
     } catch (error) {
-        console.error('sendPostWithoutResult error:', error.message);
+        displayResponse({ error: error.message });
     }
 }
 
-
 async function sendGet(endPoint) {
     try {
-        const response = await fetch(`/api${endPoint}`, {
+        const response = await fetch(url + endPoint, {
             method: 'GET',
         });
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
         const jsonData = await response.json();
-        return jsonData;
+        displayResponse(jsonData);
     } catch (error) {
-        console.error('sendGet error:', error.message);
+        displayResponse({ error: error.message });
     }
 }
 

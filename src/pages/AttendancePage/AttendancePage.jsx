@@ -13,7 +13,7 @@ const AttendancePage = () => {
     const [attendance, setAttendance] = useState([]);
     const [studentsList, setStudentsList] = useState([]);
     const groupId = 5;
-    console.debug(lesson)
+    console.debug("lesson",lesson)
     // Однократное заполнение студентиков
     useEffect(() => {
         (async () => {
@@ -48,13 +48,11 @@ const AttendancePage = () => {
     }, [lesson]);
 
     const scheduleService = new ScheduleService(studentsList, attendance, schedulePair);
-    const attendStudents = scheduleService.getAttendStudents();
+    const schedule = scheduleService.getSchedule(lesson.id, groupId);
+    const attendStudents = scheduleService.getAttendStudents(schedule);
 
     //console.log("attendStudents", attendStudents);
-
-    const schedule = scheduleService.getSchedule(lesson.id, groupId);
     const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
-
     const currentLessonId = currentLesson ? currentLesson.id : null;
     //console.debug("расписание", schedule);
     return (

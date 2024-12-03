@@ -8,7 +8,6 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents }
     // Инициализация состояния на основе attendStudents
     useEffect(() => {
         const initialStates = {};
-
         attendStudents.forEach((entry) => {
             const cellKey = `${entry.studentId}-${entry.scheduleId}`;
             initialStates[cellKey] = entry.condition;
@@ -34,7 +33,7 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents }
         });
     };
 
-    console.debug(currentLessonId);
+    console.debug("currentLessonId", currentLessonId);
     return (
         <div className="attendanceTable-wrapper">
             <table className="attendanceTable">

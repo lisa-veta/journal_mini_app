@@ -49,21 +49,22 @@ export class ScheduleService {
             );
             // console.debug(now, lessonStart, lessonEnd)
             if (now >= lessonStart && now <= lessonEnd) {
-                const isCurrentLesson = this.IsLessonCurrent(lessonId, groupId);
-                //const isCurrentLesson = true;
-                if (isCurrentLesson) {
-                    const newEntry = {
-                        id: schedule.length,
-                        isLessonCurrent: true,
-                        date: `${String(now.getDate()).padStart(2, "0")}.${String(
-                            now.getMonth() + 1
-                        ).padStart(2, "0")}`,
-                        time: pair.start_time,
-                        lesson: pair.lesson,
-                    };
+                this.IsLessonCurrent(lessonId, groupId).then((isCurrentLesson) => {
+                    console.debug("Is current lesson:", isCurrentLesson);
+                    if (isCurrentLesson) {
+                        const newEntry = {
+                            id: schedule.length,
+                            isLessonCurrent: true,
+                            date: `${String(now.getDate()).padStart(2, "0")}.${String(
+                                now.getMonth() + 1
+                            ).padStart(2, "0")}`,
+                            time: pair.start_time,
+                            lesson: pair.lesson,
+                        };
 
-                    schedule.push(newEntry);
-                }
+                        schedule.push(newEntry);
+                    }
+                });
                 break;
             }
         }
@@ -93,9 +94,7 @@ export class ScheduleService {
     }
 
     // Метод для получения посещаемости студентов
-    getAttendStudents() {
-        const schedule = this.getSchedule();
-
+    getAttendStudents(schedule) {
         const attendstudents = this.attendance.map((entry) => {
             const student = this.studentsList.find(
                 (student) => student.lastname === entry.lastname
@@ -156,74 +155,67 @@ export class ScheduleService {
         }
     }
 
-    IsLessonCurrent(lessonId, groupId) {
-
-        const IsNotCorrectDay = (now, targetLesson) => {
-
-            return now.getDay() - 1 !== this.GetWeekDayIndex(targetLesson.week_day);
-        };
-
-        const IsNotCorrectTime = (now, targetLesson) => {
-
-            let lessonMinutesStart = parseInt(targetLesson.lesson_start_time.split(':')[0]) * 60
-                + parseInt(targetLesson.lesson_start_time.split(':')[1]);
-            let lessonMinutesEnd = parseInt(targetLesson.lesson_end_time.split(':')[0]) * 60
-                + parseInt(targetLesson.lesson_end_time.split(':')[1]);
-            let nowMinutes = now.getHours() * 60 + now.getMinutes();
-
-            return nowMinutes < lessonMinutesStart || nowMinutes > lessonMinutesEnd;
-        };
-
-        const IsNotCorrectWeek = (now, targetLesson) => {
-
-            let septemberStart = new Date(new Date().getFullYear(), 8, 1, 23);
-
-            const diffInMs = now - septemberStart;
-            let weekInMs = 1000 * 60 * 60 * 24 * 7;
-            const diffInWeeks = Math.floor(diffInMs / weekInMs);
-
-            let isFirstWeekEducational = !(septemberStart.getDay() % 7 === 0);
-            let weekType;
-            if (isFirstWeekEducational) {
-                weekType = (diffInWeeks % 2 === 0) ? 2 : 1;
-            } else {
-                weekType = (diffInWeeks % 2 !== 0) ? 2 : 1;
-            }
-            //console.log('1 неделя учебная:', isFirstWeekEducational);
-            //console.log('неделя сейчас', weekType);
-
-            return weekType !== targetLesson.number_week;
-        };
-
-        (async () => {
-            try {
-                const data = await timeTable(groupId);
-                const parsedData = JSON.parse(JSON.stringify(data));
-
-                let targetLesson = parsedData.find(parsedData => parsedData.id === lessonId);
-                let now = new Date();
-                //console.log('нужая пара', JSON.stringify(targetLesson));
-
-                if (IsNotCorrectWeek(now, targetLesson)) {
-                    //console.log('не та неделя');
-                    return false;
-                }
-
-                if (IsNotCorrectDay(now, targetLesson)) {
-                    //console.log('не тот день');
-                    return false;
-                }
-
-                if (IsNotCorrectTime(now, targetLesson)) {
-                    //console.log('не то время');
-                    return false
-                }
-
-                //console.log('сейчас эта пара.');
-                return true;
-            } catch (error) {
-                console.error(error);
-            }
-        })();
+    IsNotCorrectDay(now, targetLesson) {
+        return now.getDay() - 1 !== this.GetWeekDayIndex(targetLesson.week_day);
     }
+
+    IsNotCorrectTime(now, targetLesson) {
+        const lessonMinutesStart =
+            parseInt(targetLesson.lesson_start_time.split(":")[0]) * 60 +
+            parseInt(targetLesson.lesson_start_time.split(":")[1]);
+        const lessonMinutesEnd =
+            parseInt(targetLesson.lesson_end_time.split(":")[0]) * 60 +
+            parseInt(targetLesson.lesson_end_time.split(":")[1]);
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+        return nowMinutes < lessonMinutesStart || nowMinutes > lessonMinutesEnd;
+    }
+
+    IsNotCorrectWeek(now, targetLesson) {
+        const septemberStart = new Date(new Date().getFullYear(), 8, 1, 23);
+        const diffInMs = now - septemberStart;
+        const weekInMs = 1000 * 60 * 60 * 24 * 7;
+        const diffInWeeks = Math.floor(diffInMs / weekInMs);
+
+        const isFirstWeekEducational = !(septemberStart.getDay() % 7 === 0);
+        const weekType = isFirstWeekEducational
+            ? diffInWeeks % 2 === 0
+                ? 2
+                : 1
+            : diffInWeeks % 2 !== 0
+                ? 2
+                : 1;
+
+        return weekType !== targetLesson.number_week;
+    }
+
+    async IsLessonCurrent(lessonId, groupId) {
+        // Найти занятие по ID
+        const data = await timeTable(groupId);
+        const parsedData = JSON.parse(JSON.stringify(data));
+
+        let targetLesson = parsedData.find(parsedData => parsedData.id === lessonId);
+        let now = new Date();
+        console.debug("fff",targetLesson)
+
+        if (!targetLesson) {
+            console.error(`Lesson with ID ${lessonId} not found`);
+            return false;
+        }
+
+        if (this.IsNotCorrectWeek(now, targetLesson)) {
+            return false;
+        }
+
+        if (this.IsNotCorrectDay(now, targetLesson)) {
+            return false;
+        }
+
+        if (this.IsNotCorrectTime(now, targetLesson)) {
+            return false;
+        }
+
+        return true;
+    }
+
 }
