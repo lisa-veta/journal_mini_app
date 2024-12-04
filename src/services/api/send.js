@@ -42,10 +42,27 @@ async function authorization(nick, password) {
     classId - ид пары,
     timedate - дата пары и время начала пары, формат 2024-11-18 16:40:00
 Возващает id посещаемости (общей).*/
-async function createAttendance(classId, timedate) {
+// export async function createAttendance(classId, timedate) {
+//     const endPoint = '/create-attendance';
+//     const data = { classId: classId, timedate: timedate };
+//     await sendPost(endPoint, data);
+// }
+
+export async function createAttendance(classId, timedate) {
     const endPoint = '/create-attendance';
     const data = { classId: classId, timedate: timedate };
-    sendPost(endPoint, data);
+    try {
+        const response = await sendPost(endPoint, data);
+        console.debug(response);
+        if (response) {
+            return response[0].id;
+        } else {
+            throw new Error("ID посещаемости не найдено в ответе.");
+        }
+    } catch (error) {
+        console.error("Ошибка при создании посещаемости:", error);
+        throw error;
+    }
 }
 
 /* Открыть уже существующую посещаемость (общую).
@@ -90,7 +107,7 @@ async function openAttendance(classId, timedate) {
         ]
     }
 Возващает ничего. Если не прошло будет 404*/
-async function doneAttendance(attendanceId, students) {
+export async function doneAttendance(attendanceId, students) {
     const endPoint = '/attendancedone';
     const data = { attendanceId: attendanceId, students: students };
     sendPostWithoutResult(endPoint, data);
@@ -167,13 +184,56 @@ export default async function students(groupId) {
     return await sendPost(endPoint, data);
 }
 
+// async function sendPost(endPoint, data) {
+//     try {
+//         const response = await fetch(`/api${endPoint}`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(data),
+//         });
+//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+//         const jsonData = await response.json();
+//         return jsonData;
+//     } catch (error) {
+//         console.error('sendPost error:', error.message);
+//     }
+// }
+//
+//
+// async function sendPostWithoutResult(endPoint, data) {
+//     try {
+//         const response = await fetch(`/api${endPoint}`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(data),
+//         });
+//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+//     } catch (error) {
+//         console.error('sendPostWithoutResult error:', error.message);
+//     }
+// }
+//
+//
+// async function sendGet(endPoint) {
+//     try {
+//         const response = await fetch(`/api${endPoint}`, {
+//             method: 'GET',
+//         });
+//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+//         const jsonData = await response.json();
+//         return jsonData;
+//     } catch (error) {
+//         console.error('sendGet error:', error.message);
+//     }
+// }
+
 async function sendPost(endPoint, data) {
     try {
         const response = await fetch(url + endPoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
         const jsonData = await response.json();
         //console.log(jsonData);
         return jsonData;
@@ -186,10 +246,10 @@ async function sendPost(endPoint, data) {
 async function sendPostWithoutResult(endPoint, data) {
     try {
         const response = await fetch(url + endPoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
     } catch (error) {
         displayResponse({ error: error.message });
     }
@@ -198,14 +258,15 @@ async function sendPostWithoutResult(endPoint, data) {
 async function sendGet(endPoint) {
     try {
         const response = await fetch(url + endPoint, {
-                method: 'GET',
-            });
-            const jsonData = await response.json();
-            displayResponse(jsonData);
+            method: 'GET',
+        });
+        const jsonData = await response.json();
+        displayResponse(jsonData);
     } catch (error) {
         displayResponse({ error: error.message });
     }
 }
+
 
 /* Вывод на экран результата */
 function displayResponse(data) {
@@ -220,3 +281,29 @@ function displayResponse(data) {
 //btnDoneAttendance.addEventListener('click', () => doneAttendance(88, [{"condition": 1,"id": 5},{"condition": 2,"id": 6}]));
 //btnTimeTable.addEventListener('click', () => timeTable(5));
 //btnStudents.addEventListener('click', () => students(5));
+
+/* Открыть все уже существующие посещаемости (общие).
+    lessonId - ид занятия,
+Возващает список студентов с ид их состояния и времени пары
+[
+    {
+        "time_date": "2024-11-18T13:40:00.000Z",
+        "condition": "Н",
+        "name": "Елизавета",
+        "lastname": "Перникова",
+        "patronymic": "Олеговна"
+    },
+    {
+        "time_date": "2024-11-18T13:40:00.000Z",
+        "condition": "Н",
+        "name": "Анастасия",
+        "lastname": "Кузнецова",
+        "patronymic": "Александровна"
+    },
+]
+.*/
+export async function openFullAttendance(lessonId) {
+    const endPoint = '/open-full-attendance';
+    const data = { lessonId: lessonId };
+    return await sendPost(endPoint, data);
+}

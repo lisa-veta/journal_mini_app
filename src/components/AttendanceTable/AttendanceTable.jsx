@@ -1,64 +1,70 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./AttendanceTable.css";
+import { getCellText, getCellStyle } from "./config";
+import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, currentLessonId }) => {
+const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendStudents }) => {
     const [cellStates, setCellStates] = useState({});
 
+    // Инициализация состояния на основе attendStudents
+    useEffect(() => {
+        const initialStates = {};
+        attendStudents.forEach((entry) => {
+            const cellKey = `${entry.studentId}-${entry.scheduleId}`;
+            initialStates[cellKey] = entry.condition;
+        });
+
+        setCellStates(initialStates);
+    }, [attendStudents]);
+
+    // Функция обработки кликов по ячейке
     const handleCellClick = (studentId, lessonId) => {
+        // Если урок не тот, пропускаем
         if (lessonId !== currentLessonId) return;
 
         const cellKey = `${studentId}-${lessonId}`;
-        setCellStates((prev) => ({
-            ...prev,
-            [cellKey]: ((prev[cellKey] || 0) + 1) % 4,
-        }));
+
+        // Цикличное переключение состояний ячейки (от 0 до 3)
+        setCellStates((prev) => {
+            const currentState = prev[cellKey] || 0;
+            return {
+                ...prev,
+                [cellKey]: (currentState + 1) % 4, // Переключаем состояния
+            };
+        });
     };
+    const getCurrentLessonData = () => {
+        return students.map((student) => {
+            const cellKey = `${student.id}-${currentLessonId}`;
+            const condition = cellStates[cellKey] || 0; // Учитываем состояние
+            return {
+                studentId: student.id,
+                condition,
+            };
+        });
+    };
+    console.debug("currentLessonId", currentLessonId);
+    console.debug("attendStudents", attendStudents);
+    console.debug("She", schedule)
 
-    const getCellStyle = (state, isActive) => {
-        let style = {};
+    schedule.sort((a, b) => {
+        const [dayA, monthA] = a.date.split('.').map(Number);
+        const [dayB, monthB] = b.date.split('.').map(Number);
 
-        if (!isActive) {
-            return { backgroundColor: "#e0e0e0", cursor: "not-allowed", text: '' };
+        const dateA = new Date(2024, monthA - 1, dayA);
+        const dateB = new Date(2024, monthB - 1, dayB);
+
+        if (dateA - dateB !== 0) {
+            return dateA - dateB;
         }
 
-        switch (state) {
-            case 1:
-                style = { backgroundColor: "#e69191"};
-                break;
-            case 2:
-                style = { backgroundColor: "#ffec98" };
-                break;
-            case 3:
-                style = { backgroundColor: "#aaeaff" };
-                break;
-            default:
-                break;
-        }
+        const lessonNumberA = parseInt(a.lesson.match(/\d+/));
+        const lessonNumberB = parseInt(b.lesson.match(/\d+/));
 
-        return style;
-    };
-
-    const getCellText = (state) => {
-        let text = '';
-
-        switch (state) {
-            case 1:
-                text = "н";
-                break;
-            case 2:
-                text = "б";
-                break;
-            case 3:
-                text = "у";
-                break;
-            default:
-                break;
-        }
-
-        return text;
-    };
-
+        return lessonNumberA - lessonNumberB;
+    });
     return (
+        <div>
         <div className="attendanceTable-wrapper">
             <table className="attendanceTable">
                 <thead>
@@ -81,22 +87,33 @@ const AttendanceTable = ({ students, schedule, currentLessonId }) => {
                 <tbody>
                 {students.map((student) => (
                     <tr key={student.id}>
-                        <td>{student.name}</td>
-                        {schedule.map((item) => (
-                            <td
-                                key={item.id}
-                                style={getCellStyle(cellStates[`${student.id}-${item.id}`], item.id === currentLessonId)}
-                                onClick={() => handleCellClick(student.id, item.id)}
-                            >
-                                {getCellText(cellStates[`${student.id}-${item.id}`])} {}
-                            </td>
-                        ))}
+                        <td>{student.lastname} {student.name[0]}.</td>
+                        {schedule.map((item) => {
+                            // Ищем состояние для текущей ячейки
+                            const cellState = cellStates[`${student.id}-${item.id}`];
+
+                            return (
+                                <td
+                                    key={item.id}
+                                    style={getCellStyle(cellState, item.id === currentLessonId)}
+                                    onClick={() => handleCellClick(student.id, item.id)}
+                                >
+                                    {getCellText(cellState)} {/* Выводим текст состояния */}
+                                </td>
+                            );
+                        })}
                     </tr>
                 ))}
                 </tbody>
             </table>
         </div>
+            <div>
+                <SaveAttendanceButton lesson={lesson} schedule={schedule}
+                                      currentLessonData={getCurrentLessonData()}></SaveAttendanceButton>
+            </div>
+        </div>
     );
 };
+
 
 export default AttendanceTable;

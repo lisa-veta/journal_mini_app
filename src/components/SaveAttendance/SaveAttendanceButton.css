@@ -1,0 +1,22 @@
+.buttonSave-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonSave {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background-color: black;
+    color: white;
+    padding: 1.5rem;
+    font-size: 2rem;
+    margin-top: 2rem;
+    width: auto;
+    height: auto;
+}
+.buttonSave_disabled {
+    background-color: var(--colorBattleshipGray);
+}
