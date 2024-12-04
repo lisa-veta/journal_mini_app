@@ -53,9 +53,9 @@ export async function createAttendance(classId, timedate) {
     const data = { classId: classId, timedate: timedate };
     try {
         const response = await sendPost(endPoint, data);
-
-        if (response && response.id) {
-            return response.id;
+        console.debug(response);
+        if (response) {
+            return response[0].id;
         } else {
             throw new Error("ID посещаемости не найдено в ответе.");
         }

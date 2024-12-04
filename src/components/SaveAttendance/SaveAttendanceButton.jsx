@@ -30,15 +30,20 @@ const SaveAttendanceButton = ({lesson, schedule, currentLessonData}) => {
         };
 
         return (
-            <div  className="buttonSave">
-                <button onClick={handleSave}>Сохранить</button>
+            <div className="buttonSave-container">
+                <div  className="buttonSave">
+                    <button onClick={handleSave}>Сохранить</button>
+                </div>
             </div>
         );
     } else {
         return (
-            <div className="buttonSave buttonSave_disabled">
-                <button disabled>Сохранить</button>
+            <div className="buttonSave-container">
+                <div className="buttonSave buttonSave_disabled">
+                    <button disabled>Нет текущей пары</button>
+                </div>
             </div>
+
         );
     }
 };

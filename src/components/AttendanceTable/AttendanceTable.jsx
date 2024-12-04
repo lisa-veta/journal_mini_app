@@ -45,6 +45,8 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
     };
     console.debug("currentLessonId", currentLessonId);
     console.debug("attendStudents", attendStudents);
+    console.debug("She", schedule)
+
     schedule.sort((a, b) => {
         const [dayA, monthA] = a.date.split('.').map(Number);
         const [dayB, monthB] = b.date.split('.').map(Number);
@@ -62,6 +64,7 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
         return lessonNumberA - lessonNumberB;
     });
     return (
+        <div>
         <div className="attendanceTable-wrapper">
             <table className="attendanceTable">
                 <thead>
@@ -103,6 +106,7 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
                 ))}
                 </tbody>
             </table>
+        </div>
             <div>
                 <SaveAttendanceButton lesson={lesson} schedule={schedule}
                                       currentLessonData={getCurrentLessonData()}></SaveAttendanceButton>
