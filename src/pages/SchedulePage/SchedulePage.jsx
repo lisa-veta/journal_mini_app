@@ -19,7 +19,7 @@ const SchedulePage = () => {
             try {
                 const data = await timeTable(groupId);
                 const parsedData = JSON.parse(JSON.stringify(data));
-                console.log('ответ с сервера', JSON.stringify(data));
+                //console.log('ответ с сервера', JSON.stringify(data));
 
                 const tempSchedule = {
                     weeks: [

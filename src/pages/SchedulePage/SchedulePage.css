@@ -164,3 +164,17 @@
 .day-container .lesson-container:last-child{
     background-image: none;
 }
+
+.schedule-container__current-lesson-navigation-container {
+    font-size: 2rem;
+    width: 100%;
+    height: 46px;
+    background-color: #F6F6F6;
+    position: center center;
+    margin-top: 3rem;
+}
+
+.schedule-container__current-lesson-button {
+    width: 100%;
+    height: 100%;
+}
