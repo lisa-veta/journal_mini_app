@@ -1,10 +1,11 @@
 ﻿import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Day } from "components/index.jsx";
+import { Day, Lesson } from "components/index.jsx";
 import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
 
 function Schedule(props) {
     const navigate = useNavigate();
+    const style = { backgroundColor: 'red' };
 
     const [week, setWeek] = useState(() => {
         // Найти неделю, где is_even=true
@@ -12,11 +13,7 @@ function Schedule(props) {
         return evenWeek || props.weeks[0];
     });
 
-    const [currentLesson, setCurrentLesson] = useState({
-        text: "Сейчас нет пары",
-        onClick: null,
-        style: {cursor: 'none'}
-    });
+    const [currentLesson, setCurrentLesson] = useState(null);
 
     // Для обновления локального состояния при обновлении недель во внешнем компоненте
     useEffect(() => {
@@ -54,43 +51,30 @@ function Schedule(props) {
                 // Поменять номер группы в будущем
                 const currentLesson = await new ScheduleService().FindCurrentLesson(5);
                 if (!currentLesson) {
-                    setCurrentLesson({
-                        text: "Сейчас нет пары",
-                        onClick: null,
-                        style: { cursor: 'default' }
-                    });
+                    setCurrentLesson(null);
                 } else {
-                    setCurrentLesson({
-                        text: `Перейти к отметкам текущей пары: ${currentLesson.lesson}`,
-                        onClick: () => {
-                            navigate(`/attendance/${currentLesson.id}`,
-                                { state:
-                                    {
-                                        lesson: 
-                                        {
-                                            name: currentLesson.lesson,
-                                            id_lesson: currentLesson.id_lesson,
-                                            room: currentLesson.classroom,
-                                            teacher: `${currentLesson.lastname} ${currentLesson.name} ${currentLesson.patronymic}`,
-                                            teacher_lastName: currentLesson.lastname,
-                                            teacher_name: currentLesson.name,
-                                            teacher_patronymic: currentLesson.patronymic,
-                                            type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
-                                                (currentLesson.type_lesson === "Практика") ? 2 :
-                                                    (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
-                                            //building_id: 1,
-                                            start_time: currentLesson.lesson_start_time,
-                                            end_time: currentLesson.lesson_end_time,
-                                            id: currentLesson.id
-                                        }
-                                    }
-                                });
-                        },
-                        style: { cursor: 'pointer' }
-                    });
+                    setCurrentLesson(
+                        {
+                            name: currentLesson.lesson,
+                            id_lesson: currentLesson.id_lesson,
+                            room: currentLesson.classroom,
+                            teacher: `${currentLesson.lastname} ${currentLesson.name} ${currentLesson.patronymic}`,
+                            teacher_lastName: currentLesson.lastname,
+                            teacher_name: currentLesson.name,
+                            teacher_patronymic: currentLesson.patronymic,
+                            type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
+                                (currentLesson.type_lesson === "Практика") ? 2 :
+                                    (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
+                            //building_id: 1,
+                            start_time: currentLesson.lesson_start_time,
+                            end_time: currentLesson.lesson_end_time,
+                            id: currentLesson.id,
+                            style: { backgroundColor: '#69e9f5'}
+                        }
+                    )
                 }
             } catch (error) {
-                console.error("Ошибка при получении текущего урока:", error);
+                console.error("Ошибка при получении текущей пары:", error);
             }
         })();
 
@@ -111,13 +95,9 @@ function Schedule(props) {
                 </select>
             </div>
 
-            <div className='schedule-container__current-lesson-navigation-container'>
-                <button className='schedule-container__current-lesson-button'
-                    onClick={currentLesson.onClick}
-                    style={currentLesson.style}                >
-                    {currentLesson.text}
-                    
-                </button>
+            <div className='current-lesson-label'>Текущая пара</div>
+            <div className='current-lesson-container day-container'>
+                <Lesson lesson={currentLesson} style={style}></Lesson>
             </div>
 
             <div className='schedule-days-container'>
