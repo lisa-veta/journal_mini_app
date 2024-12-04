@@ -53,15 +53,15 @@ function Schedule(props) {
             try {
                 // Поменять номер группы в будущем
                 const currentLesson = await new ScheduleService().FindCurrentLesson(5);
-                if (currentLesson) {
+                if (!currentLesson) {
                     setCurrentLesson({
                         text: "Сейчас нет пары",
                         onClick: null,
-                        style: { cursor: 'none' }
+                        style: { cursor: 'default' }
                     });
                 } else {
                     setCurrentLesson({
-                        text: `Перейти к отметкам текущей пары: ${currentLesson.name}`,
+                        text: `Перейти к отметкам текущей пары: ${currentLesson.lesson}`,
                         onClick: () => {
                             navigate(`/attendance/${currentLesson.id}`,
                                 { state:
