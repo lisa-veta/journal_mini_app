@@ -58,10 +58,7 @@ function Schedule(props) {
                             name: currentLesson.lesson,
                             id_lesson: currentLesson.id_lesson,
                             room: currentLesson.classroom,
-                            teacher: `${currentLesson.lastname} ${currentLesson.name} ${currentLesson.patronymic}`,
-                            teacher_lastName: currentLesson.lastname,
-                            teacher_name: currentLesson.name,
-                            teacher_patronymic: currentLesson.patronymic,
+                            teachers: currentLesson.teachers.map(t => t),
                             type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
                                 (currentLesson.type_lesson === "Практика") ? 2 :
                                     (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,

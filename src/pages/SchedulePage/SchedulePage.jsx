@@ -39,10 +39,7 @@ const SchedulePage = () => {
                                 name: parsedData[i].lesson,
                                 id_lesson: parsedData[i].id_lesson,
                                 room: parsedData[i].classroom,
-                                teacher: `${parsedData[i].lastname} ${parsedData[i].name} ${parsedData[i].patronymic}`,
-                                teacher_lastName: parsedData[i].lastname,
-                                teacher_name: parsedData[i].name,
-                                teacher_patronymic: parsedData[i].patronymic,
+                                teachers: parsedData[i].teachers.map(t => t),
                                 type_id: (parsedData[i].type_lesson === "Лекция") ? 1 :
                                     (parsedData[i].type_lesson === "Практика") ? 2 :
                                         (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,
