@@ -4,7 +4,7 @@ import { timeTable } from '../../services/api/send.js';
 import { useEffect, useState } from 'react';
 import { IsLessonCurrent, GetWeekDayIndex } from '../../services/schedule/ScheduleService.js';
 
-const SchedulePage = () => {
+const SchedulePage = (props) => {
 
     const [weeks, setWeeks] = useState(
         [
@@ -12,12 +12,11 @@ const SchedulePage = () => {
             { is_even: true, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) }
         ]
     );
-    const groupId = 5;
 
     useEffect(() => {
         (async () => {
             try {
-                const data = await timeTable(groupId);
+                const data = await timeTable(props.groupId);
                 const parsedData = JSON.parse(JSON.stringify(data));
                 //console.log('ответ с сервера', JSON.stringify(data));
 
@@ -195,7 +194,7 @@ const SchedulePage = () => {
     return (
         <div className="schedule-content">
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
-            <Schedule weeks={weeks}></Schedule>
+            <Schedule weeks={weeks} groupId={props.groupId}></Schedule>
             {/*<Navigation></Navigation>*/}
         </div >
     );

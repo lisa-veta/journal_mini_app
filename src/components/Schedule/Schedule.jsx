@@ -49,7 +49,7 @@ function Schedule(props) {
         (async () => {
             try {
                 // Поменять номер группы в будущем
-                const currentLesson = await new ScheduleService().FindCurrentLesson(5);
+                const currentLesson = await new ScheduleService().FindCurrentLesson(props.groupId);
                 if (!currentLesson) {
                     setCurrentLesson(null);
                 } else {
