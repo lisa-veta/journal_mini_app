@@ -78,7 +78,8 @@ if (!tgUserId) {
 (async () => {
     try {
         const data = await authorizationTelegram(tgUserId);
-        const groupId = (JSON.parse(JSON.stringify(data))).groupId;
+        const groupId = 5;
+//            (JSON.parse(JSON.stringify(data))).groupId;
 
         if (groupId) {
             root.render(

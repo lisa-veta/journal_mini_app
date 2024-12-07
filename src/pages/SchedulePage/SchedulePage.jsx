@@ -3,6 +3,7 @@ import { Navigation, Schedule } from "components/index.jsx";
 import { timeTable } from '../../services/api/send.js';
 import { useEffect, useState } from 'react';
 import { IsLessonCurrent, GetWeekDayIndex } from '../../services/schedule/ScheduleService.js';
+import { CurrentTime } from '../../services/api/timeApi.js';
 
 const SchedulePage = (props) => {
 
@@ -38,7 +39,7 @@ const SchedulePage = (props) => {
                                 name: parsedData[i].lesson,
                                 id_lesson: parsedData[i].id_lesson,
                                 room: parsedData[i].classroom,
-                                teachers: parsedData[i].teachers.map(t => t),
+                                teachers: parsedData[i].teachers,
                                 type_id: (parsedData[i].type_lesson === "Лекция") ? 1 :
                                     (parsedData[i].type_lesson === "Практика") ? 2 :
                                         (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,
@@ -194,7 +195,7 @@ const SchedulePage = (props) => {
     return (
         <div className="schedule-content">
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
-            <Schedule weeks={weeks} groupId={props.groupId}></Schedule>
+            <Schedule weeks={weeks} groupId={props.groupId} date={props.date}></Schedule>
             {/*<Navigation></Navigation>*/}
         </div >
     );

@@ -1,17 +1,27 @@
 import { timeTable } from '../api/send.js';
 export class ScheduleService {
-    constructor(studentsList, attendance, schedulePair, lesson) {
+    constructor(studentsList, attendance, schedulePair, lesson, date) {
         this.studentsList = studentsList;
         this.attendance = attendance;
         this.schedulePair = schedulePair;
-        this.lesson = lesson
+        this.lesson = lesson;
         this.conditionMapping = {
             'Н': 1,
             'Б': 2,
             'УП': 3,
             '+': 0,
         };
+        this.date = date;
     }
+    // date такое: 
+    //  {
+    //      "year": 2024,
+    //      "month": 12,
+    //      "day": 07,
+    //      "hour": 23,
+    //      "minute": 53
+    //  }
+
 
     // Метод для получения расписания на основе посещаемости
     async getSchedule(groupId) {
@@ -33,7 +43,7 @@ export class ScheduleService {
             };
         });
 
-        const now = new Date();
+        const now = new Date(this.date.year, this.date.month, this.date.day, this.date.hour, this.date.minute);
 
         // Используем цикл с await для правильной обработки асинхронных вызовов
         for (const pair of this.schedulePair) {
@@ -182,7 +192,7 @@ export class ScheduleService {
     }
 
     IsNotCorrectWeek(now, targetLesson) {
-        const septemberStart = new Date(new Date().getFullYear(), 8, 1, 23);
+        const septemberStart = new Date(now.getFullYear(), 8, 1, 23);
         const diffInMs = now - septemberStart;
         const weekInMs = 1000 * 60 * 60 * 24 * 7;
         const diffInWeeks = Math.floor(diffInMs / weekInMs);
@@ -205,7 +215,7 @@ export class ScheduleService {
         const parsedData = JSON.parse(JSON.stringify(data));
 
         let targetLesson = parsedData.find(parsedData => parsedData.id === lessonId);
-        let now = new Date();
+        let now = new Date(this.date.year, this.date.month, this.date.day, this.date.hour, this.date.minute);
         //console.debug("fff", targetLesson)
 
         if (!targetLesson) {
@@ -237,7 +247,7 @@ export class ScheduleService {
         const data = await timeTable(groupId);
         const parsedData = JSON.parse(JSON.stringify(data));
 
-        const now = new Date();
+        const now = new Date(this.date.year, this.date.month, this.date.day, this.date.hour, this.date.minute);
         for (let i = 0; i < parsedData.length; i++) {
             if (this.IsCurrentLesson(now, parsedData[i])) {
                 return parsedData[i];

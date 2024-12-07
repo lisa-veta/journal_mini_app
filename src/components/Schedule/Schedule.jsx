@@ -49,7 +49,7 @@ function Schedule(props) {
         (async () => {
             try {
                 // Поменять номер группы в будущем
-                const currentLesson = await new ScheduleService().FindCurrentLesson(props.groupId);
+                const currentLesson = await new ScheduleService(null, null, null, null, props.date).FindCurrentLesson(props.groupId);
                 if (!currentLesson) {
                     setCurrentLesson(null);
                 } else {
@@ -58,7 +58,7 @@ function Schedule(props) {
                             name: currentLesson.lesson,
                             id_lesson: currentLesson.id_lesson,
                             room: currentLesson.classroom,
-                            teachers: currentLesson.teachers.map(t => t),
+                            teachers: currentLesson.teachers,
                             type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
                                 (currentLesson.type_lesson === "Практика") ? 2 :
                                     (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
