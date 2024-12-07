@@ -9,7 +9,8 @@
 //const btnStudents = document.getElementById('students');
 
 /* URL сервера */
-const url = 'http://185.104.249.229:3000';
+//const url = 'http://185.104.249.229:3000';
+const url = 'https://elejournal.ru';
 
 /* Простой запрос get. Возвращается текст dudes. */
 async function getDudes() {
@@ -84,10 +85,21 @@ export async function createAttendance(classId, timedate) {
     }
 ]
 .*/
-async function openAttendance(classId, timedate) {
+export async function openAttendance(classId, timedate) {
     const endPoint = '/open-attendance';
     const data = { classId: classId, timedate: timedate };
-    sendPost(endPoint, data);
+    try {
+        const response = await sendPost(endPoint, data);
+        console.debug(response);
+        if (response) {
+            return response[0].id;
+        } else {
+            throw new Error("ID посещаемости не найдено в ответе.");
+        }
+    } catch (error) {
+        console.error("Ошибка при создании посещаемости:", error);
+        throw error;
+    }
 }
 
 /* Сохранить посещаемость (общую).
@@ -110,7 +122,7 @@ async function openAttendance(classId, timedate) {
 export async function doneAttendance(attendanceId, students) {
     const endPoint = '/attendancedone';
     const data = { attendanceId: attendanceId, students: students };
-    sendPostWithoutResult(endPoint, data);
+    await sendPostWithoutResult(endPoint, data);
     displayResponse("good maybe");
 }
 

@@ -1,3 +1,9 @@
+.attendancePrev {
+    font-size: 2rem;
+    margin: 1rem;
+    color: #ff3a5d;
+}
+
 .attendanceTable-wrapper {
     overflow: auto;
     max-width: 100%;

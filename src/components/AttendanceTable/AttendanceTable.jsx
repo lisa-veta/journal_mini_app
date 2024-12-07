@@ -3,9 +3,9 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendStudents }) => {
+const AttendanceTable = ({ classLesson, students, schedule, currentLessonId, attendStudents, attendanceId }) => {
     const [cellStates, setCellStates] = useState({});
-
+    const [hasChanges, setHasChanges] = useState(false);
     // Инициализация состояния на основе attendStudents
     useEffect(() => {
         const initialStates = {};
@@ -13,7 +13,6 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
             const cellKey = `${entry.studentId}-${entry.scheduleId}`;
             initialStates[cellKey] = entry.condition;
         });
-
         setCellStates(initialStates);
     }, [attendStudents]);
 
@@ -23,7 +22,7 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
         if (lessonId !== currentLessonId) return;
 
         const cellKey = `${studentId}-${lessonId}`;
-
+        setHasChanges(true);
         // Цикличное переключение состояний ячейки (от 0 до 3)
         setCellStates((prev) => {
             const currentState = prev[cellKey] || 0;
@@ -36,7 +35,7 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
     const getCurrentLessonData = () => {
         return students.map((student) => {
             const cellKey = `${student.id}-${currentLessonId}`;
-            const condition = cellStates[cellKey] || 0; // Учитываем состояние
+            const condition = cellStates[cellKey] || 0;
             return {
                 studentId: student.id,
                 condition,
@@ -63,8 +62,14 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
 
         return lessonNumberA - lessonNumberB;
     });
+
+
+
     return (
         <div>
+            <div className="attendancePrev">
+                {hasChanges ? "Есть несохраненные изменения" : ""}
+            </div>
         <div className="attendanceTable-wrapper">
             <table className="attendanceTable">
                 <thead>
@@ -77,6 +82,8 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
                             style={{
                                 backgroundColor:
                                     item.id === currentLessonId ? "#f9f9f9" : "#e0e0e0",
+                                borderColor: item.id === currentLessonId ? "rgb(112,112,112)" : "",
+                                borderWidth: "2px",
                             }}
                         >
                             {item.date}, {item.lesson}
@@ -91,11 +98,12 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
                         {schedule.map((item) => {
                             // Ищем состояние для текущей ячейки
                             const cellState = cellStates[`${student.id}-${item.id}`];
-
                             return (
                                 <td
                                     key={item.id}
-                                    style={getCellStyle(cellState, item.id === currentLessonId)}
+                                    style={
+                                    getCellStyle(cellState, item.id === currentLessonId)
+                                }
                                     onClick={() => handleCellClick(student.id, item.id)}
                                 >
                                     {getCellText(cellState)} {/* Выводим текст состояния */}
@@ -108,8 +116,8 @@ const AttendanceTable = ({ lesson, students, schedule, currentLessonId, attendSt
             </table>
         </div>
             <div>
-                <SaveAttendanceButton lesson={lesson} schedule={schedule}
-                                      currentLessonData={getCurrentLessonData()}></SaveAttendanceButton>
+                <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData()}
+                                      attendanceId={attendanceId} hasChanges={hasChanges} setHasChanges={setHasChanges}></SaveAttendanceButton>
             </div>
         </div>
     );

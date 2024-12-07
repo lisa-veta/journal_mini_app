@@ -14,6 +14,7 @@ const AttendancePage = () => {
     const [studentsList, setStudentsList] = useState([]);
     const [schedule, setSchedule] = useState([]);
     const [currentLessonId, setCurrentLessonId] = useState(null);
+    const [attendanceId, setAttendanceId] = useState(null);
     const groupId = 5;
     console.debug("lesson",lesson)
     // Однократное заполнение студентиков
@@ -52,8 +53,9 @@ const AttendancePage = () => {
                 const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
+                    const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id_lesson);
                     setSchedule(newSchedule);
-
+                    setAttendanceId(newAttendanceId);
                     console.debug("newSchedule", newSchedule);
 
                     if (Array.isArray(newSchedule) && newSchedule.length > 0) {
@@ -68,7 +70,7 @@ const AttendancePage = () => {
             }
         };
 
-        fetchSchedule();  // Вызываем асинхронную функцию
+        fetchSchedule();
     }, [studentsList, attendance]);
 
     const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
@@ -77,18 +79,18 @@ const AttendancePage = () => {
 
     //console.log("attendStudents", attendStudents);
     console.log("attendStudents", attendance);
-    //const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
-    //const currentLessonId = currentLesson ? currentLesson.id : null;
     console.debug("currentLessonId!!!!!!!!!!!!!!!!!!", currentLessonId);
     return (
         <Layout>
             <div className="attendancePage">
                 <p className="attendancePage__subject-name">{lesson.name}</p>
                 <div className="attendancePage__teacher">
-                    <CustomInfo caption="Преподаватель" content={lesson.teacher}/>
+                    {lesson.teachers.map((teacher) => (
+                        <CustomInfo caption="Преподаватель" content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
+                    ))}
                 </div>
                 <div className="attendancePage__table">
-                    <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents}/>
+                    <AttendanceTable classLesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} attendanceId={attendanceId}/>
                 </div>
             </div>
         </Layout>

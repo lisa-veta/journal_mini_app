@@ -1,4 +1,4 @@
-import { timeTable } from '../api/send.js';
+import {createAttendance, doneAttendance, openAttendance, timeTable} from '../api/send.js';
 export class ScheduleService {
     constructor(studentsList, attendance, schedulePair, lesson) {
         this.studentsList = studentsList;
@@ -50,10 +50,22 @@ export class ScheduleService {
                 ...pair.end_time.split(":").map(Number)
             );
             console.debug("ВРЕМЯ", lessonStart, now, lessonEnd);
+
+            const currentDate = `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}`;
+            // Проверка текущей даты и времени в schedule
+            for (const entry of schedule) {
+                if (entry.date === currentDate) {
+                    if (now >= lessonStart && now <= lessonEnd) {
+                        entry.isLessonCurrent = true;
+                        return schedule;
+                    }
+                }
+            }
+
             if (now >= lessonStart && now <= lessonEnd) {
                 try {
-                    const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
-                    //const isCurrentLesson = true;
+                    //const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
+                    const isCurrentLesson = true;
                     console.debug("Is current lesson:", isCurrentLesson);
                     //if (isCurrentLesson && (this.lesson.id === 7 || this.lesson.id === 8)) {
                     if (isCurrentLesson) {
@@ -245,6 +257,23 @@ export class ScheduleService {
         }
 
         return null;
+    }
+
+    async getAttendanceId(schedule, classLessonId){
+        const currentLesson = schedule.find((schedule) => schedule.isLessonCurrent === true);
+        if(currentLesson) {
+            const [day, month] = currentLesson.date.split('.');  // Разбиваем на день и месяц
+            const [hour, minute] = currentLesson.time.split(':'); // Разбиваем на часы и минуты
+
+            const currentYear = new Date().getFullYear();  // Получаем текущий год
+            const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;  // Формируем строку времени
+            console.log(timedate)
+            try {
+                return await openAttendance(classLessonId, timedate);
+            } catch (error) {
+                return await createAttendance(classLessonId, timedate);
+            }
+        }
     }
 
 }

@@ -20,3 +20,20 @@
 .buttonSave_disabled {
     background-color: var(--colorBattleshipGray);
 }
+
+.buttonSave__popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #009c0e;
+    background-color: rgba(255, 255, 255, 0.85);
+    font-size: 24px;
+    text-align: center;
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+}

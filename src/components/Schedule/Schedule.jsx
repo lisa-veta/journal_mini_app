@@ -5,7 +5,7 @@ import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
 
 function Schedule(props) {
     const navigate = useNavigate();
-    const style = { backgroundColor: 'red' };
+    const style = { backgroundColor: 'var(--colorRed)' };
 
     const [week, setWeek] = useState(() => {
         // Найти неделю, где is_even=true

@@ -78,8 +78,8 @@ if (!tgUserId) {
 (async () => {
     try {
         const data = await authorizationTelegram(tgUserId);
-        const groupId = (JSON.parse(JSON.stringify(data))).groupId;
-
+        const groupId = (JSON.parse(JSON.stringify(data))).id_group;
+        //const groupId = 5;
         if (groupId) {
             root.render(
                 <React.StrictMode>
