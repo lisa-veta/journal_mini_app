@@ -1,13 +1,19 @@
 ﻿import { useState, useEffect } from 'react';
-import { Day } from "components/index.jsx";
+import { useNavigate } from 'react-router-dom';
+import { Day, Lesson } from "components/index.jsx";
+import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
 
 function Schedule(props) {
+    const navigate = useNavigate();
+    const style = { backgroundColor: 'red' };
 
     const [week, setWeek] = useState(() => {
         // Найти неделю, где is_even=true
         const evenWeek = props.weeks.find(w => w.is_even === true);
         return evenWeek || props.weeks[0];
     });
+
+    const [currentLesson, setCurrentLesson] = useState(null);
 
     // Для обновления локального состояния при обновлении недель во внешнем компоненте
     useEffect(() => {
@@ -32,14 +38,45 @@ function Schedule(props) {
     const addTranstparentClass = () => {
 
         document.querySelector('.schedule-days-container').classList.add('semi-transparent');
-        // document.querySelector('.nav-container').classList.add('semi-transparent');
     };
 
     const removeTransparentClass = () => {
 
         document.querySelector('.schedule-days-container').classList.remove('semi-transparent');
-        //document.querySelector('.nav-container').classList.remove('semi-transparent');
     };
+
+    useEffect(() => {
+        (async () => {
+            try {
+                // Поменять номер группы в будущем
+                const currentLesson = await new ScheduleService().FindCurrentLesson(props.groupId);
+                if (!currentLesson) {
+                    setCurrentLesson(null);
+                } else {
+                    setCurrentLesson(
+                        {
+                            name: currentLesson.lesson,
+                            id_lesson: currentLesson.id_lesson,
+                            room: currentLesson.classroom,
+                            teachers: currentLesson.teachers.map(t => t),
+                            type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
+                                (currentLesson.type_lesson === "Практика") ? 2 :
+                                    (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
+                            //building_id: 1,
+                            start_time: currentLesson.lesson_start_time,
+                            end_time: currentLesson.lesson_end_time,
+                            id: currentLesson.id,
+                            style: { backgroundColor: '#69e9f5'}
+                        }
+                    )
+                }
+            } catch (error) {
+                console.error("Ошибка при получении текущей пары:", error);
+            }
+        })();
+
+    }, [props.weeks, week]);
+
     const selectedWeekIndex = props.weeks.indexOf(week) + 1;
     return (
         <div className='schedule-container'>
@@ -53,6 +90,11 @@ function Schedule(props) {
                     <option className='select-list__item' value='1'>1 неделя</option>
                     <option className='select-list__item' value='2'>2 неделя</option>
                 </select>
+            </div>
+
+            <div className='current-lesson-label'>Текущая пара</div>
+            <div className='current-lesson-container day-container'>
+                <Lesson lesson={currentLesson} style={style}></Lesson>
             </div>
 
             <div className='schedule-days-container'>

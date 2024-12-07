@@ -184,6 +184,20 @@ export default async function students(groupId) {
     return await sendPost(endPoint, data);
 }
 
+/*
+принимает:
+telegramId - ид пользователя который нужно запросить у самого телеграмма
+возвращает:
+200 - всё ок, в теле ответа ид группы
+404 - юзер не авторизован
+*/
+
+export async function authorizationTelegram(telegramId) {
+    const endPoint = '/authorization-telegram';
+    const data = { telegramId: telegramId };
+    return await sendPost(endPoint, data);
+}
+
 // async function sendPost(endPoint, data) {
 //     try {
 //         const response = await fetch(`/api${endPoint}`, {

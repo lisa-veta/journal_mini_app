@@ -2,8 +2,9 @@ import "./SchedulePage.css"
 import { Navigation, Schedule } from "components/index.jsx";
 import { timeTable } from '../../services/api/send.js';
 import { useEffect, useState } from 'react';
+import { IsLessonCurrent, GetWeekDayIndex } from '../../services/schedule/ScheduleService.js';
 
-const SchedulePage = () => {
+const SchedulePage = (props) => {
 
     const [weeks, setWeeks] = useState(
         [
@@ -11,31 +12,13 @@ const SchedulePage = () => {
             { is_even: true, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) }
         ]
     );
-    const groupId = 5;
-
-    const GetWeekDayIndex = (day_name) => {
-        switch (day_name) {
-            case "Понедельник":
-                return 0;
-            case "Вторник":
-                return 1;
-            case "Среда":
-                return 2;
-            case "Четверг":
-                return 3;
-            case "Пятница":
-                return 4;
-            default:
-                return 5;
-        }
-    }
 
     useEffect(() => {
         (async () => {
             try {
-                const data = await timeTable(groupId);
+                const data = await timeTable(props.groupId);
                 const parsedData = JSON.parse(JSON.stringify(data));
-                console.log('ответ с сервера', JSON.stringify(data));
+                //console.log('ответ с сервера', JSON.stringify(data));
 
                 const tempSchedule = {
                     weeks: [
@@ -55,10 +38,7 @@ const SchedulePage = () => {
                                 name: parsedData[i].lesson,
                                 id_lesson: parsedData[i].id_lesson,
                                 room: parsedData[i].classroom,
-                                teacher: `${parsedData[i].lastname} ${parsedData[i].name} ${parsedData[i].patronymic}`,
-                                teacher_lastName: parsedData[i].lastname,
-                                teacher_name: parsedData[i].name,
-                                teacher_patronymic: parsedData[i].patronymic,
+                                teachers: parsedData[i].teachers.map(t => t),
                                 type_id: (parsedData[i].type_lesson === "Лекция") ? 1 :
                                     (parsedData[i].type_lesson === "Практика") ? 2 :
                                         (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,
@@ -71,6 +51,7 @@ const SchedulePage = () => {
                 }
                 
                 setWeeks(tempSchedule.weeks);
+                //IsLessonCurrent(7);
             } catch (error) {
                 console.error(error);
             }
@@ -213,7 +194,7 @@ const SchedulePage = () => {
     return (
         <div className="schedule-content">
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
-            <Schedule weeks={weeks}></Schedule>
+            <Schedule weeks={weeks} groupId={props.groupId}></Schedule>
             {/*<Navigation></Navigation>*/}
         </div >
     );

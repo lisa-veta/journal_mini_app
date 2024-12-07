@@ -206,13 +206,17 @@ export class ScheduleService {
 
         let targetLesson = parsedData.find(parsedData => parsedData.id === lessonId);
         let now = new Date();
-        console.debug("fff",targetLesson)
+        //console.debug("fff", targetLesson)
 
         if (!targetLesson) {
             console.error(`Lesson with ID ${lessonId} not found`);
             return false;
         }
 
+        return this.IsCurrentLesson(now, targetLesson);
+    }
+
+    IsCurrentLesson(now, targetLesson) {
         if (this.IsNotCorrectWeek(now, targetLesson)) {
             return false;
         }
@@ -226,6 +230,21 @@ export class ScheduleService {
         }
 
         return true;
+    }
+
+
+    async FindCurrentLesson(groupId) {
+        const data = await timeTable(groupId);
+        const parsedData = JSON.parse(JSON.stringify(data));
+
+        const now = new Date();
+        for (let i = 0; i < parsedData.length; i++) {
+            if (this.IsCurrentLesson(now, parsedData[i])) {
+                return parsedData[i];
+            }
+        }
+
+        return null;
     }
 
 }
