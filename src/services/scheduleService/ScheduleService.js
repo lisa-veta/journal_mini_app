@@ -288,9 +288,9 @@ export class ScheduleService {
             const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;  // Формируем строку времени
             console.log(timedate)
             try {
-                //return await openAttendance(classLessonId, timedate);
+                return await openAttendance(classLessonId, timedate);
             } catch (error) {
-                //return await createAttendance(classLessonId, timedate);
+                return await createAttendance(classLessonId, timedate);
             }
         }
     }

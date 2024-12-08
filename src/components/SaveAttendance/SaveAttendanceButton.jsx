@@ -21,7 +21,7 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
                 id: student.studentId,
             }));
             console.log(updatedStudents)
-            //await doneAttendance(attendanceId, updatedStudents);
+            await doneAttendance(attendanceId, updatedStudents);
             setShowPopup(true);
             setHasChanges(false);
             console.log("Посещаемость сохранена успешно!");
