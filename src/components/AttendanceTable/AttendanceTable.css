@@ -24,9 +24,9 @@
 
 @media (max-width: 768px) {
     .attendanceTable__vertical-header {
-        writing-mode: vertical-rl;
+        writing-mode: vertical-lr;
+        transform: none;
         text-align: center;
-        padding: 0 4px;
         white-space: nowrap;
     }
 }
