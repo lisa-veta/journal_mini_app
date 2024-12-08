@@ -22,12 +22,12 @@
     white-space: nowrap;
 }
 
-/*@media (max-width: 768px) {*/
-/*    .attendanceTable__vertical-header {*/
-/*        writing-mode: vertical-rl;*/
-/*        transform: rotate(180deg);*/
-/*    }*/
-/*}*/
+@media (max-width: 768px) {
+    .attendanceTable__vertical-header {
+        writing-mode: vertical-lr;
+        transform: none;
+    }
+}
 
 .attendanceTable th,
 .attendanceTable td {
