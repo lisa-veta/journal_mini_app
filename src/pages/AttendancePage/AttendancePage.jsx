@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import { schedulePair } from "./config"
-const AttendancePage = () => {
+const AttendancePage = (props) => {
     const location = useLocation();
     const lesson = location.state?.lesson;
     const [attendance, setAttendance] = useState([]);
@@ -15,8 +15,9 @@ const AttendancePage = () => {
     const [schedule, setSchedule] = useState([]);
     const [currentLessonId, setCurrentLessonId] = useState(null);
     const [attendanceId, setAttendanceId] = useState(null);
-    const groupId = 5;
-    console.debug("lesson",lesson)
+    const groupId = props.groupId;
+    const date = props.date;
+    console.debug("date date",date)
     // Однократное заполнение студентиков
     useEffect(() => {
         (async () => {
@@ -50,7 +51,7 @@ const AttendancePage = () => {
     useEffect(() => {
         const fetchSchedule = async () => {
             if (studentsList.length > 0 && attendance.length > 0) {
-                const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
+                const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
                     const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id_lesson);

@@ -22,7 +22,6 @@ function Day(props) {
         default:
             dayName = 'Суббота';
     }
-    console.debug("day", props.day.subjects)
     return (
         <div className='day-container day-container_position'>
             <span className='day-container__day-name'>{dayName}</span>

@@ -1,10 +1,8 @@
 ﻿import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Day, Lesson } from "components/index.jsx";
 import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
 
 function Schedule(props) {
-    const navigate = useNavigate();
     const style = { backgroundColor: 'var(--colorRed)' };
 
     const [week, setWeek] = useState(() => {
