@@ -14,22 +14,20 @@
 .attendanceTable {
     font-size: 1.7rem;
 }
-/*.attendanceTable__vertical-header {*/
-/*    writing-mode: vertical-rl;*/
-/*    transform: rotate(90deg);*/
-/*    text-align: center;*/
-/*    padding: 0 4px;*/
-/*    white-space: nowrap;*/
-/*}*/
-
-@media (max-width: 768px) {
-    .attendanceTable__vertical-header {
-        writing-mode: vertical-lr;
-        transform: none;
-        text-align: center;
-        white-space: nowrap;
-    }
+.attendanceTable__vertical-header {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+    padding: 0 4px;
+    white-space: nowrap;
 }
+
+/*@media (max-width: 768px) {*/
+/*    .attendanceTable__vertical-header {*/
+/*        writing-mode: vertical-rl;*/
+/*        transform: rotate(180deg);*/
+/*    }*/
+/*}*/
 
 .attendanceTable th,
 .attendanceTable td {
