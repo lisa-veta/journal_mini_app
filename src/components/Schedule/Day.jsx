@@ -28,7 +28,9 @@ function Day(props) {
             <span className='day-container__day-name'>{dayName}</span>
 
             {props.day.subjects.map(lesson => (
-                <Lesson lesson={lesson} />
+                <div key={lesson.id} className='lesson-wrapper'>
+                    <Lesson lesson={lesson}/>
+                </div>
             ))}
 
         </div>

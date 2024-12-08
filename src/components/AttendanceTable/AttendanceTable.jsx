@@ -3,7 +3,7 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ classLesson, students, schedule, currentLessonId, attendStudents, attendanceId }) => {
+const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, attendanceId }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     // Инициализация состояния на основе attendStudents
@@ -45,76 +45,58 @@ const AttendanceTable = ({ classLesson, students, schedule, currentLessonId, att
     console.debug("currentLessonId", currentLessonId);
     console.debug("attendStudents", attendStudents);
     console.debug("She", schedule)
-
-    schedule.sort((a, b) => {
-        const [dayA, monthA] = a.date.split('.').map(Number);
-        const [dayB, monthB] = b.date.split('.').map(Number);
-
-        const dateA = new Date(2024, monthA - 1, dayA);
-        const dateB = new Date(2024, monthB - 1, dayB);
-
-        if (dateA - dateB !== 0) {
-            return dateA - dateB;
-        }
-
-        const lessonNumberA = parseInt(a.lesson.match(/\d+/));
-        const lessonNumberB = parseInt(b.lesson.match(/\d+/));
-
-        return lessonNumberA - lessonNumberB;
-    });
-
-
+    console.debug("She", students)
 
     return (
         <div>
             <div className="attendancePrev">
                 {hasChanges ? "Есть несохраненные изменения" : ""}
             </div>
-        <div className="attendanceTable-wrapper">
-            <table className="attendanceTable">
-                <thead>
-                <tr>
-                    <th>Студент</th>
-                    {schedule.map((item) => (
-                        <th
-                            key={item.id}
-                            className="attendanceTable__vertical-header"
-                            style={{
-                                backgroundColor:
-                                    item.id === currentLessonId ? "#f9f9f9" : "#e0e0e0",
-                                borderColor: item.id === currentLessonId ? "rgb(112,112,112)" : "",
-                                borderWidth: "2px",
-                            }}
-                        >
-                            {item.date}, {item.lesson}
-                        </th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {students.map((student) => (
-                    <tr key={student.id}>
-                        <td>{student.lastname} {student.name[0]}.</td>
-                        {schedule.map((item) => {
-                            // Ищем состояние для текущей ячейки
-                            const cellState = cellStates[`${student.id}-${item.id}`];
-                            return (
-                                <td
-                                    key={item.id}
-                                    style={
-                                    getCellStyle(cellState, item.id === currentLessonId)
-                                }
-                                    onClick={() => handleCellClick(student.id, item.id)}
-                                >
-                                    {getCellText(cellState)} {/* Выводим текст состояния */}
-                                </td>
-                            );
-                        })}
+            <div className="attendanceTable-wrapper">
+                <table className="attendanceTable">
+                    <thead>
+                    <tr>
+                        <th>Студент</th>
+                        {schedule.map((item) => (
+                            <th
+                                key={item.id}
+                                className="attendanceTable__vertical-header"
+                                style={{
+                                    backgroundColor:
+                                        item.id === currentLessonId ? "#f9f9f9" : "#e0e0e0",
+                                    borderColor: item.id === currentLessonId ? "rgb(112,112,112)" : "",
+                                    borderWidth: "2px",
+                                }}
+                            >
+                                {item.date}, {item.lesson}
+                            </th>
+                        ))}
                     </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                    {students.map((student) => (
+                        <tr key={student.id}>
+                            <td>{student.lastname} {student.name[0]}.</td>
+                            {schedule.map((item) => {
+                                // Ищем состояние для текущей ячейки
+                                const cellState = cellStates[`${student.id}-${item.id}`];
+                                return (
+                                    <td
+                                        key={item.id}
+                                        style={
+                                        getCellStyle(cellState, item.id === currentLessonId)
+                                    }
+                                        onClick={() => handleCellClick(student.id, item.id)}
+                                    >
+                                        {getCellText(cellState)} {/* Выводим текст состояния */}
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
             <div>
                 <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData()}
                                       attendanceId={attendanceId} hasChanges={hasChanges} setHasChanges={setHasChanges}></SaveAttendanceButton>

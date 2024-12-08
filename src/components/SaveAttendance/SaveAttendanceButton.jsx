@@ -5,6 +5,7 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
     //console.debug("КНОППКАА", lesson, schedule, currentLessonData);
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
+    const popupClass = showPopup ? 'buttonSave__popup-visible' : 'buttonSave__popup-hidden';
     useEffect(() => {
         if (showPopup) {
             const timer = setTimeout(() => {
@@ -31,12 +32,12 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
     if (currentLesson) {
 
         return (
-            <div className="buttonSave-container">
+            <div className="buttonSave-container buttonSave_position">
                 <div  className={`buttonSave ${!hasChanges ? 'buttonSave_disabled' : ''}`}>
-                    <button onClick={handleSave} disabled={!hasChanges}>Сохранить</button>
+                    <button className={`buttonSave__btn`} onClick={handleSave} disabled={!hasChanges}>Сохранить</button>
                 </div>
                 {showPopup && (
-                    <div className="buttonSave__popup">
+                    <div className={`buttonSave__popup ${popupClass}`}>
                         Изменения сохранены!
                     </div>
                 )}
@@ -44,7 +45,7 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
         );
     } else {
         return (
-            <div className="buttonSave-container">
+            <div className="buttonSave-container buttonSave_position">
                 <div className="buttonSave buttonSave_disabled">
                     <button disabled>Нет текущей пары</button>
                 </div>

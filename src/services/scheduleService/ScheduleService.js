@@ -1,4 +1,4 @@
-import {createAttendance, doneAttendance, openAttendance, timeTable} from '../api/send.js';
+import {createAttendance, openAttendance, timeTable} from '../api/send.js';
 export class ScheduleService {
     constructor(studentsList, attendance, schedulePair, lesson) {
         this.studentsList = studentsList;
@@ -94,6 +94,25 @@ export class ScheduleService {
         return schedule;
     }
 
+    getSortSchedule(schedule) {
+        schedule.sort((a, b) => {
+            const [dayA, monthA] = a.date.split('.').map(Number);
+            const [dayB, monthB] = b.date.split('.').map(Number);
+
+            const dateA = new Date(2024, monthA - 1, dayA);
+            const dateB = new Date(2024, monthB - 1, dayB);
+
+            if (dateA - dateB !== 0) {
+                return dateA - dateB;
+            }
+
+            const lessonNumberA = parseInt(a.lesson.match(/\d+/));
+            const lessonNumberB = parseInt(b.lesson.match(/\d+/));
+
+            return lessonNumberA - lessonNumberB;
+        });
+        return schedule;
+    }
 
     // Метод для поиска занятия по времени
     getPairNumber(time) {
@@ -269,9 +288,9 @@ export class ScheduleService {
             const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;  // Формируем строку времени
             console.log(timedate)
             try {
-                return await openAttendance(classLessonId, timedate);
+                //return await openAttendance(classLessonId, timedate);
             } catch (error) {
-                return await createAttendance(classLessonId, timedate);
+                //return await createAttendance(classLessonId, timedate);
             }
         }
     }

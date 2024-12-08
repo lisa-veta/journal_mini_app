@@ -54,7 +54,8 @@ const AttendancePage = () => {
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
                     const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id_lesson);
-                    setSchedule(newSchedule);
+                    const ss = scheduleService.getSortSchedule(newSchedule)
+                    setSchedule(ss);
                     setAttendanceId(newAttendanceId);
                     console.debug("newSchedule", newSchedule);
 
