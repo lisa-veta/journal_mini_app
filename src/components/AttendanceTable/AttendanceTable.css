@@ -16,7 +16,7 @@
 }
 .attendanceTable__vertical-header {
     writing-mode: vertical-rl;
-    transform: rotate(-90deg);
+    transform: rotate(90deg);
     text-align: center;
     padding: 0 4px;
     white-space: nowrap;
