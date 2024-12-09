@@ -3,7 +3,7 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, attendanceId }) => {
+const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, attendanceId, lesson }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     // Инициализация состояния на основе attendStudents
@@ -99,7 +99,7 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
             </div>
             <div>
                 <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData()}
-                                      attendanceId={attendanceId} hasChanges={hasChanges} setHasChanges={setHasChanges}></SaveAttendanceButton>
+                                      attendanceId={attendanceId} hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson}></SaveAttendanceButton>
             </div>
         </div>
     );

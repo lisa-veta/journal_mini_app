@@ -70,8 +70,8 @@ export class ScheduleService {
 
             if (now >= lessonStart && now <= lessonEnd) {
                 try {
-                    const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
-                    //const isCurrentLesson = true;
+                    //const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
+                    const isCurrentLesson = true;
                     console.debug("Is current lesson:", isCurrentLesson);
                     //if (isCurrentLesson && (this.lesson.id === 7 || this.lesson.id === 8)) {
                     if (isCurrentLesson) {
@@ -297,22 +297,17 @@ export class ScheduleService {
     async getAttendanceId(schedule, classLessonId){
         const currentLesson = schedule.find((schedule) => schedule.isLessonCurrent === true);
         if(currentLesson) {
-            const [day, month] = currentLesson.date.split('.');  // Разбиваем на день и месяц
-            const [hour, minute] = currentLesson.time.split(':'); // Разбиваем на часы и минуты
+            const [day, month] = currentLesson.date.split('.');
+            const [hour, minute] = currentLesson.time.split(':');
 
-            const currentYear = new Date().getFullYear();  // Получаем текущий год
-            const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;  // Формируем строку времени
+            const currentYear = new Date().getFullYear();
+            const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;
             console.log(timedate)
             try {
-                console.log("ЗАШЛА В OPENATTEN getIdAttendanceIfExist", classLessonId)
                 return await getIdAttendanceIfExist(classLessonId, timedate);
-                //return 1;
             } catch (error) {
-                console.log("ЗАШЛА В OPENATTEN createAttendance", classLessonId)
                 return await createAttendance(classLessonId, timedate);
-                //return 1;
             }
         }
     }
-
 }

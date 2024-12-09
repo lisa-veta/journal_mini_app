@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { doneAttendance } from "../../services/api/send.js";
+import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
-const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasChanges, setHasChanges}) => {
+const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasChanges, setHasChanges, lesson}) => {
     //console.debug("КНОППКАА", lesson, schedule, currentLessonData);
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
@@ -21,7 +22,10 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
                 id: student.studentId,
             }));
             console.log(updatedStudents)
-            await doneAttendance(attendanceId, updatedStudents);
+            const scheduleService = new ScheduleService();
+            const id = await scheduleService.getAttendanceId(schedule, lesson.id)
+            //await doneAttendance(attendanceId, updatedStudents);
+            await doneAttendance(id, updatedStudents);
             setShowPopup(true);
             setHasChanges(false);
             console.log("Посещаемость сохранена успешно!");

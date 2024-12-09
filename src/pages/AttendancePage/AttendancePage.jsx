@@ -51,14 +51,14 @@ const AttendancePage = (props) => {
     }, [lesson]);
     useEffect(() => {
         const fetchSchedule = async () => {
+            const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
             if (studentsList.length > 0 && attendance.length > 0) {
-                const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
-                    const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id);
+                    //const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id);
                     const ss = scheduleService.getSortSchedule(newSchedule)
                     setSchedule(ss);
-                    setAttendanceId(newAttendanceId);
+                    //setAttendanceId(newAttendanceId);
                     console.debug("newSchedule", newSchedule);
 
                     if (Array.isArray(newSchedule) && newSchedule.length > 0) {
@@ -71,18 +71,18 @@ const AttendancePage = (props) => {
                     console.error("Ошибка при получении расписания:", error);
                 }
             }
+            if (attendance.length <= 0) {
+
+            }
         };
 
         fetchSchedule();
     }, [studentsList, attendance]);
 
     const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
-    //const schedule = scheduleService.getSchedule(groupId);
+
     const attendStudents = scheduleService.getAttendStudents(schedule);
 
-    //console.log("attendStudents", attendStudents);
-    //console.log("attendStudents", attendance);
-    //console.debug("currentLessonId!!!!!!!!!!!!!!!!!!", currentLessonId);
     return (
         <Layout>
             <div className="attendancePage">
@@ -93,7 +93,7 @@ const AttendancePage = (props) => {
                     ))}
                 </div>
                 <div className="attendancePage__table">
-                    <AttendanceTable classLesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} attendanceId={attendanceId}/>
+                    <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} attendanceId={attendanceId}/>
                 </div>
             </div>
         </Layout>
