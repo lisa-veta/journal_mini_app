@@ -70,8 +70,8 @@ export class ScheduleService {
 
             if (now >= lessonStart && now <= lessonEnd) {
                 try {
-                    //const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
-                    const isCurrentLesson = true;
+                    const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
+                    //const isCurrentLesson = true;
                     console.debug("Is current lesson:", isCurrentLesson);
                     //if (isCurrentLesson && (this.lesson.id === 7 || this.lesson.id === 8)) {
                     if (isCurrentLesson) {
