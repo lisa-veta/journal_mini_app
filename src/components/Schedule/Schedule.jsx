@@ -6,10 +6,21 @@ function Schedule(props) {
     const style = { backgroundColor: 'var(--colorRed)' };
 
     const [week, setWeek] = useState(() => {
-        // Найти неделю, где is_even=true
         const evenWeek = props.weeks.find(w => w.is_even === true);
         return evenWeek || props.weeks[0];
     });
+
+    useEffect(() => {
+        (() => {
+            const currentWeekNumber = new ScheduleService().GetCurrentWeekNumber(
+                    new Date(props.date.year,
+                        props.date.month - 1,
+                        props.date.day,
+                        props.date.hour,
+                        props.date.minute));
+            setWeek(props.weeks[currentWeekNumber - 1]);
+        })()
+    }, [props.date, props.weeks]);
 
     const [currentLesson, setCurrentLesson] = useState(null);
 
@@ -74,7 +85,7 @@ function Schedule(props) {
             }
         })();
 
-    }, [props.weeks, week]);
+    }, [props.weeks, week, props.date]);
 
     const selectedWeekIndex = props.weeks.indexOf(week) + 1;
     return (

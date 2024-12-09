@@ -67,8 +67,10 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 
 const urlParams = new URLSearchParams(window.location.search);
-const tgUserId = urlParams.get('userId');
+//const tgUserId = urlParams.get('userId');
+const tgUserId = 1789426376;
 console.log('ид из телеги', tgUserId);
+
 if (!tgUserId) {
     root.render(
         <div>Нет доступа к журналу.</div>
@@ -78,14 +80,13 @@ if (!tgUserId) {
 (async () => {
     try {
         const data = await authorizationTelegram(tgUserId);
-        const groupId = 5;
-//            (JSON.parse(JSON.stringify(data))).groupId;
+        const groupId = (JSON.parse(JSON.stringify(data))).id_group;
 
         if (groupId) {
             root.render(
-                <React.StrictMode>
+                //<React.StrictMode>
                     <App groupId={groupId} />
-                </React.StrictMode>
+                //</React.StrictMode>
             );
         } else {
             root.render(
