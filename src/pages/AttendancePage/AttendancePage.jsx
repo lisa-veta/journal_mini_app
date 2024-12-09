@@ -8,6 +8,8 @@ import { useLocation } from 'react-router-dom';
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import { schedulePair } from "./config"
 const AttendancePage = (props) => {
+    const groupId = props.groupId;
+    const date = props.date;
     const location = useLocation();
     const lesson = location.state?.lesson;
     const [attendance, setAttendance] = useState([]);
@@ -15,9 +17,8 @@ const AttendancePage = (props) => {
     const [schedule, setSchedule] = useState([]);
     const [currentLessonId, setCurrentLessonId] = useState(null);
     const [attendanceId, setAttendanceId] = useState(null);
-    const groupId = props.groupId;
-    const date = props.date;
-    console.debug("date date",date)
+
+    //console.debug("date date",date)
     // Однократное заполнение студентиков
     useEffect(() => {
         (async () => {
@@ -54,7 +55,7 @@ const AttendancePage = (props) => {
                 const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
-                    const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id_lesson);
+                    const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id);
                     const ss = scheduleService.getSortSchedule(newSchedule)
                     setSchedule(ss);
                     setAttendanceId(newAttendanceId);
@@ -75,13 +76,13 @@ const AttendancePage = (props) => {
         fetchSchedule();
     }, [studentsList, attendance]);
 
-    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
+    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
     //const schedule = scheduleService.getSchedule(groupId);
     const attendStudents = scheduleService.getAttendStudents(schedule);
 
     //console.log("attendStudents", attendStudents);
-    console.log("attendStudents", attendance);
-    console.debug("currentLessonId!!!!!!!!!!!!!!!!!!", currentLessonId);
+    //console.log("attendStudents", attendance);
+    //console.debug("currentLessonId!!!!!!!!!!!!!!!!!!", currentLessonId);
     return (
         <Layout>
             <div className="attendancePage">

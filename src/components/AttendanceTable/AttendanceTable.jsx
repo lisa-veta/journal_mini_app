@@ -42,10 +42,10 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
             };
         });
     };
-    console.debug("currentLessonId", currentLessonId);
-    console.debug("attendStudents", attendStudents);
-    console.debug("She", schedule)
-    console.debug("She", students)
+    //console.debug("currentLessonId", currentLessonId);
+    //console.debug("attendStudents", attendStudents);
+    //console.debug("She", schedule)
+    //console.debug("She", students)
 
     return (
         <div>

@@ -102,6 +102,25 @@ export async function openAttendance(classId, timedate) {
     }
 }
 
+export async function getIdAttendanceIfExist(classId, timedate) {
+    const endPoint = '/get-id-attendance-if-exist';
+    const data = { classId: classId, timedate: timedate };
+    try {
+        const response = await sendPost(endPoint, data);
+        console.debug("getIdAttendanceIfExist sendPost", response);
+        // const responce =  [ 1, 2, 4 ];
+        //return responce[0];
+        if (response) {
+            return response[response.length -1].id;
+        } else {
+            throw new Error("ID посещаемости не найдено в ответе.");
+        }
+    } catch (error) {
+        console.error("Ошибка при создании посещаемости:", error);
+        throw error;
+    }
+}
+
 /* Сохранить посещаемость (общую).
     attendanceId - ид посещаемости,
     students - список студентов
