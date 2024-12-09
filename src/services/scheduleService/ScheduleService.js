@@ -43,7 +43,7 @@ export class ScheduleService {
             };
         });
 
-        const now = new Date(this.date.year, this.date.month, this.date.day, this.date.hour, this.date.minute);
+        const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
 
         // Используем цикл с await для правильной обработки асинхронных вызовов
         for (const pair of this.schedulePair) {
@@ -215,7 +215,7 @@ export class ScheduleService {
         const parsedData = JSON.parse(JSON.stringify(data));
 
         let targetLesson = parsedData.find(parsedData => parsedData.id === lessonId);
-        let now = new Date(this.date.year, this.date.month, this.date.day, this.date.hour, this.date.minute);
+        let now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
         //console.debug("fff", targetLesson)
 
         if (!targetLesson) {
@@ -247,7 +247,7 @@ export class ScheduleService {
         const data = await timeTable(groupId);
         const parsedData = JSON.parse(JSON.stringify(data));
 
-        const now = new Date(this.date.year, this.date.month, this.date.day, this.date.hour, this.date.minute);
+        const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
         for (let i = 0; i < parsedData.length; i++) {
             if (this.IsCurrentLesson(now, parsedData[i])) {
                 return parsedData[i];
