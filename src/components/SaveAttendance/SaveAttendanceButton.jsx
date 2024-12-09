@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { doneAttendance } from "../../services/api/send.js";
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
-const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasChanges, setHasChanges, lesson}) => {
+const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson}) => {
     //console.debug("КНОППКАА", lesson, schedule, currentLessonData);
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);

@@ -37,7 +37,7 @@ export  const getCellStyle = (state, isActive) => {
             default:
                 break;
         }
-        style.borderColor = "rgb(112,112,112)";
+        style.border = "2px solid rgb(112,112,112)"
         style.borderWidth = "2px";
     } else {
         // Для неактивных ячеек

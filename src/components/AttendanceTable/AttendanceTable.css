@@ -7,7 +7,6 @@
 .attendanceTable-wrapper {
     overflow: auto;
     max-width: 100%;
-    max-height: calc(100vh - 300px);;
     margin-bottom: 5rem;
 }
 
@@ -31,7 +30,7 @@
 
 .attendanceTable th,
 .attendanceTable td {
-    border: 1px solid var(--colorSilver);
+    /*border: 1px solid var(--colorSilver);*/
     padding: 1.5rem;
     border-radius: 1.25rem;
     white-space: nowrap;

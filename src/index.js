@@ -82,9 +82,7 @@ if (!tgUserId) {
         //const groupId = 5;
         if (groupId) {
             root.render(
-                <React.StrictMode>
                     <App groupId={groupId} />
-                </React.StrictMode>
             );
         } else {
             root.render(

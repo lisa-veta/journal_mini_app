@@ -1,11 +1,12 @@
-import {createAttendance, openAttendance, getIdAttendanceIfExist, timeTable} from '../api/send.js';
+import {createAttendance, getIdAttendanceIfExist} from '../api/send.js';
 export class ScheduleService {
-    constructor(studentsList, attendance, schedulePair, lesson, date) {
+    constructor(studentsList, attendance, schedulePair, lesson, date, schedule) {
         this.studentsList = studentsList;
         this.attendance = attendance;
         this.schedulePair = schedulePair;
         this.lesson = lesson;
         this.date = date;
+        this.schedule = schedule;
         this.conditionMapping = {
             'Н': 1,
             'Б': 2,
@@ -33,10 +34,16 @@ export class ScheduleService {
                 lesson,
             };
         });
-        console.debug(this.date, this.date.year, this.date.month-1, this.date.day, this.date.hour, this.date.minute);
         const now = new Date(this.date.year, this.date.month-1, this.date.day, this.date.hour, this.date.minute);
-        console.log("тщц now", now);
-        // Используем цикл с await для правильной обработки асинхронных вызовов
+
+        let isCurrentLesson;
+        try {
+            isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
+
+        } catch (error) {
+            console.error("Ошибка при вызове IsLessonCurrent:", error);
+        }
+        //isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -50,51 +57,42 @@ export class ScheduleService {
                 now.getDate(),
                 ...pair.end_time.split(":").map(Number)
             );
-            //console.debug("ВРЕМЯ", lessonStart, now, lessonEnd);
+
 
             const currentDate = `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}`;
-            // Проверка текущей даты и времени в schedule
-            //console.debug("currentDate", currentDate);
-            for (const entry of schedule) {
-                console.log("шаг1!!", entry, currentDate, lessonStart, entry.time === lessonStart);
-                if (entry.date === currentDate && entry.time === this.formatTime(lessonStart)) {
-                    console.log("шаг2!!", entry);
-                    if (now >= lessonStart && now <= lessonEnd) {
-                        console.log("isLessonCurrent!!!!!!!!!!!", entry);
-                        console.log("isLessonCurrent!!!!!!!!!!", entry.time === lessonStart,  entry.time, lessonStart);
-                        entry.isLessonCurrent = true;
-                        return schedule;
+            if (isCurrentLesson) {
+                for (const entry of schedule) {
+                    if (entry.date === currentDate && entry.time === this.formatTime(lessonStart)) {
+                         if (now >= lessonStart && now <= lessonEnd) {
+                            entry.isLessonCurrent = true;
+                            return schedule;
+                        }
                     }
                 }
             }
-
+            console.debug(now, lessonStart, lessonEnd)
             if (now >= lessonStart && now <= lessonEnd) {
-                try {
-                    const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
-                    //const isCurrentLesson = true;
-                    console.debug("Is current lesson:", isCurrentLesson);
-                    //if (isCurrentLesson && (this.lesson.id === 7 || this.lesson.id === 8)) {
-                    if (isCurrentLesson) {
-                        const newEntry = {
-                            id: schedule.length,
-                            isLessonCurrent: true,
-                            date: `${String(now.getDate()).padStart(2, "0")}.${String(
-                                now.getMonth() + 1
-                            ).padStart(2, "0")}`,
-                            time: pair.start_time,
-                            lesson: pair.lesson,
-                        };
-                        if(schedule) {
-                            schedule.push(newEntry);
-                        }
-                        else {
-                            return newEntry;
-                        }
+                //if (isCurrentLesson && (this.lesson.id === 7 || this.lesson.id === 8)) {
+
+                if (isCurrentLesson) {
+                    const newEntry = {
+                        id: schedule.length,
+                        isLessonCurrent: true,
+                        date: `${String(now.getDate()).padStart(2, "0")}.${String(
+                            now.getMonth() + 1
+                        ).padStart(2, "0")}`,
+                        time: pair.start_time,
+                        lesson: pair.lesson,
+                    };
+
+                    if(schedule) {
+                        schedule.push(newEntry);
                     }
-                } catch (error) {
-                    console.error("Ошибка при вызове IsLessonCurrent:", error);
+                    else {
+                        return newEntry;
+                    }
                 }
-            }
+        }
         }
 
         return schedule;
@@ -115,8 +113,8 @@ export class ScheduleService {
             const [dayA, monthA] = a.date.split('.').map(Number);
             const [dayB, monthB] = b.date.split('.').map(Number);
 
-            const dateA = new Date(2024, monthA - 1, dayA);
-            const dateB = new Date(2024, monthB - 1, dayB);
+            const dateA = new Date(this.date.year, monthA - 1, dayA);
+            const dateB = new Date(this.date.year, monthB - 1, dayB);
 
             if (dateA - dateB !== 0) {
                 return dateA - dateB;
@@ -248,8 +246,7 @@ export class ScheduleService {
 
     async IsLessonCurrent(lessonId, groupId) {
         // Найти занятие по ID
-        const data = await timeTable(groupId);
-        const parsedData = JSON.parse(JSON.stringify(data));
+        const parsedData = this.schedule;
 
         let targetLesson = parsedData.find(parsedData => parsedData.id === lessonId);
         let now = new Date(this.date.year, this.date.month-1, this.date.day, this.date.hour, this.date.minute);
@@ -281,8 +278,7 @@ export class ScheduleService {
 
 
     async FindCurrentLesson(groupId) {
-        const data = await timeTable(groupId);
-        const parsedData = JSON.parse(JSON.stringify(data));
+        const parsedData = this.schedule;
 
         const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
         for (let i = 0; i < parsedData.length; i++) {
@@ -309,5 +305,21 @@ export class ScheduleService {
                 return await createAttendance(classLessonId, timedate);
             }
         }
+    }
+
+    GetCurrentWeekNumber(now) {
+        const septemberStart = new Date(now.getFullYear(), 8, 1, 23);
+        const diffInMs = now - septemberStart;
+        const weekInMs = 1000 * 60 * 60 * 24 * 7;
+        const diffInWeeks = Math.floor(diffInMs / weekInMs);
+
+        const isFirstWeekEducational = !(septemberStart.getDay() % 7 === 0);
+        return isFirstWeekEducational
+            ? diffInWeeks % 2 === 0
+                ? 2
+                : 1
+            : diffInWeeks % 2 !== 0
+                ? 2
+                : 1;
     }
 }

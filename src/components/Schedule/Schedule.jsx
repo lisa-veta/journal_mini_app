@@ -76,6 +76,18 @@ function Schedule(props) {
 
     }, [props.weeks, week]);
 
+    useEffect(() => {
+        (() => {
+            const currentWeekNumber = new ScheduleService().GetCurrentWeekNumber(
+                new Date(props.date.year,
+                    props.date.month - 1,
+                    props.date.day,
+                    props.date.hour,
+                    props.date.minute));
+            setWeek(props.weeks[currentWeekNumber - 1]);
+        })()
+    }, [props.date, props.weeks]);
+
     const selectedWeekIndex = props.weeks.indexOf(week) + 1;
     return (
         <div className='schedule-container'>

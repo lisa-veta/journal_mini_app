@@ -3,7 +3,7 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, attendanceId, lesson }) => {
+const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, lesson }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     // Инициализация состояния на основе attendStudents
@@ -42,11 +42,6 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
             };
         });
     };
-    //console.debug("currentLessonId", currentLessonId);
-    //console.debug("attendStudents", attendStudents);
-    //console.debug("She", schedule)
-    //console.debug("She", students)
-
     return (
         <div>
             <div className="attendancePrev">
@@ -64,7 +59,7 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
                                 style={{
                                     backgroundColor:
                                         item.id === currentLessonId ? "#f9f9f9" : "#e0e0e0",
-                                    borderColor: item.id === currentLessonId ? "rgb(112,112,112)" : "",
+                                    border: item.id === currentLessonId ? "2px solid rgb(112,112,112)" : "",
                                     borderWidth: "2px",
                                 }}
                             >
@@ -99,7 +94,7 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
             </div>
             <div>
                 <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData()}
-                                      attendanceId={attendanceId} hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson}></SaveAttendanceButton>
+                                 hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson}></SaveAttendanceButton>
             </div>
         </div>
     );

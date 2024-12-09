@@ -1,23 +1,19 @@
 import "./SchedulePage.css"
-import { Navigation, Schedule } from "components/index.jsx";
-import { timeTable } from '../../services/api/send.js';
+import { Schedule } from "components/index.jsx";
 import { useEffect, useState } from 'react';
-import { IsLessonCurrent, GetWeekDayIndex } from '../../services/schedule/ScheduleService.js';
+import { ScheduleService } from '../../services/scheduleService/ScheduleService.js';
 
 const SchedulePage = (props) => {
 
-    const [weeks, setWeeks] = useState(
-        [
-            { is_even: false, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) },
-            { is_even: true, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) }
-        ]
-    );
+    const [weeks, setWeeks] = useState([
+        { is_even: false, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) },
+        { is_even: true, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) }
+    ]);
 
     useEffect(() => {
-        (async () => {
+        ( () => {
             try {
-                const data = await timeTable(props.groupId);
-                const parsedData = JSON.parse(JSON.stringify(data));
+                const parsedData = props.schedule
                 //console.log('ответ с сервера', JSON.stringify(data));
 
                 const tempSchedule = {
@@ -28,7 +24,7 @@ const SchedulePage = (props) => {
                 };
 
                 for (let i = 0; i < parsedData.length; i++) {
-                    let dayIndex = GetWeekDayIndex(parsedData[i].week_day);
+                    let dayIndex = new ScheduleService().GetWeekDayIndex(parsedData[i].week_day);
                     let weekIndex = parsedData[i].number_week - 1;
 
                     tempSchedule.weeks[weekIndex].days[dayIndex].day_number = dayIndex + 1;
@@ -56,7 +52,7 @@ const SchedulePage = (props) => {
                 console.error(error);
             }
         })();
-    }, []);
+    }, [props.schedule]);
 
     return (
         <div className="schedule-content">

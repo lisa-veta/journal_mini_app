@@ -16,7 +16,6 @@ const AttendancePage = (props) => {
     const [studentsList, setStudentsList] = useState([]);
     const [schedule, setSchedule] = useState([]);
     const [currentLessonId, setCurrentLessonId] = useState(null);
-    const [attendanceId, setAttendanceId] = useState(null);
 
     //console.debug("date date",date)
     // Однократное заполнение студентиков
@@ -42,7 +41,6 @@ const AttendancePage = (props) => {
             try {
                 const parsedData = await openFullAttendance(lesson.id_lesson);
                 const attendanceData = JSON.parse(JSON.stringify(parsedData));
-                //console.debug('!!!!!посещаемость с сервера!!!', attendanceData);
                 setAttendance(attendanceData);
             } catch (error) {
                 console.error(error);
@@ -55,12 +53,8 @@ const AttendancePage = (props) => {
             if (studentsList.length > 0 && attendance.length > 0) {
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
-                    //const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id);
                     const ss = scheduleService.getSortSchedule(newSchedule)
                     setSchedule(ss);
-                    //setAttendanceId(newAttendanceId);
-                    console.debug("newSchedule", newSchedule);
-
                     if (Array.isArray(newSchedule) && newSchedule.length > 0) {
                         const currentLesson = newSchedule.find((entry) => entry.isLessonCurrent === true);
                         setCurrentLessonId(currentLesson ? currentLesson.id : null);
@@ -92,9 +86,7 @@ const AttendancePage = (props) => {
                         <CustomInfo caption="Преподаватель" content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
                     ))}
                 </div>
-                <div className="attendancePage__table">
-                    <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} attendanceId={attendanceId}/>
-                </div>
+                <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} />
             </div>
         </Layout>
     );
