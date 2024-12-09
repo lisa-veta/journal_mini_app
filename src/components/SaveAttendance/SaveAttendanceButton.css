@@ -8,15 +8,63 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;
     background-color: black;
     color: white;
-    padding: 1.5rem;
+    padding: 3rem;
     font-size: 2rem;
-    margin-top: 2rem;
-    width: auto;
+    width: 100%;
     height: auto;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+.buttonSave__btn {
+    width: 100%;
+    height: auto;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.buttonSave__btn:active {
+    background-color: #393939;
 }
 .buttonSave_disabled {
     background-color: var(--colorBattleshipGray);
+}
+
+.buttonSave_position{
+    margin-top: 2rem;
+    margin-right: 2rem;
+}
+
+.buttonSave__popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #009c0e;
+    background-color: rgba(255, 255, 255, 0.85);
+    font-size: 24px;
+    text-align: center;
+    z-index: 1001;
+}
+
+.buttonSave__popup-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.buttonSave__popup-visible {
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease-in-out;
 }

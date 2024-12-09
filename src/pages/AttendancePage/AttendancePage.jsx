@@ -7,15 +7,18 @@ import { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import { schedulePair } from "./config"
-const AttendancePage = () => {
+const AttendancePage = (props) => {
+    const groupId = props.groupId;
+    const date = props.date;
     const location = useLocation();
     const lesson = location.state?.lesson;
     const [attendance, setAttendance] = useState([]);
     const [studentsList, setStudentsList] = useState([]);
     const [schedule, setSchedule] = useState([]);
     const [currentLessonId, setCurrentLessonId] = useState(null);
-    const groupId = 5;
-    console.debug("lesson",lesson)
+    const [attendanceId, setAttendanceId] = useState(null);
+
+    //console.debug("date date",date)
     // Однократное заполнение студентиков
     useEffect(() => {
         (async () => {
@@ -49,11 +52,13 @@ const AttendancePage = () => {
     useEffect(() => {
         const fetchSchedule = async () => {
             if (studentsList.length > 0 && attendance.length > 0) {
-                const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
+                const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
-                    setSchedule(newSchedule);
-
+                    const newAttendanceId = await scheduleService.getAttendanceId(newSchedule, lesson.id);
+                    const ss = scheduleService.getSortSchedule(newSchedule)
+                    setSchedule(ss);
+                    setAttendanceId(newAttendanceId);
                     console.debug("newSchedule", newSchedule);
 
                     if (Array.isArray(newSchedule) && newSchedule.length > 0) {
@@ -68,27 +73,27 @@ const AttendancePage = () => {
             }
         };
 
-        fetchSchedule();  // Вызываем асинхронную функцию
+        fetchSchedule();
     }, [studentsList, attendance]);
 
-    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson);
+    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
     //const schedule = scheduleService.getSchedule(groupId);
     const attendStudents = scheduleService.getAttendStudents(schedule);
 
     //console.log("attendStudents", attendStudents);
-    console.log("attendStudents", attendance);
-    //const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
-    //const currentLessonId = currentLesson ? currentLesson.id : null;
-    console.debug("currentLessonId!!!!!!!!!!!!!!!!!!", currentLessonId);
+    //console.log("attendStudents", attendance);
+    //console.debug("currentLessonId!!!!!!!!!!!!!!!!!!", currentLessonId);
     return (
         <Layout>
             <div className="attendancePage">
                 <p className="attendancePage__subject-name">{lesson.name}</p>
                 <div className="attendancePage__teacher">
-                    <CustomInfo caption="Преподаватель" content={lesson.teacher}/>
+                    {lesson.teachers.map((teacher) => (
+                        <CustomInfo caption="Преподаватель" content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
+                    ))}
                 </div>
                 <div className="attendancePage__table">
-                    <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents}/>
+                    <AttendanceTable classLesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} attendanceId={attendanceId}/>
                 </div>
             </div>
         </Layout>

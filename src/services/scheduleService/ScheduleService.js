@@ -1,10 +1,11 @@
-import { timeTable } from '../api/send.js';
+import {createAttendance, openAttendance, getIdAttendanceIfExist, timeTable} from '../api/send.js';
 export class ScheduleService {
     constructor(studentsList, attendance, schedulePair, lesson, date) {
         this.studentsList = studentsList;
         this.attendance = attendance;
         this.schedulePair = schedulePair;
         this.lesson = lesson;
+        this.date = date;
         this.conditionMapping = {
             'Н': 1,
             'Б': 2,
@@ -42,9 +43,9 @@ export class ScheduleService {
                 lesson,
             };
         });
-
-        const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
-
+        console.debug(this.date, this.date.year, this.date.month-1, this.date.day, this.date.hour, this.date.minute);
+        const now = new Date(this.date.year, this.date.month-1, this.date.day, this.date.hour, this.date.minute);
+        console.log("тщц now", now);
         // Используем цикл с await для правильной обработки асинхронных вызовов
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
@@ -59,7 +60,24 @@ export class ScheduleService {
                 now.getDate(),
                 ...pair.end_time.split(":").map(Number)
             );
-            console.debug("ВРЕМЯ", lessonStart, now, lessonEnd);
+            //console.debug("ВРЕМЯ", lessonStart, now, lessonEnd);
+
+            const currentDate = `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}`;
+            // Проверка текущей даты и времени в schedule
+            //console.debug("currentDate", currentDate);
+            for (const entry of schedule) {
+                console.log("шаг1!!", entry, currentDate, lessonStart, entry.time === lessonStart);
+                if (entry.date === currentDate && entry.time === this.formatTime(lessonStart)) {
+                    console.log("шаг2!!", entry);
+                    if (now >= lessonStart && now <= lessonEnd) {
+                        console.log("isLessonCurrent!!!!!!!!!!!", entry);
+                        console.log("isLessonCurrent!!!!!!!!!!", entry.time === lessonStart,  entry.time, lessonStart);
+                        entry.isLessonCurrent = true;
+                        return schedule;
+                    }
+                }
+            }
+
             if (now >= lessonStart && now <= lessonEnd) {
                 try {
                     const isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
@@ -92,6 +110,35 @@ export class ScheduleService {
         return schedule;
     }
 
+    formatTime(date) {
+        if (!(date instanceof Date)) {
+            console.error("lessonStart is not a Date object:", date);
+            return null; // Or handle the error in a more suitable way for your application
+        }
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+
+    getSortSchedule(schedule) {
+        schedule.sort((a, b) => {
+            const [dayA, monthA] = a.date.split('.').map(Number);
+            const [dayB, monthB] = b.date.split('.').map(Number);
+
+            const dateA = new Date(2024, monthA - 1, dayA);
+            const dateB = new Date(2024, monthB - 1, dayB);
+
+            if (dateA - dateB !== 0) {
+                return dateA - dateB;
+            }
+
+            const lessonNumberA = parseInt(a.lesson.match(/\d+/));
+            const lessonNumberB = parseInt(b.lesson.match(/\d+/));
+
+            return lessonNumberA - lessonNumberB;
+        });
+        return schedule;
+    }
 
     // Метод для поиска занятия по времени
     getPairNumber(time) {
@@ -255,6 +302,27 @@ export class ScheduleService {
         }
 
         return null;
+    }
+
+    async getAttendanceId(schedule, classLessonId){
+        const currentLesson = schedule.find((schedule) => schedule.isLessonCurrent === true);
+        if(currentLesson) {
+            const [day, month] = currentLesson.date.split('.');  // Разбиваем на день и месяц
+            const [hour, minute] = currentLesson.time.split(':'); // Разбиваем на часы и минуты
+
+            const currentYear = new Date().getFullYear();  // Получаем текущий год
+            const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;  // Формируем строку времени
+            console.log(timedate)
+            try {
+                console.log("ЗАШЛА В OPENATTEN getIdAttendanceIfExist", classLessonId)
+                return await getIdAttendanceIfExist(classLessonId, timedate);
+                //return 1;
+            } catch (error) {
+                console.log("ЗАШЛА В OPENATTEN createAttendance", classLessonId)
+                return await createAttendance(classLessonId, timedate);
+                //return 1;
+            }
+        }
     }
 
 }

@@ -1,11 +1,18 @@
+.attendancePrev {
+    font-size: 2rem;
+    margin: 1rem;
+    color: #ff3a5d;
+}
+
 .attendanceTable-wrapper {
     overflow: auto;
     max-width: 100%;
-    max-height: 87.5rem;
+    max-height: calc(100vh - 250px);;
+    margin-bottom: 5rem;
 }
 
 .attendanceTable {
-    font-size: 2rem;
+    font-size: 1.7rem;
 }
 .attendanceTable__vertical-header {
     writing-mode: vertical-rl;
@@ -15,12 +22,10 @@
     white-space: nowrap;
 }
 
-@media {
+@media (max-width: 768px) {
     .attendanceTable__vertical-header {
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        text-align: center;
-        white-space: nowrap;
+        writing-mode: vertical-lr;
+        transform: none;
     }
 }
 

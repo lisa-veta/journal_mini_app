@@ -26,17 +26,19 @@ export  const getCellStyle = (state, isActive) => {
         // Для активных ячеек
         switch (state) {
             case 1:
-                style = { backgroundColor: "rgba(230, 145, 145, 1)" };
+                style = { backgroundColor: "rgba(230, 145, 145, 1)"};
                 break;
             case 2:
-                style = { backgroundColor: "rgba(255, 236, 152, 1)" };
+                style = { backgroundColor: "rgba(255, 236, 152, 1)"};
                 break;
             case 3:
-                style = { backgroundColor: "rgba(170, 234, 255, 1)" };
+                style = { backgroundColor: "rgba(170, 234, 255, 1)"};
                 break;
             default:
                 break;
         }
+        style.borderColor = "rgb(112,112,112)";
+        style.borderWidth = "2px";
     } else {
         // Для неактивных ячеек
         switch (state) {
@@ -53,10 +55,10 @@ export  const getCellStyle = (state, isActive) => {
                 style = { backgroundColor: "rgba(224, 224, 224, 0.5)" };
                 break;
         }
-
         // Дополнительный стиль для серого фона для неактивных ячеек
         style = { ...style, cursor: "not-allowed" };
     }
-
+    style.textAlign = "center";
+    style.verticalAlign = "middle";
     return style;
 };

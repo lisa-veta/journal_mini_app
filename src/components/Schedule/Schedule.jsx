@@ -1,11 +1,9 @@
 ﻿import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Day, Lesson } from "components/index.jsx";
 import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
 
 function Schedule(props) {
-    const navigate = useNavigate();
-    const style = { backgroundColor: 'red' };
+    const style = { backgroundColor: 'var(--colorRed)' };
 
     const [week, setWeek] = useState(() => {
         // Найти неделю, где is_even=true
@@ -49,6 +47,7 @@ function Schedule(props) {
         (async () => {
             try {
                 // Поменять номер группы в будущем
+                console.debug(props.date, "!!!!!!!!!!!!!!!!!!!!!!1")
                 const currentLesson = await new ScheduleService(null, null, null, null, props.date).FindCurrentLesson(props.groupId);
                 if (!currentLesson) {
                     setCurrentLesson(null);

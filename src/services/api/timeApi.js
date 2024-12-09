@@ -10,8 +10,7 @@ async function sendGet() {
         const response = await fetch(url, {
             method: 'GET',
         });
-        const jsonData = await response.json();
-        return jsonData;
+        return await response.json();
     } catch (error) {
         console.log('Ошибка в получении даты: ', error.message);
     }

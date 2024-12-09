@@ -38,15 +38,12 @@ function Lesson(props) {
                 <div className='lesson-time-start'>{props.lesson.start_time.slice(0, 5)}</div>
                 <div className='lesson-time-end'>{props.lesson.end_time.slice(0, 5)}</div>
             </div>
-
             <div className='lesson-info-container'>
-                <div className='lesson-info-row'>
-                    <div className='lesson-name'>{props.lesson.name}</div>
-                    <div className='lesson-teacher'>
-                        {props.lesson.teachers.map(t => t.lastname).join(', ')}
-                    </div>
-                </div>
+                <div className='lesson-name'>{props.lesson.name}</div>
                 <div className='lesson-room-and-type'>{props.lesson.room}, {lessonType}</div>
+            </div>
+            <div className='lesson-teacher'>
+                {props.lesson.teachers.map(t => t.lastname).join(', ')}
             </div>
         </div>
     );
