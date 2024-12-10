@@ -16,7 +16,7 @@ const AttendancePage = (props) => {
     const [studentsList, setStudentsList] = useState([]);
     const [schedule, setSchedule] = useState([]);
     const [currentLessonId, setCurrentLessonId] = useState(null);
-
+    const timeTable = props.schedule;
     //console.debug("date date",date)
     // Однократное заполнение студентиков
     useEffect(() => {
@@ -49,7 +49,7 @@ const AttendancePage = (props) => {
     }, [lesson]);
     useEffect(() => {
         const fetchSchedule = async () => {
-            const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
+            const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date, timeTable);
             if (studentsList.length > 0 && attendance.length > 0) {
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
@@ -73,7 +73,7 @@ const AttendancePage = (props) => {
         fetchSchedule();
     }, [studentsList, attendance]);
 
-    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date);
+    const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date, timeTable);
 
     const attendStudents = scheduleService.getAttendStudents(schedule);
 

@@ -44,7 +44,7 @@ function App(props) {
       <Router>
           <Routes>
               <Route path="/" element={<SchedulePage groupId={props.groupId} date={date} schedule={schedule} />} />
-              <Route path="/attendance/:subjectId" element={<AttendancePage groupId={props.groupId} date={date} />} />
+              <Route path="/attendance/:subjectId" element={<AttendancePage groupId={props.groupId} date={date} schedule={schedule} />} />
           </Routes>
       </Router>
   );
