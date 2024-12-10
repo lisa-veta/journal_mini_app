@@ -74,7 +74,7 @@ function Schedule(props) {
             }
         })();
 
-    }, [props.weeks, week]);
+    }, [props.weeks, week, props.date]);
 
     useEffect(() => {
         (() => {
