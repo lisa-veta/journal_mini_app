@@ -2,6 +2,9 @@ export const getCellText = (state) => {
     let text = '';
 
     switch (state) {
+        case 0:
+            text = '+';
+            break;
         case 1:
             text = "н";
             break;
@@ -12,8 +15,9 @@ export const getCellText = (state) => {
             text = "уп";
             break;
         case 4:
-            text = '';
+            text = '+';
             break;
+
     }
 
     return text;
@@ -35,8 +39,10 @@ export  const getCellStyle = (state, isActive) => {
                 style = { backgroundColor: "rgba(170, 234, 255, 1)"};
                 break;
             default:
+                style = { backgroundColor: "rgb(255,255,255)", color: "rgb(255,255,255)"};
                 break;
         }
+        // style["box-sizing"] = 'border-box';
         style.border = "2px solid rgb(112,112,112)"
         style.borderWidth = "2px";
     } else {
@@ -52,7 +58,7 @@ export  const getCellStyle = (state, isActive) => {
                 style = { backgroundColor: "rgba(170, 234, 255, 0.5)" };
                 break;
             default:
-                style = { backgroundColor: "rgba(224, 224, 224, 0.5)" };
+                style = { backgroundColor: "rgba(224, 224, 224, 0.5)", color: "rgba(224, 224, 224, 0.5)"};
                 break;
         }
         // Дополнительный стиль для серого фона для неактивных ячеек

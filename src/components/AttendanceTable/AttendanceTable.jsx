@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
@@ -6,7 +6,13 @@ import {SaveAttendanceButton} from "../index";
 const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, lesson }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
-    // Инициализация состояния на основе attendStudents
+    const currentLessonRef = useRef(null);
+    useEffect(() => {
+        if (currentLessonRef.current) {
+            currentLessonRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    }, [currentLessonId]);
+
     useEffect(() => {
         const initialStates = {};
         attendStudents.forEach((entry) => {
@@ -16,19 +22,19 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
         setCellStates(initialStates);
     }, [attendStudents]);
 
-    // Функция обработки кликов по ячейке
+
     const handleCellClick = (studentId, lessonId) => {
-        // Если урок не тот, пропускаем
+
         if (lessonId !== currentLessonId) return;
 
         const cellKey = `${studentId}-${lessonId}`;
         setHasChanges(true);
-        // Цикличное переключение состояний ячейки (от 0 до 3)
+
         setCellStates((prev) => {
             const currentState = prev[cellKey] || 0;
             return {
                 ...prev,
-                [cellKey]: (currentState + 1) % 4, // Переключаем состояния
+                [cellKey]: (currentState + 1) % 4,
             };
         });
     };
@@ -55,10 +61,11 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
                         {schedule.map((item) => (
                             <th
                                 key={item.id}
+                                ref={item.id === currentLessonId ? currentLessonRef : null}
                                 className="attendanceTable__vertical-header"
                                 style={{
                                     backgroundColor:
-                                        item.id === currentLessonId ? "#f9f9f9" : "#e0e0e0",
+                                        item.id === currentLessonId ? "#ffffff" : "#e0e0e0",
                                     border: item.id === currentLessonId ? "2px solid rgb(112,112,112)" : "",
                                     borderWidth: "2px",
                                 }}
