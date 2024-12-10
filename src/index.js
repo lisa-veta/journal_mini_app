@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.js';
 import './assets/styles/main.css';
 import { miniApp, mockTelegramEnv, parseInitData } from '@telegram-apps/sdk';
+import { authorizationTelegram } from '../src/services/api/send.js';
 
 
 const initializeTelegramSDK = async () => {
@@ -65,9 +66,31 @@ initializeTelegramSDK();
 const container = document.getElementById('root');
 const root = createRoot(container);
 
-root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
-);
+const urlParams = new URLSearchParams(window.location.search);
+const tgUserId = urlParams.get('userId');
+console.log('ид из телеги', tgUserId);
+if (!tgUserId) {
+    root.render(
+        <div>Нет доступа к журналу.</div>
+    );
+}
 
+(async () => {
+    try {
+        const data = await authorizationTelegram(tgUserId);
+        const groupId = (JSON.parse(JSON.stringify(data))).id_group;
+        //const groupId = 5;
+        if (groupId) {
+            root.render(
+                    <App groupId={groupId} />
+            );
+        } else {
+            root.render(
+                <div>Нет доступа к журналу.</div>
+            );
+        }
+    }
+    catch (e) {
+        console.error('Ошибка при получении группы: ', e.message);
+    }
+})();
