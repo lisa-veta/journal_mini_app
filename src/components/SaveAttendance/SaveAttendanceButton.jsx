@@ -36,7 +36,7 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
     if (currentLesson) {
 
         return (
-            <div className="buttonSave-container buttonSave_position">
+            <div className="buttonSave-container">
                 <div  className={`buttonSave ${!hasChanges ? 'buttonSave_disabled' : ''}`}>
                     <button className={`buttonSave__btn`} onClick={handleSave} disabled={!hasChanges}>Сохранить</button>
                 </div>
@@ -49,7 +49,7 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
         );
     } else {
         return (
-            <div className="buttonSave-container buttonSave_position">
+            <div className="buttonSave-container">
                 <div className="buttonSave buttonSave_disabled">
                     <button disabled>Нет текущей пары</button>
                 </div>

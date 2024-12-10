@@ -2,7 +2,7 @@
     margin-left: 2rem;
     display: flex;
     flex-direction: column;
-    max-height: 100vh;
+    height: calc(100vh - 300px);
 }
 .attendancePage__subject-name {
     font-weight: 600;

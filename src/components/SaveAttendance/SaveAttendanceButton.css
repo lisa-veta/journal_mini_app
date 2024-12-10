@@ -34,12 +34,6 @@
 .buttonSave_disabled {
     background-color: var(--colorBattleshipGray);
 }
-
-.buttonSave_position{
-    margin-top: 2rem;
-    margin-right: 2rem;
-}
-
 .buttonSave__popup {
     display: flex;
     justify-content: center;
@@ -49,7 +43,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    color: #009c0e;
+    color: var(--colorGreen);
     background-color: rgba(255, 255, 255, 0.85);
     font-size: 24px;
     text-align: center;
