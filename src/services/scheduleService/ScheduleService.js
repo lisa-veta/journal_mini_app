@@ -292,6 +292,7 @@ export class ScheduleService {
 
     async getAttendanceId(schedule, classLessonId){
         const currentLesson = schedule.find((schedule) => schedule.isLessonCurrent === true);
+        console.log(schedule, "schedule", currentLesson)
         if(currentLesson) {
             const [day, month] = currentLesson.date.split('.');
             const [hour, minute] = currentLesson.time.split(':');
