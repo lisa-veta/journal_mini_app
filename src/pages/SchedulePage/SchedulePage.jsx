@@ -1,19 +1,20 @@
 import "./SchedulePage.css"
-import { Navigation, Schedule } from "components/index.jsx";
-import { timeTable } from '../../services/api/send.js';
+import { Schedule } from "components/index.jsx";
 import { useEffect, useState } from 'react';
 import { ScheduleService } from '../../services/scheduleService/ScheduleService.js';
-import { CurrentTime } from '../../services/api/timeApi.js';
 
 const SchedulePage = (props) => {
+
     const [weeks, setWeeks] = useState([
         { is_even: false, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) },
         { is_even: true, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) }
     ]);
+
     useEffect(() => {
-        (() => {
+        ( () => {
             try {
-                const parsedData = props.schedule;
+                const parsedData = props.schedule
+                //console.log('ответ с сервера', JSON.stringify(data));
 
                 const tempSchedule = {
                     weeks: [

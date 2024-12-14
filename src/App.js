@@ -2,13 +2,23 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AttendancePage, SchedulePage } from "./pages/index.jsx"
 import { useState, useEffect } from 'react';
-import { Navigation } from './components';
-import { CurrentTime } from './services/api/timeApi.js';
 import { timeTable } from './services/api/send.js';
-import { ScheduleService } from './services/scheduleService/ScheduleService.js';
+import { CurrentTime } from './services/api/timeApi.js';
 function App(props) {
     const [date, setDate] = useState({});
     const [schedule, setSchedule] = useState(null);
+    useEffect(() => {
+        (async () => {
+            try {
+                const data = await timeTable(props.groupId);
+                const parsedData = JSON.parse(JSON.stringify(data));
+                setSchedule(parsedData);
+                //IsLessonCurrent(7);
+            } catch (error) {
+                console.error(error);
+            }
+        })();
+    }, [props.groupId]);
     useEffect(
         () => {
             (async () => {
@@ -30,25 +40,11 @@ function App(props) {
             })()
         }, []);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const data = await timeTable(props.groupId);
-                const parsedData = JSON.parse(JSON.stringify(data));
-
-                setSchedule(parsedData);
-                //IsLessonCurrent(7);
-            } catch (error) {
-                console.error(error);
-            }
-        })();
-    }, [props.groupId]);
-
     return (
       <Router>
-            <Routes>
-                <Route path="/" element={<SchedulePage groupId={props.groupId} date={date} schedule={schedule} />} />
-              <Route path="/attendance/:subjectId" element={<AttendancePage groupId={props.groupId} date={date} />} />
+          <Routes>
+              <Route path="/" element={<SchedulePage groupId={props.groupId} date={date} schedule={schedule} />} />
+              <Route path="/attendance/:subjectId" element={<AttendancePage groupId={props.groupId} date={date} schedule={schedule} />} />
           </Routes>
       </Router>
   );

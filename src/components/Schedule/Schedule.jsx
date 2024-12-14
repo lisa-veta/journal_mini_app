@@ -76,7 +76,7 @@ function Schedule(props) {
                             start_time: currentLesson.lesson_start_time,
                             end_time: currentLesson.lesson_end_time,
                             id: currentLesson.id,
-                            style: { backgroundColor: '#69e9f5'}
+                            style: { backgroundColor: 'var(--colorBlue)'}
                         }
                     )
                 }
@@ -86,6 +86,18 @@ function Schedule(props) {
         })();
 
     }, [props.weeks, week, props.date]);
+
+    useEffect(() => {
+        (() => {
+            const currentWeekNumber = new ScheduleService().GetCurrentWeekNumber(
+                new Date(props.date.year,
+                    props.date.month - 1,
+                    props.date.day,
+                    props.date.hour,
+                    props.date.minute));
+            setWeek(props.weeks[currentWeekNumber - 1]);
+        })()
+    }, [props.date, props.weeks]);
 
     const selectedWeekIndex = props.weeks.indexOf(week) + 1;
     return (

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { doneAttendance } from "../../services/api/send.js";
+import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
-const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasChanges, setHasChanges}) => {
+const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson}) => {
     //console.debug("КНОППКАА", lesson, schedule, currentLessonData);
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
@@ -21,7 +22,10 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
                 id: student.studentId,
             }));
             console.log(updatedStudents)
-            await doneAttendance(attendanceId, updatedStudents);
+            const scheduleService = new ScheduleService();
+            const id = await scheduleService.getAttendanceId(schedule, lesson.id)
+            //await doneAttendance(attendanceId, updatedStudents);
+            await doneAttendance(id, updatedStudents);
             setShowPopup(true);
             setHasChanges(false);
             console.log("Посещаемость сохранена успешно!");
@@ -32,7 +36,7 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
     if (currentLesson) {
 
         return (
-            <div className="buttonSave-container buttonSave_position">
+            <div className="buttonSave-container">
                 <div  className={`buttonSave ${!hasChanges ? 'buttonSave_disabled' : ''}`}>
                     <button className={`buttonSave__btn`} onClick={handleSave} disabled={!hasChanges}>Сохранить</button>
                 </div>
@@ -45,7 +49,7 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, attendanceId, hasCh
         );
     } else {
         return (
-            <div className="buttonSave-container buttonSave_position">
+            <div className="buttonSave-container">
                 <div className="buttonSave buttonSave_disabled">
                     <button disabled>Нет текущей пары</button>
                 </div>

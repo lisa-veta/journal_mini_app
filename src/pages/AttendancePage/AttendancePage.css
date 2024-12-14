@@ -1,5 +1,8 @@
 .attendancePage {
     margin-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 300px);
 }
 .attendancePage__subject-name {
     font-weight: 600;
@@ -11,4 +14,7 @@
 .attendancePage__teacher {
     margin-right: 2rem;
     margin-bottom: 2rem;
+}
+
+.attendancePage__table {
 }

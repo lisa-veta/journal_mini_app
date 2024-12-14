@@ -6,14 +6,14 @@
 
 .attendanceTable-wrapper {
     overflow: auto;
-    max-width: 100%;
-    max-height: calc(100vh - 250px);;
-    margin-bottom: 5rem;
+    height: calc(100vh - 8.75rem);
+    margin-bottom: 8.75rem;
 }
 
 .attendanceTable {
     font-size: 1.7rem;
 }
+
 .attendanceTable__vertical-header {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
@@ -31,7 +31,7 @@
 
 .attendanceTable th,
 .attendanceTable td {
-    border: 1px solid var(--colorSilver);
+    /*border: 1px solid var(--colorSilver);*/
     padding: 1.5rem;
     border-radius: 1.25rem;
     white-space: nowrap;
