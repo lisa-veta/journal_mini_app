@@ -43,8 +43,19 @@ function App(props) {
     return (
       <Router>
           <Routes>
-              <Route path="/" element={<SchedulePage groupId={props.groupId} date={date} schedule={schedule} />} />
-              <Route path="/attendance/:subjectId" element={<AttendancePage groupId={props.groupId} date={date} schedule={schedule} />} />
+                <Route path="/"
+                    element={<SchedulePage
+                        groupId={props.groupId}
+                        date={date}
+                        schedule={schedule} />}
+                />
+                <Route path="/attendance/:subjectId"
+                    element={<AttendancePage
+                        groupId={props.groupId}
+                        date={date}
+                        schedule={schedule}
+                        isHeadman={props.isHeadman} />}
+                />
           </Routes>
       </Router>
   );
