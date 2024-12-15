@@ -3,10 +3,11 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, lesson }) => {
+const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, lesson, isHeadman }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     const currentLessonRef = useRef(null);
+    
     useEffect(() => {
         if (currentLessonRef.current) {
             currentLessonRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -101,7 +102,7 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
             </div>
             <div>
                 <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData()}
-                                 hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson}></SaveAttendanceButton>
+                                 hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson} isHeadman={isHeadman}></SaveAttendanceButton>
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ export const getCellText = (state) => {
 
     switch (state) {
         case 0:
+        case 4:
             text = '+';
             break;
         case 1:
@@ -14,10 +15,9 @@ export const getCellText = (state) => {
         case 3:
             text = "уп";
             break;
-        case 4:
+        default:
             text = '+';
             break;
-
     }
 
     return text;

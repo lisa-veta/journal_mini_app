@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { doneAttendance } from "../../services/api/send.js";
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
-const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson}) => {
+const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson, isHeadman}) => {
     //console.debug("КНОППКАА", lesson, schedule, currentLessonData);
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
@@ -37,8 +37,10 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
 
         return (
             <div className="buttonSave-container">
-                <div  className={`buttonSave ${!hasChanges ? 'buttonSave_disabled' : ''}`}>
-                    <button className={`buttonSave__btn`} onClick={handleSave} disabled={!hasChanges}>Сохранить</button>
+                <div  className={`buttonSave ${!hasChanges || !isHeadman ? 'buttonSave_disabled' : ''}`}>
+                    <button className={`buttonSave__btn`} onClick={handleSave} disabled={!hasChanges || !isHeadman}>
+                        {isHeadman ? 'Сохранить' : 'У вас нет прав на сохранение'}
+                    </button>
                 </div>
                 {showPopup && (
                     <div className={`buttonSave__popup ${popupClass}`}>

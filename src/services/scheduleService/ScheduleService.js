@@ -43,7 +43,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),

@@ -75,20 +75,35 @@ if (!tgUserId) {
     );
 }
 
+// (async () => {
+//     try {
+//         const data = await authorizationTelegram(tgUserId);
+//         const groupId = (JSON.parse(JSON.stringify(data))).id_group;
+//         //const groupId = 5;
+//         if (groupId) {
+//             root.render(
+//                     <App groupId={groupId} />
+//             );
+//         } else {
+//             root.render(
+//                 <div>Нет доступа к журналу.</div>
+//             );
+//         }
+//     }
+//     catch (e) {
+//         console.error('Ошибка при получении группы: ', e.message);
+//     }
+// })();
 (async () => {
     try {
-        const data = await authorizationTelegram(tgUserId);
-        const groupId = (JSON.parse(JSON.stringify(data))).id_group;
-        //const groupId = 5;
-        if (groupId) {
-            root.render(
-                    <App groupId={groupId} />
-            );
-        } else {
-            root.render(
-                <div>Нет доступа к журналу.</div>
-            );
-        }
+        const data = tgUserId ? await authorizationTelegram(tgUserId) : null;
+        let groupId = data ? (JSON.parse(JSON.stringify(data))).id_group : 5;
+        let isHeadman = data ? true : false;
+        //console.log(isHeadman);
+
+        root.render(
+            <App groupId={groupId} isHeadman={isHeadman} />
+        );
     }
     catch (e) {
         console.error('Ошибка при получении группы: ', e.message);
