@@ -56,18 +56,24 @@ const AttendancePage = (props) => {
                     const newSchedule = await scheduleService.getSchedule(groupId);
                     const ss = scheduleService.getSortSchedule(newSchedule)
                     setSchedule(ss);
-                    if (Array.isArray(newSchedule) && newSchedule.length > 0) {
-                        const currentLesson = newSchedule.find((entry) => entry.isLessonCurrent === true);
-                        setCurrentLessonId(currentLesson ? currentLesson.id : null);
-                    } else {
-                        console.error("newSchedule не является массивом:", newSchedule);
-                    }
                 } catch (error) {
                     console.error("Ошибка при получении расписания:", error);
                 }
             }
             if (attendance.length <= 0) {
-
+                try {
+                    const newSchedule = await scheduleService.getEmptySchedule(groupId);
+                    const ss = scheduleService.getSortSchedule(newSchedule)
+                    setSchedule(ss);
+                } catch (error) {
+                    console.error("Ошибка при получении расписания:", error);
+                }
+            }
+            if (Array.isArray(schedule) && schedule.length > 0) {
+                const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
+                setCurrentLessonId(currentLesson ? currentLesson.id : null);
+            } else {
+                console.error("newSchedule не является массивом:", schedule);
             }
         };
 
