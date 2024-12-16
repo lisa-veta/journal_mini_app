@@ -3,16 +3,17 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, lesson, isHeadman }) => {
+const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     const currentLessonRef = useRef(null);
-    
+
+
     useEffect(() => {
         if (currentLessonRef.current) {
             currentLessonRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
-    }, [currentLessonId]);
+    }, [schedule]);
 
     useEffect(() => {
         const initialStates = {};
@@ -24,11 +25,11 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
     }, [attendStudents]);
 
 
-    const handleCellClick = (studentId, lessonId) => {
+    const handleCellClick = (studentId, lesson) => {
 
-        if (lessonId !== currentLessonId) return;
+        if (lesson.isLessonCurrent !== true) return;
 
-        const cellKey = `${studentId}-${lessonId}`;
+        const cellKey = `${studentId}-${lesson.id}`;
         setHasChanges(true);
 
         setCellStates((prev) => {
@@ -39,7 +40,14 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
             };
         });
     };
-    const getCurrentLessonData = () => {
+    const getCurrentLessonData = (schedule) => {
+        let currentLessonId;
+        for (const entry of schedule) {
+            if (entry.isLessonCurrent === true) {
+                currentLessonId = entry.id;
+                break;
+            }
+        }
         return students.map((student) => {
             const cellKey = `${student.id}-${currentLessonId}`;
             const condition = cellStates[cellKey] || 0;
@@ -62,12 +70,12 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
                         {schedule.map((item) => (
                             <th
                                 key={item.id}
-                                ref={item.id === currentLessonId ? currentLessonRef : null}
+                                ref={item.isLessonCurrent === true ? currentLessonRef : null}
                                 className="attendanceTable__vertical-header"
                                 style={{
                                     backgroundColor:
-                                        item.id === currentLessonId ? "#ffffff" : "#e0e0e0",
-                                    border: item.id === currentLessonId ? "2px solid rgb(112,112,112)" : "",
+                                        item.isLessonCurrent === true ? "#ffffff" : "#e0e0e0",
+                                    border: item.isLessonCurrent === true ? "2px solid rgb(112,112,112)" : "",
                                     borderWidth: "2px",
                                 }}
                             >
@@ -87,9 +95,9 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
                                     <td
                                         key={item.id}
                                         style={
-                                        getCellStyle(cellState, item.id === currentLessonId)
+                                        getCellStyle(cellState, item.isLessonCurrent === true)
                                     }
-                                        onClick={() => handleCellClick(student.id, item.id)}
+                                        onClick={() => handleCellClick(student.id, item)}
                                     >
                                         {getCellText(cellState)} {/* Выводим текст состояния */}
                                     </td>
@@ -101,12 +109,11 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
                 </table>
             </div>
             <div>
-                <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData()}
+                <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData(schedule)}
                                  hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson} isHeadman={isHeadman}></SaveAttendanceButton>
             </div>
         </div>
     );
 };
-
 
 export default AttendanceTable;

@@ -55,9 +55,17 @@ const AttendancePage = (props) => {
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
                     const ss = scheduleService.getSortSchedule(newSchedule)
+                    console.debug("ss", ss);
                     setSchedule(ss);
                 } catch (error) {
                     console.error("Ошибка при получении расписания:", error);
+                }
+                if (Array.isArray(schedule) && schedule.length > 0) {
+                    const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
+                    console.debug(currentLesson, "currentLesson")
+                    setCurrentLessonId(currentLesson ? currentLesson.id : null);
+                } else {
+                    console.error("newSchedule не является массивом:", schedule);
                 }
             }
             if (attendance.length <= 0) {
@@ -68,22 +76,24 @@ const AttendancePage = (props) => {
                 } catch (error) {
                     console.error("Ошибка при получении расписания:", error);
                 }
+                if (Array.isArray(schedule) && schedule.length > 0) {
+                    const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
+                    console.debug(currentLesson, "currentLesson")
+                    setCurrentLessonId(currentLesson ? currentLesson.id : null);
+                } else {
+                    console.error("newSchedule не является массивом:", schedule);
+                }
             }
-            if (Array.isArray(schedule) && schedule.length > 0) {
-                const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
-                setCurrentLessonId(currentLesson ? currentLesson.id : null);
-            } else {
-                console.error("newSchedule не является массивом:", schedule);
-            }
+
         };
 
         fetchSchedule();
     }, [studentsList, attendance]);
 
+
     const scheduleService = new ScheduleService(studentsList, attendance, schedulePair, lesson, date, timeTable);
 
     const attendStudents = scheduleService.getAttendStudents(schedule);
-
     return (
         <Layout>
             <div className="attendancePage">
