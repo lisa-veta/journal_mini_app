@@ -3,16 +3,16 @@ export const getCellText = (state) => {
 
     switch (state) {
         case 0:
-        case 4:
+        case 1:
             text = '+';
             break;
-        case 1:
+        case 2:
             text = "н";
             break;
-        case 2:
+        case 3:
             text = "б";
             break;
-        case 3:
+        case 4:
             text = "уп";
             break;
         default:
@@ -25,36 +25,38 @@ export const getCellText = (state) => {
 
 export  const getCellStyle = (state, isActive) => {
     let style = {};
-
     if (isActive) {
-        // Для активных ячеек
         switch (state) {
             case 1:
-                style = { backgroundColor: "rgba(230, 145, 145, 1)"};
+                style = { backgroundColor: "rgb(145,230,146)"};
                 break;
             case 2:
-                style = { backgroundColor: "rgba(255, 236, 152, 1)"};
+                style = { backgroundColor: "rgba(230, 145, 145, 1)"};
                 break;
             case 3:
+                style = { backgroundColor: "rgba(255, 236, 152, 1)"};
+                break;
+            case 4:
                 style = { backgroundColor: "rgba(170, 234, 255, 1)"};
                 break;
             default:
                 style = { backgroundColor: "rgb(255,255,255)", color: "rgb(255,255,255)"};
                 break;
         }
-        // style["box-sizing"] = 'border-box';
         style.border = "2px solid rgb(112,112,112)"
         style.borderWidth = "2px";
     } else {
-        // Для неактивных ячеек
         switch (state) {
             case 1:
-                style = { backgroundColor: "rgba(230, 145, 145, 0.5)" };
+                style = { backgroundColor: "rgb(145,230,146, 0.5)"};
                 break;
             case 2:
-                style = { backgroundColor: "rgba(255, 236, 152, 0.5)" };
+                style = { backgroundColor: "rgba(230, 145, 145, 0.5)" };
                 break;
             case 3:
+                style = { backgroundColor: "rgba(255, 236, 152, 0.5)" };
+                break;
+            case 4:
                 style = { backgroundColor: "rgba(170, 234, 255, 0.5)" };
                 break;
             default:

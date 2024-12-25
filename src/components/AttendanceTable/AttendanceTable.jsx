@@ -8,7 +8,6 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
     const [hasChanges, setHasChanges] = useState(false);
     const currentLessonRef = useRef(null);
 
-
     useEffect(() => {
         if (currentLessonRef.current) {
             currentLessonRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -18,8 +17,22 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
     useEffect(() => {
         const initialStates = {};
         attendStudents.forEach((entry) => {
+            const transformCondition = (condition) => {
+                switch (condition) {
+                    case 1:
+                        return 2;
+                    case 2:
+                        return 3;
+                    case 3:
+                        return 4;
+                    case 4:
+                        return 0;
+                    default:
+                        return condition;
+                }
+            };
             const cellKey = `${entry.studentId}-${entry.scheduleId}`;
-            initialStates[cellKey] = entry.condition;
+            initialStates[cellKey] = transformCondition(entry.condition);
         });
         setCellStates(initialStates);
     }, [attendStudents]);
@@ -33,10 +46,11 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
         setHasChanges(true);
 
         setCellStates((prev) => {
-            const currentState = prev[cellKey] || 0;
+            const currentState = prev[cellKey] || 5;
+            console.debug(currentState, (currentState + 1) % 5)
             return {
                 ...prev,
-                [cellKey]: (currentState + 1) % 4,
+                [cellKey]: (currentState + 1) % 5,
             };
         });
     };
@@ -57,6 +71,7 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
             };
         });
     };
+
     return (
         <div>
             <div className="attendancePrev">

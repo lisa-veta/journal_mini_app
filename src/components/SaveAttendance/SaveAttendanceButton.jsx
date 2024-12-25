@@ -17,14 +17,29 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
     }, [showPopup]);
     const handleSave = async () => {
         try {
+            console.debug(currentLessonData)
+            const transformCondition = (condition) => {
+                switch (condition) {
+                    case 0:
+                    case 1:
+                        return 4;
+                    case 2:
+                        return 1;
+                    case 3:
+                        return 2;
+                    case 4:
+                        return 3;
+                    default:
+                        return condition;
+                }
+            };
             const updatedStudents = currentLessonData.map(student => ({
-                condition: student.condition === 0 ? 4 : student.condition,
+                condition: transformCondition(student.condition),
                 id: student.studentId,
             }));
-            console.log(updatedStudents)
+            console.log("updatedStudents", updatedStudents)
             const scheduleService = new ScheduleService();
             const id = await scheduleService.getAttendanceId(schedule, lesson.id)
-            //await doneAttendance(attendanceId, updatedStudents);
             await doneAttendance(id, updatedStudents);
             setShowPopup(true);
             setHasChanges(false);
