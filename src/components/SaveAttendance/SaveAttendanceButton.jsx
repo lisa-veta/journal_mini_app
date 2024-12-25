@@ -21,14 +21,9 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
             const transformCondition = (condition) => {
                 switch (condition) {
                     case 0:
+                        return 1;
                     case 1:
                         return 4;
-                    case 2:
-                        return 1;
-                    case 3:
-                        return 2;
-                    case 4:
-                        return 3;
                     default:
                         return condition;
                 }

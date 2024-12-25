@@ -8,10 +8,10 @@ export class ScheduleService {
         this.date = date;
         this.schedule = schedule;
         this.conditionMapping = {
-            'Н': 1,
+            'Н': 0,
             'Б': 2,
             'УП': 3,
-            '+': 0,
+            '+': 1,
         };
     }
 
@@ -43,7 +43,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -109,7 +109,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),

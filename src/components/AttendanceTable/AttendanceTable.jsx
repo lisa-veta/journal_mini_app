@@ -17,22 +17,16 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
     useEffect(() => {
         const initialStates = {};
         attendStudents.forEach((entry) => {
-            const transformCondition = (condition) => {
-                switch (condition) {
-                    case 1:
-                        return 2;
-                    case 2:
-                        return 3;
-                    case 3:
-                        return 4;
-                    case 4:
-                        return 0;
-                    default:
-                        return condition;
-                }
-            };
             const cellKey = `${entry.studentId}-${entry.scheduleId}`;
-            initialStates[cellKey] = transformCondition(entry.condition);
+            initialStates[cellKey] = entry.condition;
+        });
+        students.forEach(student => {
+            schedule.forEach(lesson => {
+                const cellKey = `${student.id}-${lesson.id}`;
+                if (!(cellKey in initialStates)) {
+                    initialStates[cellKey] = 0;
+                }
+            });
         });
         setCellStates(initialStates);
     }, [attendStudents]);
@@ -46,11 +40,11 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
         setHasChanges(true);
 
         setCellStates((prev) => {
-            const currentState = prev[cellKey] || 5;
-            console.debug(currentState, (currentState + 1) % 5)
+            const currentState = prev[cellKey] || 4;
+            console.debug(currentState, (currentState + 1) % 4)
             return {
                 ...prev,
-                [cellKey]: (currentState + 1) % 5,
+                [cellKey]: (currentState + 1) % 4,
             };
         });
     };
