@@ -57,7 +57,8 @@ const SchedulePage = (props) => {
     return (
         <div className="schedule-content">
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
-            <Schedule weeks={weeks} groupId={props.groupId} date={props.date} schedule={props.schedule}></Schedule>
+            <Schedule weeks={weeks} groupId={props.groupId} date={props.date}
+                      schedule={props.schedule} telegramId={props.telegramId} ></Schedule>
             {/*<Navigation></Navigation>*/}
         </div >
     );

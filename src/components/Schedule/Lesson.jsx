@@ -26,6 +26,10 @@ function Lesson(props) {
     }
 
     const handleSubjectClick = () => {
+        (async () => {
+            props.incrementMethod();
+        })();
+
         console.log(JSON.stringify(props));
         console.debug("АЙДИ", props.lesson.id);
         navigate(`/attendance/${props.lesson.id}`, { state: { lesson: props.lesson } });
@@ -33,7 +37,7 @@ function Lesson(props) {
 
     const style = props.lesson.style !== null ? props.lesson.style : { backgroundColor: '#F6F6F6' };
     return (
-        <div className='lesson-container' style={style} onClick={() => handleSubjectClick()}>
+        <div className='lesson-container' style={style} onClick={handleSubjectClick}>
             <div className='time-container'>
                 <div className='lesson-time-start'>{props.lesson.start_time.slice(0, 5)}</div>
                 <div className='lesson-time-end'>{props.lesson.end_time.slice(0, 5)}</div>
