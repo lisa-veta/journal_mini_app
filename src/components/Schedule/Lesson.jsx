@@ -27,7 +27,9 @@ function Lesson(props) {
 
     const handleSubjectClick = () => {
         (async () => {
-            props.incrementMethod();
+            if(props.incrementMethod){
+                props.incrementMethod();
+            }
         })();
 
         console.log(JSON.stringify(props));

@@ -355,13 +355,13 @@ export async function openFullAttendance(lessonId) {
 export async function incrementOpenMiniapp(telegramId) {
     const endPoint = '/increment_open_miniapp_count';
     const data = { telegramId: telegramId };
-    await sendPost(endPoint, data);
+    return await sendPost(endPoint, data);
 }
 
 export async function incrementOpenCurrentLesson(telegramId) {
     const endPoint = '/increment_open_current_lesson';
     const data = { telegramId: telegramId };
-    await sendPost(endPoint, data);
+    return await sendPost(endPoint, data);
 }
 
 export async function incrementCurrentAttendance(telegramId) {
