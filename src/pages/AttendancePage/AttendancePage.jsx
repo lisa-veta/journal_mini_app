@@ -86,7 +86,13 @@ const AttendancePage = (props) => {
                         <CustomInfo caption="Преподаватель" content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
                     ))}
                 </div>
-                <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} />
+                <AttendanceTable lesson={lesson}
+                                 students={studentsList}
+                                 schedule={schedule}
+                                 currentLessonId={currentLessonId}
+                                 lessonId={lesson.id}
+                                 attendStudents={attendStudents}
+                                 telegramId={props.telegramId} />
             </div>
         </Layout>
     );

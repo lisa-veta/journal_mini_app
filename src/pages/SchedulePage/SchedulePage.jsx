@@ -30,22 +30,22 @@ const SchedulePage = (props) => {
                     tempSchedule.weeks[weekIndex].days[dayIndex].day_number = dayIndex + 1;
 
                     tempSchedule.weeks[weekIndex].days[dayIndex].subjects.push(
-                            {
-                                name: parsedData[i].lesson,
-                                id_lesson: parsedData[i].id_lesson,
-                                room: parsedData[i].classroom,
-                                teachers: parsedData[i].teachers.map(t => t),
-                                type_id: (parsedData[i].type_lesson === "Лекция") ? 1 :
-                                    (parsedData[i].type_lesson === "Практика") ? 2 :
-                                        (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,
-                                //building_id: 1,
-                                start_time: parsedData[i].lesson_start_time,
-                                end_time: parsedData[i].lesson_end_time,
-                                id: parsedData[i].id
-                            }
+                        {
+                            name: parsedData[i].lesson,
+                            id_lesson: parsedData[i].id_lesson,
+                            room: parsedData[i].classroom,
+                            teachers: parsedData[i].teachers,
+                            type_id: (parsedData[i].type_lesson === "Лекция") ? 1 :
+                                (parsedData[i].type_lesson === "Практика") ? 2 :
+                                    (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,
+                            //building_id: 1,
+                            start_time: parsedData[i].lesson_start_time,
+                            end_time: parsedData[i].lesson_end_time,
+                            id: parsedData[i].id
+                        }
                     );
                 }
-                
+
                 setWeeks(tempSchedule.weeks);
                 //IsLessonCurrent(7);
             } catch (error) {
@@ -57,7 +57,8 @@ const SchedulePage = (props) => {
     return (
         <div className="schedule-content">
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
-            <Schedule weeks={weeks} groupId={props.groupId} date={props.date} schedule={props.schedule}></Schedule>
+            <Schedule weeks={weeks} groupId={props.groupId} date={props.date}
+                      schedule={props.schedule} telegramId={props.telegramId} ></Schedule>
             {/*<Navigation></Navigation>*/}
         </div >
     );

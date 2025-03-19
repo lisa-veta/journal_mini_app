@@ -1,3 +1,4 @@
+// Захардкодил для получения нашего времени, думаю, пока не важно
 const url = 'https://timeapi.io/api/timezone/zone?timeZone=Asia%2FYekaterinburg';
 
 export async function CurrentTime() {
