@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import {doneAttendance, incrementCurrentAttendance} from "../../services/api/send.js";
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
+
 const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson, telegramId}) => {
-    //console.debug("КНОППКАА", lesson, schedule, currentLessonData);
+
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
     const popupClass = showPopup ? 'buttonSave__popup-visible' : 'buttonSave__popup-hidden';
@@ -17,14 +18,24 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
     }, [showPopup]);
     const handleSave = async () => {
         try {
+            console.debug(currentLessonData)
+            const transformCondition = (condition) => {
+                switch (condition) {
+                    case 0:
+                        return 1;
+                    case 1:
+                        return 4;
+                    default:
+                        return condition;
+                }
+            };
             const updatedStudents = currentLessonData.map(student => ({
-                condition: student.condition === 0 ? 4 : student.condition,
+                condition: transformCondition(student.condition),
                 id: student.studentId,
             }));
-            console.log(updatedStudents)
+            console.log("updatedStudents", updatedStudents)
             const scheduleService = new ScheduleService();
             const id = await scheduleService.getAttendanceId(schedule, lesson.id)
-            //await doneAttendance(attendanceId, updatedStudents);
             await doneAttendance(id, updatedStudents);
             setShowPopup(true);
             setHasChanges(false);
@@ -40,8 +51,10 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
 
         return (
             <div className="buttonSave-container">
-                <div  className={`buttonSave ${!hasChanges ? 'buttonSave_disabled' : ''}`}>
-                    <button className={`buttonSave__btn`} onClick={handleSave} disabled={!hasChanges}>Сохранить</button>
+                <div  className={`buttonSave ${!hasChanges || !isHeadman ? 'buttonSave_disabled' : ''}`}>
+                    <button className={`buttonSave__btn`} onClick={handleSave} disabled={!hasChanges || !isHeadman}>
+                        {isHeadman ? 'Сохранить' : 'У вас нет прав на сохранение'}
+                    </button>
                 </div>
                 {showPopup && (
                     <div className={`buttonSave__popup ${popupClass}`}>

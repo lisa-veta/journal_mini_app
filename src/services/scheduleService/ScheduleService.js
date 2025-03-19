@@ -8,10 +8,10 @@ export class ScheduleService {
         this.date = date;
         this.schedule = schedule;
         this.conditionMapping = {
-            'Н': 1,
+            'Н': 0,
             'Б': 2,
             'УП': 3,
-            '+': 0,
+            '+': 1,
         };
     }
 
@@ -43,7 +43,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -72,8 +72,6 @@ export class ScheduleService {
             }
             console.debug(now, lessonStart, lessonEnd)
             if (now >= lessonStart && now <= lessonEnd) {
-                //if (isCurrentLesson && (this.lesson.id === 7 || this.lesson.id === 8)) {
-
                 if (isCurrentLesson) {
                     const newEntry = {
                         id: schedule.length,
@@ -96,6 +94,50 @@ export class ScheduleService {
         }
 
         return schedule;
+    }
+
+    async getEmptySchedule(groupId) {
+
+        const now = new Date(this.date.year, this.date.month-1, this.date.day, this.date.hour, this.date.minute);
+
+        let isCurrentLesson;
+        try {
+            isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
+
+        } catch (error) {
+            console.error("Ошибка при вызове IsLessonCurrent:", error);
+        }
+        isCurrentLesson = true;
+        for (const pair of this.schedulePair) {
+            const lessonStart = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                ...pair.start_time.split(":").map(Number)
+            );
+            const lessonEnd = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                ...pair.end_time.split(":").map(Number)
+            );
+
+            console.debug(now, lessonStart, lessonEnd)
+            if (now >= lessonStart && now <= lessonEnd) {
+                if (isCurrentLesson) {
+                    const newEntry = {
+                        id: 1,
+                        isLessonCurrent: true,
+                        date: `${String(now.getDate()).padStart(2, "0")}.${String(
+                            now.getMonth() + 1
+                        ).padStart(2, "0")}`,
+                        time: pair.start_time,
+                        lesson: pair.lesson,
+                    };
+                    return [newEntry];
+                }
+            }
+        }
     }
 
     formatTime(date) {

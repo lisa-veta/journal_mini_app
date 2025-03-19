@@ -8,14 +8,12 @@ import {authorizationTelegram, incrementOpenMiniapp} from './services/api/send';
 
 const initializeTelegramSDK = async () => {
     try {
-        // Попытка инициализировать настоящее окружение Telegram
         console.log("Инициализация окружения Telegram");
         if (miniApp.mount.isAvailable()) {
             miniApp.mount();
             miniApp.isMounted(); // true
         }
     } catch (error) {
-        // В случае ошибки инициализируем фейковое окружение
         console.error('Ошибка при инициализации Telegram:', error);
 
         const initDataRaw = new URLSearchParams([
@@ -68,13 +66,6 @@ const root = createRoot(container);
 
 const urlParams = new URLSearchParams(window.location.search);
 const tgUserId = urlParams.get('userId');
-//console.log('ид из телеги', tgUserId);
-//if (!tgUserId) {
-//    root.render(
-//        <div>Нет доступа к журналу.</div>
-//    );
-//}
-
 (async () => {
     await incrementOpenMiniapp(tgUserId);
     console.log('+1 заход в миниапп');
@@ -84,8 +75,8 @@ const tgUserId = urlParams.get('userId');
     try {
         const data = tgUserId ? await authorizationTelegram(tgUserId) : null;
         let groupId = data ? (JSON.parse(JSON.stringify(data))).id_group : 5;
+
         let isHeadman = !!data;
-        //console.log(isHeadman);
 
         root.render(
             <App groupId={groupId} isHeadman={isHeadman} telegramId={tgUserId}/>

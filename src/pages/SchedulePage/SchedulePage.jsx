@@ -14,7 +14,6 @@ const SchedulePage = (props) => {
         ( () => {
             try {
                 const parsedData = props.schedule
-                //console.log('ответ с сервера', JSON.stringify(data));
 
                 const tempSchedule = {
                     weeks: [
@@ -47,7 +46,6 @@ const SchedulePage = (props) => {
                 }
 
                 setWeeks(tempSchedule.weeks);
-                //IsLessonCurrent(7);
             } catch (error) {
                 console.error(error);
             }

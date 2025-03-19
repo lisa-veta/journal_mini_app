@@ -13,7 +13,6 @@ function App(props) {
                 const data = await timeTable(props.groupId);
                 const parsedData = JSON.parse(JSON.stringify(data));
                 setSchedule(parsedData);
-                //IsLessonCurrent(7);
             } catch (error) {
                 console.error(error);
             }

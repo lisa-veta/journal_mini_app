@@ -1,38 +1,62 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
+
 const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, lesson, telegramId }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
-    // Инициализация состояния на основе attendStudents
+    const currentLessonRef = useRef(null);
+
+    useEffect(() => {
+        if (currentLessonRef.current) {
+            currentLessonRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    }, [schedule]);
+
     useEffect(() => {
         const initialStates = {};
         attendStudents.forEach((entry) => {
             const cellKey = `${entry.studentId}-${entry.scheduleId}`;
             initialStates[cellKey] = entry.condition;
         });
+        students.forEach(student => {
+            schedule.forEach(lesson => {
+                const cellKey = `${student.id}-${lesson.id}`;
+                if (!(cellKey in initialStates)) {
+                    initialStates[cellKey] = 0;
+                }
+            });
+        });
         setCellStates(initialStates);
     }, [attendStudents]);
 
-    // Функция обработки кликов по ячейке
-    const handleCellClick = (studentId, lessonId) => {
-        // Если урок не тот, пропускаем
-        if (lessonId !== currentLessonId) return;
 
-        const cellKey = `${studentId}-${lessonId}`;
+    const handleCellClick = (studentId, lesson) => {
+
+        if (lesson.isLessonCurrent !== true) return;
+
+        const cellKey = `${studentId}-${lesson.id}`;
         setHasChanges(true);
-        // Цикличное переключение состояний ячейки (от 0 до 3)
+
         setCellStates((prev) => {
-            const currentState = prev[cellKey] || 0;
+            const currentState = prev[cellKey] || 4;
+            console.debug(currentState, (currentState + 1) % 4)
             return {
                 ...prev,
-                [cellKey]: (currentState + 1) % 4, // Переключаем состояния
+                [cellKey]: (currentState + 1) % 4,
             };
         });
     };
-    const getCurrentLessonData = () => {
+    const getCurrentLessonData = (schedule) => {
+        let currentLessonId;
+        for (const entry of schedule) {
+            if (entry.isLessonCurrent === true) {
+                currentLessonId = entry.id;
+                break;
+            }
+        }
         return students.map((student) => {
             const cellKey = `${student.id}-${currentLessonId}`;
             const condition = cellStates[cellKey] || 0;
@@ -42,6 +66,7 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
             };
         });
     };
+
     return (
         <div>
             <div className="attendancePrev">
@@ -55,11 +80,12 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
                         {schedule.map((item) => (
                             <th
                                 key={item.id}
+                                ref={item.isLessonCurrent === true ? currentLessonRef : null}
                                 className="attendanceTable__vertical-header"
                                 style={{
                                     backgroundColor:
-                                        item.id === currentLessonId ? "#f9f9f9" : "#e0e0e0",
-                                    border: item.id === currentLessonId ? "2px solid rgb(112,112,112)" : "",
+                                        item.isLessonCurrent === true ? "#ffffff" : "#e0e0e0",
+                                    border: item.isLessonCurrent === true ? "2px solid rgb(112,112,112)" : "",
                                     borderWidth: "2px",
                                 }}
                             >
@@ -79,9 +105,9 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
                                     <td
                                         key={item.id}
                                         style={
-                                        getCellStyle(cellState, item.id === currentLessonId)
+                                        getCellStyle(cellState, item.isLessonCurrent === true)
                                     }
-                                        onClick={() => handleCellClick(student.id, item.id)}
+                                        onClick={() => handleCellClick(student.id, item)}
                                     >
                                         {getCellText(cellState)} {/* Выводим текст состояния */}
                                     </td>
@@ -104,6 +130,5 @@ const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, 
         </div>
     );
 };
-
 
 export default AttendanceTable;
