@@ -22,11 +22,13 @@ function Day(props) {
         default:
             dayName = 'Суббота';
     }
+
+    const sortedLessons = [...props.day.subjects].sort((a, b) => a.start_time.localeCompare(b.start_time));
     return (
         <div className='day-container day-container_position'>
             <span className='day-container__day-name'>{dayName}</span>
 
-            {props.day.subjects.map(lesson => (
+            {sortedLessons.map(lesson => (
                 <div key={lesson.id} className='lesson-wrapper'>
                     <Lesson lesson={lesson}/>
                 </div>

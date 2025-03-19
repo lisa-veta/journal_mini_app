@@ -3,7 +3,6 @@ import { doneAttendance } from "../../services/api/send.js";
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
 const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson, isHeadman}) => {
-    //console.debug("КНОППКАА", lesson, schedule, currentLessonData);
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
     const popupClass = showPopup ? 'buttonSave__popup-visible' : 'buttonSave__popup-hidden';
