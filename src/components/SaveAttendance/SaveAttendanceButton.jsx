@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { doneAttendance } from "../../services/api/send.js";
+import {doneAttendance, incrementCurrentAttendance} from "../../services/api/send.js";
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
-const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson, isHeadman}) => {
+
+const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson, telegramId}) => {
+
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
     const popupClass = showPopup ? 'buttonSave__popup-visible' : 'buttonSave__popup-hidden';
@@ -38,6 +40,9 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
             setShowPopup(true);
             setHasChanges(false);
             console.log("Посещаемость сохранена успешно!");
+
+            await incrementCurrentAttendance(telegramId);
+            console.log("Типа инкремент сохранения произошел");
         } catch (error) {
             console.error("Ошибка при создании посещаемости:", error);
         }

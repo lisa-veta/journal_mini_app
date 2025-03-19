@@ -1,15 +1,27 @@
 ﻿import { useState, useEffect } from 'react';
 import { Day, Lesson } from "components/index.jsx";
 import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
+import {incrementOpenCurrentLesson} from "../../services/api/send";
 
 function Schedule(props) {
     const style = { backgroundColor: 'var(--colorRed)' };
 
     const [week, setWeek] = useState(() => {
-        // Найти неделю, где is_even=true
         const evenWeek = props.weeks.find(w => w.is_even === true);
         return evenWeek || props.weeks[0];
     });
+
+    useEffect(() => {
+        (() => {
+            const currentWeekNumber = new ScheduleService().GetCurrentWeekNumber(
+                    new Date(props.date.year,
+                        props.date.month - 1,
+                        props.date.day,
+                        props.date.hour,
+                        props.date.minute));
+            setWeek(props.weeks[currentWeekNumber - 1]);
+        })()
+    }, [props.date, props.weeks]);
 
     const [currentLesson, setCurrentLesson] = useState(null);
 
@@ -57,7 +69,7 @@ function Schedule(props) {
                             name: currentLesson.lesson,
                             id_lesson: currentLesson.id_lesson,
                             room: currentLesson.classroom,
-                            teachers: currentLesson.teachers.map(t => t),
+                            teachers: currentLesson.teachers,
                             type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
                                 (currentLesson.type_lesson === "Практика") ? 2 :
                                     (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
@@ -105,7 +117,13 @@ function Schedule(props) {
 
             <div className='current-lesson-label'>Текущая пара</div>
             <div className='current-lesson-container day-container'>
-                <Lesson lesson={currentLesson} style={style}></Lesson>
+                <Lesson lesson={currentLesson} style={style}
+                        incrementMethod={() => {
+                            console.log("Типа клик на текущую пару");
+                            incrementOpenCurrentLesson(props.telegramId);
+                        }
+                } >
+                </Lesson>
             </div>
 
             <div className='schedule-days-container'>
@@ -115,6 +133,6 @@ function Schedule(props) {
             </div>
         </div>
     );
-};
+}
 
 export default Schedule;

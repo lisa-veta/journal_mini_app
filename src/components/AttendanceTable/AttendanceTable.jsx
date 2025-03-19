@@ -3,7 +3,8 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman }) => {
+
+const AttendanceTable = ({ students, schedule, currentLessonId, attendStudents, lesson, telegramId }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     const currentLessonRef = useRef(null);
@@ -118,8 +119,13 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
                 </table>
             </div>
             <div>
-                <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData(schedule)}
-                                 hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson} isHeadman={isHeadman}></SaveAttendanceButton>
+                <SaveAttendanceButton schedule={schedule}
+                                      currentLessonData={getCurrentLessonData()}
+                                      hasChanges={hasChanges}
+                                      setHasChanges={setHasChanges}
+                                      lesson={lesson}
+                                      telegramId={telegramId} >
+                </SaveAttendanceButton>
             </div>
         </div>
     );
