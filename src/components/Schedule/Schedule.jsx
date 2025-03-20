@@ -1,10 +1,11 @@
 ﻿import { useState, useEffect } from 'react';
 import { Day, Lesson } from "components/index.jsx";
 import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
+import {incrementOpenCurrentLesson} from "../../services/api/send";
 
 function Schedule(props) {
     const style = { backgroundColor: 'var(--colorRed)' };
-
+    const telegramId = props.telegramId;
     const [week, setWeek] = useState(() => {
         // Найти неделю, где is_even=true
         const evenWeek = props.weeks.find(w => w.is_even === true);
@@ -105,7 +106,12 @@ function Schedule(props) {
 
             <div className='current-lesson-label'>Текущая пара</div>
             <div className='current-lesson-container day-container'>
-                <Lesson lesson={currentLesson} style={style}></Lesson>
+                <Lesson lesson={currentLesson} style={style} incrementMethod={() => {
+                    console.log("Типа клик на текущую пару");
+                    incrementOpenCurrentLesson(telegramId);
+                }
+                } >
+                </Lesson>
             </div>
 
             <div className='schedule-days-container'>

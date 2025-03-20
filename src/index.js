@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.js';
 import './assets/styles/main.css';
 import { miniApp, mockTelegramEnv, parseInitData } from '@telegram-apps/sdk';
-import { authorizationTelegram } from '../src/services/api/send.js';
+import { authorizationTelegram, incrementOpenMiniapp } from './services/api/send';
 
 
 const initializeTelegramSDK = async () => {
@@ -73,14 +73,18 @@ if (!tgUserId) {
     );
 }
 (async () => {
+    await incrementOpenMiniapp(tgUserId);
+    console.log('+1 заход в миниапп');
+})();
+(async () => {
     try {
         const data = tgUserId ? await authorizationTelegram(tgUserId) : null;
         let groupId = data ? (JSON.parse(JSON.stringify(data))).id_group : 5;
-        let isHeadman = data ? true : false;
+        let isHeadman = !!data;
         //console.log(isHeadman);
 
         root.render(
-            <App groupId={groupId} isHeadman={isHeadman} />
+            <App groupId={groupId} isHeadman={isHeadman} telegramId={tgUserId}/>
         );
     }
     catch (e) {

@@ -18,8 +18,10 @@ const AttendancePage = (props) => {
     const [currentLessonId, setCurrentLessonId] = useState(null);
     const timeTable = props.schedule;
     const isHeadman = props.isHeadman;
-    //console.debug("date date",date)
-    // Однократное заполнение студентиков
+    const telegramId = props.telegramId;
+
+    console.log("timeTable", timeTable)
+
     useEffect(() => {
         (async () => {
             try {
@@ -55,14 +57,12 @@ const AttendancePage = (props) => {
                 try {
                     const newSchedule = await scheduleService.getSchedule(groupId);
                     const ss = scheduleService.getSortSchedule(newSchedule)
-                    console.debug("ss", ss);
                     setSchedule(ss);
                 } catch (error) {
                     console.error("Ошибка при получении расписания:", error);
                 }
                 if (Array.isArray(schedule) && schedule.length > 0) {
                     const currentLesson = schedule.find((entry) => entry.isLessonCurrent === true);
-                    console.debug(currentLesson, "currentLesson")
                     setCurrentLessonId(currentLesson ? currentLesson.id : null);
                 } else {
                     console.error("newSchedule не является массивом:", schedule);
@@ -103,7 +103,7 @@ const AttendancePage = (props) => {
                         <CustomInfo caption="Преподаватель" content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
                     ))}
                 </div>
-                <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} isHeadman={isHeadman}/>
+                <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} isHeadman={isHeadman} telegramId={telegramId}/>
             </div>
         </Layout>
     );

@@ -22,7 +22,7 @@ export class ScheduleService {
         ).map((uniqueDateTime, index) => {
             const [fullDate, fullTime] = uniqueDateTime.split(" ");
             const [year, month, day] = fullDate.split("-");
-            const formattedDate = `${day}.${month}`;
+            const formattedDate = `${day}.${month}.${year.slice(-2)}`;
             const formattedTime = fullTime.slice(0, 5);
             const lesson = this.getPairNumber(formattedTime);
 
@@ -43,7 +43,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        isCurrentLesson = true;
+        //isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -76,9 +76,7 @@ export class ScheduleService {
                     const newEntry = {
                         id: schedule.length,
                         isLessonCurrent: true,
-                        date: `${String(now.getDate()).padStart(2, "0")}.${String(
-                            now.getMonth() + 1
-                        ).padStart(2, "0")}`,
+                        date: `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getFullYear()).slice(-2)}`,
                         time: pair.start_time,
                         lesson: pair.lesson,
                     };
@@ -107,7 +105,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        isCurrentLesson = true;
+        //isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -206,7 +204,7 @@ export class ScheduleService {
             const formattedTime = entryTime.slice(0, 5);
             const [year, month, day] = entryDate.split('-');
             const scheduleEntry = schedule.find(
-                (sched) => sched.date === `${day}.${month}` &&
+                (sched) => sched.date === `${day}.${month}.${year.slice(-2)}` &&
                     sched.time === formattedTime
             );
 

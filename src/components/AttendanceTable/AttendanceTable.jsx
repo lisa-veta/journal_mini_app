@@ -3,7 +3,7 @@ import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {SaveAttendanceButton} from "../index";
 
-const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman }) => {
+const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman, telegramId }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     const currentLessonRef = useRef(null);
@@ -65,7 +65,14 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
             };
         });
     };
+    const parseDate = (dateStr) => {
+        const [day, month, year] = dateStr.split(".");
+        return `${year}${month}${day}`; // 25.03.23 -> "230325"
+    };
 
+    const sortedSchedule = [...schedule]
+        .filter(item => item.date) // Убираем пустые или некорректные даты
+        .sort((a, b) => parseDate(a.date) - parseDate(b.date));
     return (
         <div>
             <div className="attendancePrev">
@@ -76,7 +83,7 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
                     <thead>
                     <tr>
                         <th>Студент</th>
-                        {schedule.map((item) => (
+                        {sortedSchedule.map((item) => (
                             <th
                                 key={item.id}
                                 ref={item.isLessonCurrent === true ? currentLessonRef : null}
@@ -97,7 +104,7 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
                     {students.map((student) => (
                         <tr key={student.id}>
                             <td>{student.lastname} {student.name[0]}.</td>
-                            {schedule.map((item) => {
+                            {sortedSchedule.map((item) => {
                                 // Ищем состояние для текущей ячейки
                                 const cellState = cellStates[`${student.id}-${item.id}`];
                                 return (
@@ -119,7 +126,7 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
             </div>
             <div>
                 <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData(schedule)}
-                                 hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson} isHeadman={isHeadman}></SaveAttendanceButton>
+                                 hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson} isHeadman={isHeadman} telegramId={telegramId}></SaveAttendanceButton>
             </div>
         </div>
     );

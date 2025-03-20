@@ -279,9 +279,7 @@ async function sendPost(endPoint, data) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        const jsonData = await response.json();
-        //console.log(jsonData);
-        return jsonData;
+        return await response.json();
     } catch (error) {
         console.log(error.message);
         //displayResponse({ error: error.message });
@@ -350,5 +348,23 @@ function displayResponse(data) {
 export async function openFullAttendance(lessonId) {
     const endPoint = '/open-full-attendance';
     const data = { lessonId: lessonId };
+    return await sendPost(endPoint, data);
+}
+
+export async function incrementOpenMiniapp(telegramId) {
+    const endPoint = '/increment_open_miniapp_count';
+    const data = { telegramId: telegramId };
+    return await sendPost(endPoint, data);
+}
+
+export async function incrementOpenCurrentLesson(telegramId) {
+    const endPoint = '/increment_open_current_lesson';
+    const data = { telegramId: telegramId };
+    return await sendPost(endPoint, data);
+}
+
+export async function incrementCurrentAttendance(telegramId) {
+    const endPoint = '/increment_currect_attendance';
+    const data = { telegramId: telegramId };
     return await sendPost(endPoint, data);
 }
