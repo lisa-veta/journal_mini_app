@@ -422,7 +422,7 @@ export class ScheduleService {
         const weekInMs = 1000 * 60 * 60 * 24 * 7;
         const diffInWeeks = Math.floor(diffInMs / weekInMs);
 
-        const isFirstWeekEducational = !(septemberStart.getDay() % 7 === 0);
+        const isFirstWeekEducational = (septemberStart.getDay() % 7 === 0);
         return isFirstWeekEducational
             ? diffInWeeks % 2 === 0
                 ? 2
