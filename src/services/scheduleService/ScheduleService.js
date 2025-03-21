@@ -388,7 +388,7 @@ export class ScheduleService {
     async FindCurrentLesson(groupId) {
         const parsedData = this.schedule;
 
-        const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
+        const now = new Date(this.date.year, this.date.month - 1, this.date.day + 7, this.date.hour, this.date.minute);
         for (let i = 0; i < parsedData.length; i++) {
             if (this.IsCurrentLesson(now, parsedData[i])) {
                 return parsedData[i];
