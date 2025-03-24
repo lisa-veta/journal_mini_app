@@ -335,19 +335,19 @@ export class ScheduleService {
     }
 
     IsNotCorrectWeek(now, targetLesson) {
-        const septemberStart = new Date(now.getFullYear(), 8, 1, 23);
-        const diffInMs = now - septemberStart;
+        const februaryStart = new Date(now.getFullYear(), 1, 10, 23);
+        const diffInMs = now - februaryStart;
         const weekInMs = 1000 * 60 * 60 * 24 * 7;
         const diffInWeeks = Math.floor(diffInMs / weekInMs);
 
-        const isFirstWeekEducational = !(septemberStart.getDay() % 7 === 0);
+        const isFirstWeekEducational = (februaryStart.getDay() % 7 !== 0);
         const weekType = isFirstWeekEducational
             ? diffInWeeks % 2 === 0
-                ? 2
-                : 1
+                ? 1
+                : 2
             : diffInWeeks % 2 !== 0
-                ? 2
-                : 1;
+                ? 1
+                : 2;
 
         return weekType !== targetLesson.number_week;
     }
@@ -369,6 +369,9 @@ export class ScheduleService {
     }
 
     IsCurrentLesson(now, targetLesson) {
+        if(!now.getFullYear()) {
+            return;
+        }
         if (this.IsNotCorrectWeek(now, targetLesson)) {
             return false;
         }
@@ -387,8 +390,13 @@ export class ScheduleService {
 
     async FindCurrentLesson(groupId) {
         const parsedData = this.schedule;
+        console.log("внутри определения findcurrentlesson", parsedData)
 
-        const now = new Date(this.date.year, this.date.month - 1, this.date.day + 7, this.date.hour, this.date.minute);
+        const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
+        if(!now.getFullYear()) {
+            return;
+        }
+        console.log("now: ", now);
         for (let i = 0; i < parsedData.length; i++) {
             if (this.IsCurrentLesson(now, parsedData[i])) {
                 return parsedData[i];
@@ -417,18 +425,21 @@ export class ScheduleService {
     }
 
     GetCurrentWeekNumber(now) {
-        const septemberStart = new Date(now.getFullYear(), 8, 1, 23);
-        const diffInMs = now - septemberStart;
+        if(!now) {
+            return;
+        }
+        const februaryStart = new Date(now.getFullYear(), 1, 10, 23);
+        const diffInMs = now - februaryStart;
         const weekInMs = 1000 * 60 * 60 * 24 * 7;
         const diffInWeeks = Math.floor(diffInMs / weekInMs);
 
-        const isFirstWeekEducational = (septemberStart.getDay() % 7 === 0);
+        const isFirstWeekEducational = (februaryStart.getDay() % 7 !== 0);
         return isFirstWeekEducational
             ? diffInWeeks % 2 === 0
-                ? 2
-                : 1
+                ? 1
+                : 2
             : diffInWeeks % 2 !== 0
-                ? 2
-                : 1;
+                ? 1
+                : 2;
     }
 }

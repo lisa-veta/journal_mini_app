@@ -65,7 +65,8 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 
 const urlParams = new URLSearchParams(window.location.search);
-const tgUserId = urlParams.get('userId');
+let tgUserId = urlParams.get('userId');
+//tgUserId = 1789426376;
 console.log('ид из телеги', tgUserId);
 if (!tgUserId) {
     root.render(
