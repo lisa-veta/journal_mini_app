@@ -328,26 +328,26 @@ export class ScheduleService {
             parseInt(targetLesson.lesson_start_time.split(":")[1]);
         const lessonMinutesEnd =
             parseInt(targetLesson.lesson_end_time.split(":")[0]) * 60 +
-            parseInt(targetLesson.lesson_end_time.split(":")[1]);
+            parseInt(targetLesson.lesson_end_time.split(":")[1]) + 5;
         const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
         return nowMinutes < lessonMinutesStart || nowMinutes > lessonMinutesEnd;
     }
 
     IsNotCorrectWeek(now, targetLesson) {
-        const februaryStart = new Date(now.getFullYear(), 1, 10, 23);
-        const diffInMs = now - februaryStart;
+        const februaryStart = new Date(now.getFullYear(), 1, 10, 0);
+        const diffInMs = now - februaryStart + 1000 * 60 * 60 * 24;
         const weekInMs = 1000 * 60 * 60 * 24 * 7;
         const diffInWeeks = Math.floor(diffInMs / weekInMs);
 
         const isFirstWeekEducational = (februaryStart.getDay() % 7 !== 0);
         const weekType = isFirstWeekEducational
             ? diffInWeeks % 2 === 0
-                ? 1
-                : 2
+                ? 2
+                : 1
             : diffInWeeks % 2 !== 0
-                ? 1
-                : 2;
+                ? 2
+                : 1;
 
         return weekType !== targetLesson.number_week;
     }
@@ -428,18 +428,18 @@ export class ScheduleService {
         if(!now) {
             return;
         }
-        const februaryStart = new Date(now.getFullYear(), 1, 10, 23);
-        const diffInMs = now - februaryStart;
+        const februaryStart = new Date(now.getFullYear(), 1, 10, 0);
+        const diffInMs = now - februaryStart + 1000 * 60 * 60 * 24;
         const weekInMs = 1000 * 60 * 60 * 24 * 7;
         const diffInWeeks = Math.floor(diffInMs / weekInMs);
 
         const isFirstWeekEducational = (februaryStart.getDay() % 7 !== 0);
         return isFirstWeekEducational
             ? diffInWeeks % 2 === 0
-                ? 1
-                : 2
+                ? 2
+                : 1
             : diffInWeeks % 2 !== 0
-                ? 1
-                : 2;
+                ? 2
+                : 1;
     }
 }
