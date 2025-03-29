@@ -14,75 +14,6 @@ export class ScheduleService {
             '+': 1,
         };
     }
-    // async getSchedule(groupId) {
-    //     const schedule = Array.from(
-    //         new Set(this.attendance.map((entry) => entry.form_time_date))
-    //     ).map((uniqueDateTime, index) => {
-    //         const [fullDate, fullTime] = uniqueDateTime.split(" ");
-    //         const [year, month, day] = fullDate.split("-");
-    //         const formattedDate = `${day}.${month}.${year.slice(-2)}`;
-    //         const formattedTime = fullTime.slice(0, 5);
-    //         const lesson = this.getPairNumber(formattedTime);
-    //
-    //         return {
-    //             id: index,
-    //             isLessonCurrent: false,
-    //             date: formattedDate,
-    //             time: formattedTime,
-    //             lesson,
-    //         };
-    //     });
-    //
-    //     const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
-    //     let isCurrentLesson;
-    //
-    //     try {
-    //         isCurrentLesson = await this.IsLessonCurrent(this.lesson.id, groupId);
-    //     } catch (error) {
-    //         console.error("Ошибка при вызове IsLessonCurrent:", error);
-    //     }
-    //
-    //     for (const pair of this.schedulePair) {
-    //         const lessonStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...pair.start_time.split(":").map(Number));
-    //         const lessonEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...pair.end_time.split(":").map(Number));
-    //
-    //         const currentDate = `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getFullYear()).slice(-2)}`;
-    //
-    //         if (isCurrentLesson) {
-    //             for (const entry of schedule) {
-    //                 if (entry.date === currentDate && entry.time === this.formatTime(lessonStart)) {
-    //                     if (now >= lessonStart && now <= lessonEnd) {
-    //                         entry.isLessonCurrent = true;
-    //                         return schedule;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //
-    //         if (now >= lessonStart && now <= lessonEnd) {
-    //             if (isCurrentLesson) {
-    //                 // Проверяем, есть ли уже такая запись
-    //                 console.log(currentDate, pair.start_time)
-    //                 const existingEntry = schedule.find(entry => entry.date === currentDate && entry.time === pair.start_time);
-    //                 console.log("ZZZZZZZNNZNNZNZNZ", existingEntry, schedule)
-    //                 if (existingEntry) {
-    //                     existingEntry.isLessonCurrent = true;
-    //                 } else {
-    //                     schedule.push({
-    //                         id: schedule.length,
-    //                         isLessonCurrent: true,
-    //                         date: `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getFullYear()).slice(-2)}`,
-    //                         time: pair.start_time,
-    //                         lesson: pair.lesson,
-    //                     });
-    //                 }
-    //                 return schedule;
-    //             }
-    //         }
-    //     }
-    //
-    //     return schedule;
-   // }
     //Метод для получения расписания на основе посещаемости
     async getSchedule(groupId) {
         const schedule = Array.from(
@@ -111,7 +42,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -173,7 +104,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),

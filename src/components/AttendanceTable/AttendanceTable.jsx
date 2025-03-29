@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from "react";
 import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
-import {SaveAttendanceButton} from "../index";
+import {CustomInfo, SaveAttendanceButton, Layout} from "../index";
 
 const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman, telegramId }) => {
     const [cellStates, setCellStates] = useState({});
@@ -74,61 +74,76 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
         .filter(item => item.date) // Убираем пустые или некорректные даты
         .sort((a, b) => parseDate(a.date) - parseDate(b.date));
     return (
-        <div>
-            <div className="attendancePrev">
-                {hasChanges ? "Есть несохраненные изменения" : ""}
-            </div>
-            <div className="attendanceTable-wrapper">
-                <table className="attendanceTable">
-                    <thead>
-                    <tr>
-                        <th>Студент</th>
-                        {sortedSchedule.map((item) => (
-                            <th
-                                key={item.id}
-                                ref={item.isLessonCurrent === true ? currentLessonRef : null}
-                                className="attendanceTable__vertical-header"
-                                style={{
-                                    backgroundColor:
-                                        item.isLessonCurrent === true ? "#ffffff" : "#e0e0e0",
-                                    border: item.isLessonCurrent === true ? "2px solid rgb(112,112,112)" : "",
-                                    borderWidth: "2px",
-                                }}
-                            >
-                                {item.date}, {item.lesson}
-                            </th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {students.map((student) => (
-                        <tr key={student.id}>
-                            <td>{student.lastname} {student.name[0]}.</td>
-                            {sortedSchedule.map((item) => {
-                                // Ищем состояние для текущей ячейки
-                                const cellState = cellStates[`${student.id}-${item.id}`];
-                                return (
-                                    <td
-                                        key={item.id}
-                                        style={
-                                        getCellStyle(cellState, item.isLessonCurrent === true)
-                                    }
-                                        onClick={() => handleCellClick(student.id, item)}
-                                    >
-                                        {getCellText(cellState)} {/* Выводим текст состояния */}
-                                    </td>
-                                );
-                            })}
-                        </tr>
+        <Layout schedule={schedule} currentLessonData={getCurrentLessonData(schedule)}
+                hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson}
+                isHeadman={isHeadman} telegramId={telegramId}>
+            <div className="attendancePage">
+                <p className="attendancePage__subject-name">{lesson.name}</p>
+                <div className="attendancePage__teacher">
+                    {lesson.teachers.map((teacher) => (
+                        <CustomInfo caption="Преподаватель"
+                                    content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
                     ))}
-                    </tbody>
-                </table>
+                </div>
+                <div>
+                    <div className="attendancePrev">
+                        {hasChanges ? "Есть несохраненные изменения" : ""}
+                    </div>
+                    <div className="attendanceTable-wrapper">
+                        <table className="attendanceTable">
+                            <thead>
+                            <tr>
+                                <th>Студент</th>
+                                {sortedSchedule.map((item) => (
+                                    <th
+                                        key={item.id}
+                                        ref={item.isLessonCurrent === true ? currentLessonRef : null}
+                                        className="attendanceTable__vertical-header"
+                                        style={{
+                                            backgroundColor:
+                                                item.isLessonCurrent === true ? "#ffffff" : "#e0e0e0",
+                                            border: item.isLessonCurrent === true ? "2px solid rgb(112,112,112)" : "",
+                                            borderWidth: "2px",
+                                        }}
+                                    >
+                                        {item.date}, {item.lesson}
+                                    </th>
+                                ))}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {students.map((student) => (
+                                <tr key={student.id}>
+                                    <td>{student.lastname} {student.name[0]}.</td>
+                                    {sortedSchedule.map((item) => {
+                                        // Ищем состояние для текущей ячейки
+                                        const cellState = cellStates[`${student.id}-${item.id}`];
+                                        return (
+                                            <td
+                                                key={item.id}
+                                                style={
+                                                    getCellStyle(cellState, item.isLessonCurrent === true)
+                                                }
+                                                onClick={() => handleCellClick(student.id, item)}
+                                            >
+                                                {getCellText(cellState)} {/* Выводим текст состояния */}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData(schedule)}
+                                              hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson}
+                                              isHeadman={isHeadman} telegramId={telegramId}></SaveAttendanceButton>
+                    </div>
+                </div>
             </div>
-            <div>
-                <SaveAttendanceButton schedule={schedule} currentLessonData={getCurrentLessonData(schedule)}
-                                 hasChanges={hasChanges} setHasChanges={setHasChanges} lesson={lesson} isHeadman={isHeadman} telegramId={telegramId}></SaveAttendanceButton>
-            </div>
-        </div>
+        </Layout>
+
     );
 };
 

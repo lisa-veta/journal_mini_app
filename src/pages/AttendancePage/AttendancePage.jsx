@@ -1,6 +1,4 @@
 import { AttendanceTable } from "components/index.jsx";
-import { CustomInfo } from "components/index.jsx";
-import { Layout } from "../index.jsx";
 import "./AttendancePage.css"
 import students, { openFullAttendance } from "../../services/api/send.js";
 import { useEffect, useState } from "react";
@@ -95,17 +93,7 @@ const AttendancePage = (props) => {
 
     const attendStudents = scheduleService.getAttendStudents(schedule);
     return (
-        <Layout>
-            <div className="attendancePage">
-                <p className="attendancePage__subject-name">{lesson.name}</p>
-                <div className="attendancePage__teacher">
-                    {lesson.teachers.map((teacher) => (
-                        <CustomInfo caption="Преподаватель" content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
-                    ))}
-                </div>
-                <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} isHeadman={isHeadman} telegramId={telegramId}/>
-            </div>
-        </Layout>
+        <AttendanceTable lesson={lesson} students={studentsList} schedule={schedule} currentLessonId={currentLessonId} lessonId={lesson.id} attendStudents={attendStudents} isHeadman={isHeadman} telegramId={telegramId}/>
     );
 };
 
