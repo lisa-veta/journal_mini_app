@@ -2,37 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {ScheduleService} from "../../services/scheduleService/ScheduleService";
 import {doneAttendance, incrementCurrentAttendance} from "../../services/api/send";
+import {useSaveAttendance} from "../../hooks/useSaveAttendance";
 
 const Layout = ({ children, schedule, currentLessonData, telegramId, lesson, hasChanges, isHeadman }) => {
-
-    const transformCondition = (condition) => {
-        switch (condition) {
-            case 0:
-                return 1;
-            case 1:
-                return 4;
-            default:
-                return condition;
-        }
-    };
+    const { saveAttendance } = useSaveAttendance(schedule, lesson, telegramId);
     const handleSaveAttendance = async () => {
-        try {
-            if(hasChanges && isHeadman) {
-                const updatedStudents = currentLessonData.map(student => ({
-                    condition: transformCondition(student.condition),
-                    id: student.studentId,
-                }));
-                console.log("updatedStudents", updatedStudents)
-                const scheduleService = new ScheduleService();
-                const id = await scheduleService.getAttendanceId(schedule, lesson.id)
-                await doneAttendance(id, updatedStudents);
-
-                console.log("Посещаемость сохранена успешно!", updatedStudents);
-                await incrementCurrentAttendance(telegramId);
-                console.log("Типа инкремент сохранения произошел");
-            }
-        } catch (error) {
-            console.error("Ошибка при создании посещаемости:", error);
+        if (hasChanges && isHeadman) {
+            await saveAttendance(currentLessonData);
         }
     };
     return (

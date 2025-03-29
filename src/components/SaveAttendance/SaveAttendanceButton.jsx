@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {doneAttendance, incrementCurrentAttendance} from "../../services/api/send.js";
-import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import "./SaveAttendanceButton.css"
+import {useSaveAttendance} from "../../hooks/useSaveAttendance";
+
 const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson, isHeadman, telegramId}) => {
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
     const [showPopup, setShowPopup] = useState(false);
     const popupClass = showPopup ? 'buttonSave__popup-visible' : 'buttonSave__popup-hidden';
+    const { saveAttendance } = useSaveAttendance(schedule, lesson, telegramId);
     useEffect(() => {
         if (showPopup) {
             const timer = setTimeout(() => {
@@ -15,35 +16,10 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
         }
     }, [showPopup]);
     const handleSave = async () => {
-        try {
-            console.debug(currentLessonData)
-            const transformCondition = (condition) => {
-                switch (condition) {
-                    case 0:
-                        return 1;
-                    case 1:
-                        return 4;
-                    default:
-                        return condition;
-                }
-            };
-            const updatedStudents = currentLessonData.map(student => ({
-                condition: transformCondition(student.condition),
-                id: student.studentId,
-            }));
-            console.log("updatedStudents", updatedStudents)
-            const scheduleService = new ScheduleService();
-            const id = await scheduleService.getAttendanceId(schedule, lesson.id)
-            await doneAttendance(id, updatedStudents);
-            setShowPopup(true);
-            setHasChanges(false);
-            console.log("Посещаемость сохранена успешно!");
-            await incrementCurrentAttendance(telegramId);
-            console.log("Типа инкремент сохранения произошел");
-        } catch (error) {
-            console.error("Ошибка при создании посещаемости:", error);
-        }
+        await saveAttendance(currentLessonData, setHasChanges);
+        setShowPopup(true);
     };
+
     if (currentLesson) {
 
         return (
