@@ -11,7 +11,12 @@ const initializeTelegramSDK = async () => {
         console.log("Инициализация окружения Telegram");
         if (miniApp.mount.isAvailable()) {
             miniApp.mount();
-            miniApp.isMounted(); // true
+            miniApp.isMounted();
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.setupClosingBehavior({
+                    isVerticalSwipesEnabled: false
+                });
+            }
         }
     } catch (error) {
         console.error('Ошибка при инициализации Telegram:', error);
