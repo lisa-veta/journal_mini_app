@@ -2,8 +2,13 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.js';
 import './assets/styles/main.css';
-import {miniApp, mockTelegramEnv, parseInitData, swipeBehavior} from '@telegram-apps/sdk';
+import { miniApp, mockTelegramEnv, parseInitData } from '@telegram-apps/sdk';
 import { authorizationTelegram, incrementOpenMiniapp } from './services/api/send';
+import {
+    disableVerticalSwipes,
+    mountSwipeBehavior,
+    isSwipeBehaviorSupported
+} from '@telegram-apps/sdk';
 
 
 const initializeTelegramSDK = async () => {
@@ -62,19 +67,17 @@ const initializeTelegramSDK = async () => {
 
 const initializeSwipeBehavior = async () => {
     try {
-        if (!swipeBehavior.isSupported()) {
+        if (!isSwipeBehaviorSupported()) {
             console.warn('Swipe behavior control is not supported in this version');
             return;
         }
 
-        if (swipeBehavior.mount.isAvailable()) {
-            await swipeBehavior.mount();
-            console.log('Swipe behavior mounted:', swipeBehavior.isMounted());
+        if (mountSwipeBehavior.isAvailable()) {
+            mountSwipeBehavior();
         }
 
-        if (swipeBehavior.disableVertical.isAvailable()) {
-            await swipeBehavior.disableVertical();
-            console.log('Vertical swipes disabled:', !swipeBehavior.isVerticalEnabled());
+        if (disableVerticalSwipes.isAvailable()) {
+            disableVerticalSwipes();
         }
 
     } catch (error) {
