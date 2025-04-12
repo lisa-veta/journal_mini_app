@@ -368,3 +368,34 @@ export async function incrementCurrentAttendance(telegramId) {
     const data = { telegramId: telegramId };
     return await sendPost(endPoint, data);
 }
+
+export async function getAllLessons(groupId) {
+    const endPoint = '/group/lessons';
+    const data = { groupId: groupId };
+    return await sendPost(endPoint, data);
+}
+
+async function sendBlobPost(endPoint, data) {
+    try {
+        const response = await fetch(url + endPoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return await response.blob();
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function exportAllLessonsAttendance(groupId, startDate, endDate) {
+    const endPoint = '/attendance/file';
+    const data = { groupId: groupId, startDate: startDate, endDate: endDate };
+    return await sendBlobPost(endPoint, data);
+}
+
+export async function exportLessonAttendance(groupId, startDate, endDate, lessonName) {
+    const endPoint = '/attendance/file/lesson';
+    const data = { groupId: groupId, lessonName: lessonName, startDate: startDate, endDate: endDate };
+    return await sendBlobPost(endPoint, data);
+}

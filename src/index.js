@@ -9,7 +9,7 @@ import {
     mountSwipeBehavior,
     isSwipeBehaviorSupported
 } from '@telegram-apps/sdk';
-
+import '@gravity-ui/uikit/styles/styles.css';
 
 const initializeTelegramSDK = async () => {
     try {

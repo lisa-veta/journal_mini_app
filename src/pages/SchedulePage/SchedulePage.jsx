@@ -2,9 +2,19 @@ import "./SchedulePage.css"
 import { Schedule } from "components/index.jsx";
 import { useEffect, useState } from 'react';
 import { ScheduleService } from '../../services/scheduleService/ScheduleService.js';
+import {Button, Icon, ThemeProvider} from '@gravity-ui/uikit';
+import {ArrowDownToLine} from '@gravity-ui/icons';
+import {getAllLessons} from "../../services/api/send";
+import ModalWindow from "../../components/ModalWindow/ModalWindow";
+import styled from "styled-components";
+
+const DownloadButton = styled(Button)`
+    margin: 3rem 0 0 1rem;
+`
 
 const SchedulePage = (props) => {
-
+    const [allLessons, setAllLessons] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
     const [weeks, setWeeks] = useState([
         { is_even: false, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) },
         { is_even: true, days: Array(6).fill(null).map((_, index) => ({ day_number: index + 1, subjects: [] })) }
@@ -52,16 +62,39 @@ const SchedulePage = (props) => {
         })();
     }, [props.schedule]);
 
+    useEffect(() => {
+        (async() => {
+            try {
+                const lessons = await getAllLessons(props.groupId);
+                setAllLessons(lessons[0].get_lessons_by_group);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        })();
+    }, []);
+
     return (
         <div className="schedule-content">
+            <ThemeProvider theme={'light'}>
+                <ModalWindow open={openModal}
+                             setOpen={setOpenModal}
+                             lessons={allLessons}
+                             groupId={props.groupId} />
+            </ThemeProvider>
             <h1 className='schedule-header schedule-header_position'>Расписание</h1>
+            <DownloadButton view="outlined"
+                            size="l"
+                            onClick={() => setOpenModal(true)}>
+                <Icon data={ArrowDownToLine} size={18} />
+                Скачать посещаемость
+            </DownloadButton>
             <Schedule weeks={weeks}
                       groupId={props.groupId}
                       date={props.date}
                       schedule={props.schedule}
                       telegramId={props.telegramId} >
             </Schedule>
-            {/*<Navigation></Navigation>*/}
         </div >
     );
 };
