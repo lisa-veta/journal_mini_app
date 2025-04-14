@@ -10,23 +10,43 @@ const LessonsRadio = styled(RadioGroup)`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-top: 1rem;
 `
 
 const InputsContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
     width: 100%;
-    padding-bottom: 20px;
+    padding: 2rem 0;
+`
+
+const InputsDateContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    border-radius: 50px;
+    gap: 0.5rem;
+    width: 100%;
 `
 
 const DownloadButton = styled(Button)`
+    padding: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
 `
 
 const ModalContentContainer = styled.div`
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
+
+const ModalLabel = styled.div`
+    font-weight: 700;
+    font-size: 2rem;
 `
 
 export default function ModalWindow({open, setOpen, lessons, groupId}) {
@@ -96,7 +116,7 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
                    setIsAllLessonsToDownload(true);
                }}>
             <ModalContentContainer>
-                <h2>Параметры</h2>
+                <ModalLabel>Параметры</ModalLabel>
                 <form>
                     <InputsContainer>
                         <LessonsRadio defaultValue={options[0].value}
@@ -107,7 +127,11 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
                                 placeholder={'Предмет'}
                                 onUpdate={(e) => {
                                     setLesson(e[0]);
-                                }} />
+                                }}
+                                style={{
+                                    padding: '20px 0',
+                                }}/>
+                        <InputsDateContainer>
                         <DatePicker
                             label={"Начальная дата: "}
                             format="YYYY-MM-DD"
@@ -122,6 +146,7 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
                             onUpdate={e => {
                                 setEndDate(dateTimeParse(e))
                             }} />
+                        </InputsDateContainer>
                     </InputsContainer>
 
                     <DownloadButton onClick={onSubmit} disabled={!isSubmitActive}>

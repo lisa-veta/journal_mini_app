@@ -199,3 +199,9 @@
     position: center center;
     z-index: 555;
 }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

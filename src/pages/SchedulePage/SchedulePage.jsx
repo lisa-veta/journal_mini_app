@@ -9,7 +9,7 @@ import ModalWindow from "../../components/ModalWindow/ModalWindow";
 import styled from "styled-components";
 
 const DownloadButton = styled(Button)`
-    margin: 3rem 0 0 1rem;
+    margin-right: 1rem;
 `
 
 const SchedulePage = (props) => {
@@ -82,20 +82,23 @@ const SchedulePage = (props) => {
                              lessons={allLessons}
                              groupId={props.groupId} />
             </ThemeProvider>
-            <h1 className='schedule-header schedule-header_position'>Расписание</h1>
-            <DownloadButton view="outlined"
-                            size="l"
-                            onClick={() => setOpenModal(true)}>
-                <Icon data={ArrowDownToLine} size={18} />
-                Скачать посещаемость
-            </DownloadButton>
+            <div className={'header'}>
+                <h1 className='schedule-header schedule-header_position'>Расписание</h1>
+                <DownloadButton view="outlined"
+                                size="l"
+                                onClick={() => setOpenModal(true)}>
+                    <Icon data={ArrowDownToLine} size={18}/>
+                    Скачать посещаемость
+                </DownloadButton>
+            </div>
+
             <Schedule weeks={weeks}
                       groupId={props.groupId}
                       date={props.date}
                       schedule={props.schedule}
-                      telegramId={props.telegramId} >
+                      telegramId={props.telegramId}>
             </Schedule>
-        </div >
+        </div>
     );
 };
 export default SchedulePage;
