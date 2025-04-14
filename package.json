@@ -11,6 +11,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@tonsolutions/telemetree-react": "^1.2.14",
     "express": "^4.21.1",
     "http-proxy-middleware": "^3.0.3",
     "prop-types": "^15.8.1",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@telegram-apps/mate": "^0.0.26",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "postcss-import": "^16.1.0",

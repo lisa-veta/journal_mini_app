@@ -2,26 +2,23 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.js';
 import './assets/styles/main.css';
-import { miniApp, mockTelegramEnv } from '@telegram-apps/sdk';
-import { authorizationTelegram, incrementOpenMiniapp } from './services/api/send';
+import { mockTelegramEnv, init } from '@telegram-apps/sdk';
 import {
     disableVerticalSwipes,
     mountSwipeBehavior,
     isSwipeBehaviorSupported
 } from '@telegram-apps/sdk';
+import { authorizationTelegram, incrementOpenMiniapp } from './services/api/send';
 import '@gravity-ui/uikit/styles/styles.css';
+import { TrackGroups, TwaAnalyticsProvider } from '@tonsolutions/telemetree-react';
 
 const initializeTelegramSDK = async () => {
     try {
-        console.log("Инициализация окружения Telegram");
-        if (miniApp.mount.isAvailable()) {
-            miniApp.mount();
-            miniApp.isMounted();
-        }
+        await init();
+        console.log("Инициализация Telegram SDK");
         await initializeSwipeBehavior();
     } catch (error) {
-        console.error('Ошибка при инициализации Telegram:', error);
-
+        console.warn("Не удалось инициализировать Telegram SDK. Используем mock окружение:", error);
         const initDataRaw = new URLSearchParams([
             ['user', JSON.stringify({
                 id: 99281932,
@@ -61,14 +58,16 @@ const initializeTelegramSDK = async () => {
             platform: 'tdesktop',
         });
 
-        console.log('Mock Telegram environment initialized');
+        console.log("Mock Telegram environment initialized");
+
+        await initializeSwipeBehavior(); // Не забываем инициализировать свайпы даже в mock
     }
 };
 
 const initializeSwipeBehavior = async () => {
     try {
         if (!isSwipeBehaviorSupported()) {
-            console.warn('Swipe behavior control is not supported in this version');
+            console.warn('Swipe behavior not supported');
             return;
         }
 
@@ -78,13 +77,12 @@ const initializeSwipeBehavior = async () => {
 
         if (disableVerticalSwipes.isAvailable()) {
             disableVerticalSwipes();
+            console.log('Свайпы вниз отключены');
         }
-
     } catch (error) {
-        console.error('Error initializing swipe behavior:', error);
+        console.error('Ошибка при инициализации свайпов:', error);
     }
 };
-
 
 initializeTelegramSDK();
 
@@ -93,29 +91,34 @@ const root = createRoot(container);
 
 const urlParams = new URLSearchParams(window.location.search);
 let tgUserId = urlParams.get('userId');
-//tgUserId = 1789426376;
-console.log('ид из телеги', tgUserId);
-if (!tgUserId) {
-    root.render(
-        <div>Нет доступа к журналу.</div>
-    );
-}
-(async () => {
-    await incrementOpenMiniapp(tgUserId);
-    console.log('+1 заход в миниапп');
-})();
-(async () => {
-    try {
-        const data = tgUserId ? await authorizationTelegram(tgUserId) : null;
-        let groupId = data ? (JSON.parse(JSON.stringify(data))).id_group : 5;
-        let isHeadman = !!data;
-        //console.log(isHeadman);
 
-        root.render(
-            <App groupId={groupId} isHeadman={isHeadman} telegramId={tgUserId}/>
-        );
-    }
-    catch (e) {
-        console.error('Ошибка при получении группы: ', e.message);
-    }
-})();
+console.log('ид из телеги', tgUserId);
+
+if (!tgUserId) {
+    root.render(<div>Нет доступа к журналу.</div>);
+} else {
+    (async () => {
+        await incrementOpenMiniapp(tgUserId);
+        console.log('+1 заход в миниапп');
+    })();
+
+    (async () => {
+        try {
+            const data = await authorizationTelegram(tgUserId);
+            let groupId = data?.id_group ?? 5;
+            let isHeadman = !!data;
+
+            root.render(
+                <TwaAnalyticsProvider
+                    projectId="2e95c213-e47f-4e23-9bb6-9c5e355c5a8e"
+                    apiKey="a122e626-05d9-49d1-9e4c-9ebd7f23aa46"
+                    trackGroup={TrackGroups.MEDIUM}
+                >
+                    <App groupId={groupId} isHeadman={isHeadman} telegramId={tgUserId} />
+                </TwaAnalyticsProvider>
+            );
+        } catch (e) {
+            console.error('Ошибка при получении группы: ', e.message);
+        }
+    })();
+}
