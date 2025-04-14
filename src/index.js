@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.js';
 import './assets/styles/main.css';
-import { miniApp, mockTelegramEnv, parseInitData } from '@telegram-apps/sdk';
+import { miniApp, mockTelegramEnv } from '@telegram-apps/sdk';
 import { authorizationTelegram, incrementOpenMiniapp } from './services/api/send';
 import {
     disableVerticalSwipes,
@@ -55,7 +55,7 @@ const initializeTelegramSDK = async () => {
                 subtitleTextColor: '#708499',
                 textColor: '#f5f5f5',
             },
-            initData: parseInitData(initDataRaw),
+            initData: initDataRaw,
             initDataRaw,
             version: '7.2',
             platform: 'tdesktop',

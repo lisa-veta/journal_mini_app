@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import {DatePicker} from "@gravity-ui/date-components";
 import {dateTimeParse} from "@gravity-ui/date-utils";
 import {exportAllLessonsAttendance, exportLessonAttendance} from "../../services/api/send";
+import { downloadFile } from '@telegram-apps/sdk';
 
 const LessonsRadio = styled(RadioGroup)`
     display: flex;
@@ -35,43 +36,39 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
     const [lesson, setLesson] = useState(null);
     const [isAllLessonsToDownload, setIsAllLessonsToDownload] = useState(true);
 
+    const downloadAttendance = async (blob, start, end) => {
+        const url = URL.createObjectURL(blob);
+        const name = `Посещаемость(${start} - ${end}).xlsx`;
+
+        if (downloadFile.isAvailable()) {
+            await downloadFile(url, name);
+        } else {
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', name);
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            console.log('загрузка из браузера');
+        }
+    };
+
     const onSubmit = async () => {
+        const format = 'YYYY-MM-DD';
+        const start = dateTimeParse(startDate)?.format(format);
+        const end = dateTimeParse(endDate)?.format(format);
         try {
-            const format = 'YYYY-MM-DD';
-
-            const group = groupId;
-            const start = dateTimeParse(startDate)?.format(format);
-            const end = dateTimeParse(endDate)?.format(format);
-
             if(isAllLessonsToDownload) {
-                const blob = await exportAllLessonsAttendance(group, start, end);
-
-                const downloadUrl = window.URL.createObjectURL(blob);
-
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.setAttribute('download', `Посещаемость(${start} - ${end}).xlsx`); // Имя файла
-                document.body.appendChild(link);
-                link.click();
-
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(downloadUrl);
+                const blob = await exportAllLessonsAttendance(groupId, start, end);
+                await downloadAttendance(blob, start, end);
                 return;
             }
-
             if(lesson) {
-                const blob = await exportLessonAttendance(group, start, end, lesson);
-
-                const downloadUrl = window.URL.createObjectURL(blob);
-
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.setAttribute('download', `Посещаемость ${lesson}(${start} - ${end}).xlsx`); // Имя файла
-                document.body.appendChild(link);
-                link.click();
-
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(downloadUrl);
+                const blob = await exportLessonAttendance(groupId, start, end, lesson);
+                await downloadAttendance(blob, start, end);
             }
         }
         catch (error) {
