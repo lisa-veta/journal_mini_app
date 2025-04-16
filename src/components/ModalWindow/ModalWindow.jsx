@@ -3,8 +3,7 @@ import {Button, Modal, RadioGroup, Select} from "@gravity-ui/uikit";
 import React, {useState} from "react";
 import {DatePicker} from "@gravity-ui/date-components";
 import {dateTimeParse} from "@gravity-ui/date-utils";
-import {exportAllLessonsAttendance, exportLessonAttendance} from "../../services/api/send";
-import { downloadFile } from '@telegram-apps/sdk';
+import { sendData } from '@telegram-apps/sdk';
 
 const LessonsRadio = styled(RadioGroup)`
     display: flex;
@@ -56,17 +55,25 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
     const [lesson, setLesson] = useState(null);
     const [isAllLessonsToDownload, setIsAllLessonsToDownload] = useState(true);
 
-    const downloadAttendance = async (blob, name) => {
-        const link = document.createElement('a');
-        link.href = blob;
-        link.setAttribute('download', name);
-        document.body.appendChild(link);
-        link.click();
+    const downloadAttendance = async (url) => {
+        // const link = document.createElement('a');
+        // link.href = blob;
+        // link.setAttribute('download', name);
+        // document.body.appendChild(link);
+        // link.click();
+        //
+        // document.body.removeChild(link);
+        // window.URL.revokeObjectURL(blob);
 
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(blob);
-
-        console.log('загрузка из браузера');
+        if (sendData.isAvailable()) {
+            const data = {
+                action: 'download_file',
+                url: url
+            };
+            sendData(JSON.stringify(data));
+        } else {
+            console.error('sendData не доступен');
+        }
     };
 
     const onSubmit = async () => {
@@ -75,21 +82,20 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
         const end = dateTimeParse(endDate)?.format(format);
         try {
             if(isAllLessonsToDownload) {
-                const blob = await exportAllLessonsAttendance(groupId, startDate, endDate);
-                const name = `Посещаемость(${start} - ${end}).xlsx`;
-                await downloadAttendance(blob, name);
-                if(window.Telegram.WebApp.openLink(`https://elejournal.ru/attendance/file?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`)) {
-                    window.Telegram.WebApp.openLink(`https://elejournal.ru/attendance/file?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`);
-                    console.log('показ файла');
-                } else {
-                    console.log('нет метода');
-                }
+                // const blob = await exportAllLessonsAttendance(groupId, startDate, endDate);
+                // const name = `Посещаемость(${start} - ${end}).xlsx`;
+                // await downloadAttendance(blob, name);
+
+                const url = `https://elejournal.ru/attendance/file?groupId=${groupId}&startDate=${start}&endDate=${end}`;
+                await downloadAttendance(url);
                 return;
             }
             if(lesson) {
-                const blob = await exportLessonAttendance(groupId, startDate, endDate, lesson);
-                const name = `Посещаемость ${lesson}(${start} - ${end}).xlsx`;
-                await downloadAttendance(blob, name);
+                // const blob = await exportLessonAttendance(groupId, startDate, endDate, lesson);
+                // const name = `Посещаемость ${lesson}(${start} - ${end}).xlsx`;
+                // await downloadAttendance(blob, name);
+                const url = `https://elejournal.ru/attendance/file/lesson?groupId=${groupId}&startDate=${start}&endDate=${end}&lessonName=${lesson}`;
+                await downloadAttendance(url);
             }
         }
         catch (error) {
