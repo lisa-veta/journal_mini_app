@@ -389,13 +389,13 @@ async function sendBlobPost(endPoint, data) {
 }
 
 export async function exportAllLessonsAttendance(groupId, startDate, endDate) {
-    const endPoint = '/attendance/file';
-    const data = { groupId: groupId, startDate: startDate, endDate: endDate };
-    return await sendBlobPost(endPoint, data);
+    const endPoint = `/attendance/file?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`;
+    // const data = { groupId: groupId, startDate: startDate, endDate: endDate };
+    return await sendGet(endPoint);
 }
 
 export async function exportLessonAttendance(groupId, startDate, endDate, lessonName) {
-    const endPoint = '/attendance/file/lesson';
-    const data = { groupId: groupId, lessonName: lessonName, startDate: startDate, endDate: endDate };
-    return await sendBlobPost(endPoint, data);
+    const endPoint = `/attendance/file/lesson?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}&lessonName=${lessonName}`;
+    // const data = { groupId: groupId, lessonName: lessonName, startDate: startDate, endDate: endDate };
+    return await sendGet(endPoint);
 }

@@ -56,10 +56,8 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
     const [lesson, setLesson] = useState(null);
     const [isAllLessonsToDownload, setIsAllLessonsToDownload] = useState(true);
 
-    const downloadAttendance = async (blob, start, end) => {
-        const url = URL.createObjectURL(blob);
-        const name = `Посещаемость(${start} - ${end}).xlsx`;
-
+    const downloadAttendance = async (url, name) => {
+        //const url = URL.createObjectURL(url);
         if (downloadFile.isAvailable()) {
             await downloadFile(url, name);
         } else {
@@ -82,13 +80,15 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
         const end = dateTimeParse(endDate)?.format(format);
         try {
             if(isAllLessonsToDownload) {
-                const blob = await exportAllLessonsAttendance(groupId, start, end);
-                await downloadAttendance(blob, start, end);
+                const url = `https://elejournal.ru/attendance/file/lesson?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`
+                const name = `Посещаемость(${start} - ${end}).xlsx`;
+                await downloadAttendance(url, name);
                 return;
             }
             if(lesson) {
-                const blob = await exportLessonAttendance(groupId, start, end, lesson);
-                await downloadAttendance(blob, start, end);
+                const url = `https://elejournal.ru/attendance/file/lesson?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}&lesson=${lesson}`
+                const name = `Посещаемость ${lesson}(${start} - ${end}).xlsx`;
+                await downloadAttendance(url, name);
             }
         }
         catch (error) {
@@ -121,6 +121,7 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
                     <InputsContainer>
                         <LessonsRadio defaultValue={options[0].value}
                                     options={options}
+                                    size={'l'}
                                     onChange={() => setIsAllLessonsToDownload(!isAllLessonsToDownload)}/>
                         <Select options={selectOptions}
                                 disabled={isAllLessonsToDownload}
