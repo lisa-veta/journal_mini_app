@@ -56,22 +56,17 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
     const [lesson, setLesson] = useState(null);
     const [isAllLessonsToDownload, setIsAllLessonsToDownload] = useState(true);
 
-    const downloadAttendance = async (url, name) => {
-        //const url = URL.createObjectURL(url);
-        if (downloadFile.isAvailable()) {
-            await downloadFile(url, name);
-        } else {
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', name);
-            document.body.appendChild(link);
-            link.click();
+    const downloadAttendance = async (blob, name) => {
+        const link = document.createElement('a');
+        link.href = blob;
+        link.setAttribute('download', name);
+        document.body.appendChild(link);
+        link.click();
 
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blob);
 
-            console.log('загрузка из браузера');
-        }
+        console.log('загрузка из браузера');
     };
 
     const onSubmit = async () => {
@@ -80,15 +75,21 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
         const end = dateTimeParse(endDate)?.format(format);
         try {
             if(isAllLessonsToDownload) {
-                const url = `https://elejournal.ru/attendance/file/lesson?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`
+                const blob = await exportAllLessonsAttendance(groupId, startDate, endDate);
                 const name = `Посещаемость(${start} - ${end}).xlsx`;
-                await downloadAttendance(url, name);
+                await downloadAttendance(blob, name);
+                if(window.Telegram.WebApp.openLink(`https://elejournal.ru/attendance/file?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`)) {
+                    window.Telegram.WebApp.openLink(`https://elejournal.ru/attendance/file?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`);
+                    console.log('показ файла');
+                } else {
+                    console.log('нет метода');
+                }
                 return;
             }
             if(lesson) {
-                const url = `https://elejournal.ru/attendance/file/lesson?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}&lesson=${lesson}`
+                const blob = await exportLessonAttendance(groupId, startDate, endDate, lesson);
                 const name = `Посещаемость ${lesson}(${start} - ${end}).xlsx`;
-                await downloadAttendance(url, name);
+                await downloadAttendance(blob, name);
             }
         }
         catch (error) {

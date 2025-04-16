@@ -310,6 +310,17 @@ async function sendGet(endPoint) {
     }
 }
 
+async function sendBlobGet(endPoint) {
+    try {
+        const response = await fetch(url + endPoint, {
+            method: 'GET',
+        });
+        return await response.blob()
+    } catch (error) {
+        displayResponse({ error: error.message });
+    }
+}
+
 
 /* Вывод на экран результата */
 function displayResponse(data) {
@@ -375,27 +386,12 @@ export async function getAllLessons(groupId) {
     return await sendPost(endPoint, data);
 }
 
-async function sendBlobPost(endPoint, data) {
-    try {
-        const response = await fetch(url + endPoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        return await response.blob();
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
 export async function exportAllLessonsAttendance(groupId, startDate, endDate) {
     const endPoint = `/attendance/file?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}`;
-    // const data = { groupId: groupId, startDate: startDate, endDate: endDate };
-    return await sendGet(endPoint);
+    return await sendBlobGet(endPoint);
 }
 
 export async function exportLessonAttendance(groupId, startDate, endDate, lessonName) {
     const endPoint = `/attendance/file/lesson?groupId=${groupId}&startDate=${startDate}&endDate=${endDate}&lessonName=${lessonName}`;
-    // const data = { groupId: groupId, lessonName: lessonName, startDate: startDate, endDate: endDate };
-    return await sendGet(endPoint);
+    return await sendBlobGet(endPoint);
 }

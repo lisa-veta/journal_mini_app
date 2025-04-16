@@ -92,6 +92,7 @@ const root = createRoot(container);
 const urlParams = new URLSearchParams(window.location.search);
 let tgUserId = urlParams.get('userId');
 
+tgUserId = 134342;
 console.log('ид из телеги', tgUserId);
 
 if (!tgUserId) {
