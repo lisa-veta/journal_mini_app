@@ -55,20 +55,12 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
     const [lesson, setLesson] = useState(null);
     const [isAllLessonsToDownload, setIsAllLessonsToDownload] = useState(true);
 
-    const downloadAttendance = async (url) => {
-        // const link = document.createElement('a');
-        // link.href = blob;
-        // link.setAttribute('download', name);
-        // document.body.appendChild(link);
-        // link.click();
-        //
-        // document.body.removeChild(link);
-        // window.URL.revokeObjectURL(blob);
-
+    const downloadAttendance = async (url, fileName) => {
         if (sendData.isAvailable()) {
             const data = {
                 action: 'download_file',
-                url: url
+                url: url,
+                fileName: fileName
             };
             sendData(JSON.stringify(data));
         } else {
@@ -82,20 +74,15 @@ export default function ModalWindow({open, setOpen, lessons, groupId}) {
         const end = dateTimeParse(endDate)?.format(format);
         try {
             if(isAllLessonsToDownload) {
-                // const blob = await exportAllLessonsAttendance(groupId, startDate, endDate);
-                // const name = `Посещаемость(${start} - ${end}).xlsx`;
-                // await downloadAttendance(blob, name);
-
+                const name = `Посещаемость(${start} - ${end}).xlsx`;
                 const url = `https://elejournal.ru/attendance/file?groupId=${groupId}&startDate=${start}&endDate=${end}`;
-                await downloadAttendance(url);
+                await downloadAttendance(url, name);
                 return;
             }
             if(lesson) {
-                // const blob = await exportLessonAttendance(groupId, startDate, endDate, lesson);
-                // const name = `Посещаемость ${lesson}(${start} - ${end}).xlsx`;
-                // await downloadAttendance(blob, name);
+                const name = `Посещаемость ${lesson}(${start} - ${end}).xlsx`;
                 const url = `https://elejournal.ru/attendance/file/lesson?groupId=${groupId}&startDate=${start}&endDate=${end}&lessonName=${lesson}`;
-                await downloadAttendance(url);
+                await downloadAttendance(url, name);
             }
         }
         catch (error) {
