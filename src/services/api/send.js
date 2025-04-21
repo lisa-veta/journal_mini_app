@@ -12,12 +12,6 @@
 //const url = 'http://185.104.249.229:3000';
 const url = 'https://elejournal.ru';
 
-/* Простой запрос get. Возвращается текст dudes. */
-async function getDudes() {
-    const endPoint = '/dudes';
-    sendGet(endPoint);
-}
-
 /* Авторизация. Если всё ок, то 200 и все о старосте
 [
 {
@@ -33,11 +27,6 @@ async function getDudes() {
 ]
 . Иначе ошибка 404. */
 
-async function authorization(nick, password) {
-    const endPoint = '/authorization';
-    const data = { email: nick, password: password };
-    sendPost(endPoint, data);
-}
 
 /* Создать новую посещаемость (общую).
     classId - ид пары,
