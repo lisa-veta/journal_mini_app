@@ -8,9 +8,11 @@ import {
     mountSwipeBehavior,
     isSwipeBehaviorSupported
 } from '@telegram-apps/sdk';
-import { authorizationTelegram, incrementOpenMiniapp } from './services/api/send';
+import { incrementOpenMiniapp } from './services/api/send';
 import '@gravity-ui/uikit/styles/styles.css';
 import { TrackGroups, TwaAnalyticsProvider } from '@tonsolutions/telemetree-react';
+import {Provider} from 'react-redux';
+import { store } from './services/store/store';
 
 const initializeTelegramSDK = async () => {
     try {
@@ -91,6 +93,7 @@ const root = createRoot(container);
 
 const urlParams = new URLSearchParams(window.location.search);
 let tgUserId = urlParams.get('userId');
+//tgUserId = 1789426376;
 console.log('ид из телеги', tgUserId);
 
 if (!tgUserId) {
@@ -98,26 +101,17 @@ if (!tgUserId) {
 } else {
     (async () => {
         await incrementOpenMiniapp(tgUserId);
-        console.log('+1 заход в миниапп');
     })();
 
-    (async () => {
-        try {
-            const data = await authorizationTelegram(tgUserId);
-            let groupId = data?.id_group ?? 5;
-            let isHeadman = !!data;
-
-            root.render(
-                <TwaAnalyticsProvider
-                    projectId="2e95c213-e47f-4e23-9bb6-9c5e355c5a8e"
-                    apiKey="a122e626-05d9-49d1-9e4c-9ebd7f23aa46"
-                    trackGroup={TrackGroups.MEDIUM}
-                >
-                    <App groupId={groupId} isHeadman={isHeadman} telegramId={tgUserId} />
-                </TwaAnalyticsProvider>
-            );
-        } catch (e) {
-            console.error('Ошибка при получении группы: ', e.message);
-        }
-    })();
+    root.render(
+        <TwaAnalyticsProvider
+            projectId="2e95c213-e47f-4e23-9bb6-9c5e355c5a8e"
+            apiKey="a122e626-05d9-49d1-9e4c-9ebd7f23aa46"
+            trackGroup={TrackGroups.MEDIUM}
+        >
+            <Provider store={store}>
+                <App telegramId={tgUserId} />
+            </Provider>
+        </TwaAnalyticsProvider>
+    );
 }
