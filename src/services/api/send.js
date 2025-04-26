@@ -1,37 +1,10 @@
-/* Привязка к html элементам */
-//const responseDiv = document.getElementById('response');
-//const btnDudes = document.getElementById('dudes');
-//const btnAuthorization = document.getElementById('authorization');
-//const btnCreateAttendance = document.getElementById('createAttendance');
-//const btnOpenAttendance = document.getElementById('openAttendance');
-//const btnDoneAttendance = document.getElementById('doneAttendance');
-//const btnTimeTable = document.getElementById('timetable');
-//const btnStudents = document.getElementById('students');
-
-/* URL сервера */
 //const url = 'http://185.104.249.229:3000';
 const url = 'https://elejournal.ru';
-
-/* Авторизация. Если всё ок, то 200 и все о старосте
-[
-{
-"id": 5,
-"nickname": "headman-PrI-301",
-"password": "headman",
-"name": "Калентьев",
-"lastname": "Дмитрий",
-"patronymic": "Евгеньевич",
-"is_headman": true,
-"id_group": 5
-}
-]
-. Иначе ошибка 404. */
-
 
 /* Создать новую посещаемость (общую).
     classId - ид пары,
     timedate - дата пары и время начала пары, формат 2024-11-18 16:40:00
-Возващает id посещаемости (общей).*/
+Возвращает id посещаемости (общей).*/
 // export async function createAttendance(classId, timedate) {
 //     const endPoint = '/create-attendance';
 //     const data = { classId: classId, timedate: timedate };
@@ -58,7 +31,7 @@ export async function createAttendance(classId, timedate) {
 /* Открыть уже существующую посещаемость (общую).
     classId - ид пары,
     timedate - дата пары и время начала пары, формат 2024-11-18 16:40:00
-Возващает список студентов с ид их состояния
+Возвращает список студентов с ид их состояния
 [
     {
         "id_condition_student": 1,
@@ -74,6 +47,7 @@ export async function createAttendance(classId, timedate) {
     }
 ]
 .*/
+
 export async function openAttendance(classId, timedate) {
     const endPoint = '/open-attendance';
     const data = { classId: classId, timedate: timedate };
@@ -97,8 +71,6 @@ export async function getIdAttendanceIfExist(classId, timedate) {
     try {
         const response = await sendPost(endPoint, data);
         console.debug("getIdAttendanceIfExist sendPost", response);
-        // const responce =  [ 1, 2, 4 ];
-        //return responce[0];
         if (response) {
             return response[response.length -1].id;
         } else {
@@ -131,12 +103,11 @@ export async function doneAttendance(attendanceId, students) {
     const endPoint = '/attendancedone';
     const data = { attendanceId: attendanceId, students: students };
     await sendPostWithoutResult(endPoint, data);
-    displayResponse("good maybe");
 }
 
 /* Расписание.  ДОБАВИТЬ
     groupId - ид группы,
-Возващает
+Возвращает
 [
     {
         "id": 1,
@@ -166,6 +137,7 @@ export async function doneAttendance(attendanceId, students) {
     }
 ]
 Если его нет, то 404*/
+
 export async function timeTable(groupId) {
     const endPoint = '/time-table';
     const data = { groupId: groupId };
@@ -218,49 +190,6 @@ export async function authorizationTelegram(telegramId) {
     return await sendPost(endPoint, data);
 }
 
-// async function sendPost(endPoint, data) {
-//     try {
-//         const response = await fetch(`/api${endPoint}`, {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(data),
-//         });
-//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-//         const jsonData = await response.json();
-//         return jsonData;
-//     } catch (error) {
-//         console.error('sendPost error:', error.message);
-//     }
-// }
-//
-//
-// async function sendPostWithoutResult(endPoint, data) {
-//     try {
-//         const response = await fetch(`/api${endPoint}`, {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(data),
-//         });
-//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-//     } catch (error) {
-//         console.error('sendPostWithoutResult error:', error.message);
-//     }
-// }
-//
-//
-// async function sendGet(endPoint) {
-//     try {
-//         const response = await fetch(`/api${endPoint}`, {
-//             method: 'GET',
-//         });
-//         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-//         const jsonData = await response.json();
-//         return jsonData;
-//     } catch (error) {
-//         console.error('sendGet error:', error.message);
-//     }
-// }
-
 async function sendPost(endPoint, data) {
     try {
         const response = await fetch(url + endPoint, {
@@ -271,47 +200,31 @@ async function sendPost(endPoint, data) {
         return await response.json();
     } catch (error) {
         console.log(error.message);
-        //displayResponse({ error: error.message });
     }
 }
 
 async function sendPostWithoutResult(endPoint, data) {
     try {
-        const response = await fetch(url + endPoint, {
+        await fetch(url + endPoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
     } catch (error) {
-        displayResponse({ error: error.message });
+        console.log(error.message);
     }
 }
 
 async function sendGet(endPoint) {
     try {
         const response = await fetch(url + endPoint, {
-            method: 'GET',
+            method: 'GET'
         });
-        const jsonData = await response.json();
-        displayResponse(jsonData);
+        return await response.json();
     } catch (error) {
-        displayResponse({ error: error.message });
+        console.log(error.message);
     }
 }
-
-/* Вывод на экран результата */
-function displayResponse(data) {
-  //responseDiv.innerText = JSON.stringify(data, null, 2);
-}
-
-/* Привязка кнопок к методам */
-//btnDudes.addEventListener('click', getDudes);
-//btnAuthorization.addEventListener('click', () => authorization('headman-PrI-301', 'headman'));
-//btnCreateAttendance.addEventListener('click', () => createAttendance(1, '2024-11-18 17:40:00'));
-//btnOpenAttendance.addEventListener('click', () => openAttendance(1, '2024-11-18 16:40:00'));
-//btnDoneAttendance.addEventListener('click', () => doneAttendance(88, [{"condition": 1,"id": 5},{"condition": 2,"id": 6}]));
-//btnTimeTable.addEventListener('click', () => timeTable(5));
-//btnStudents.addEventListener('click', () => students(5));
 
 /* Открыть все уже существующие посещаемости (общие).
     lessonId - ид занятия,
@@ -333,6 +246,7 @@ function displayResponse(data) {
     },
 ]
 .*/
+
 export async function openFullAttendance(lessonId) {
     const endPoint = '/open-full-attendance';
     const data = { lessonId: lessonId };
@@ -360,5 +274,26 @@ export async function incrementCurrentAttendance(telegramId) {
 export async function getAllLessons(groupId) {
     const endPoint = '/group/lessons';
     const data = { groupId: groupId };
+    return await sendPost(endPoint, data);
+}
+
+export async function getTeacherTimetable(teacherId) {
+    const endPoint = `/teacher/timetable?teacherId=${teacherId}`;
+    return await sendGet(endPoint);
+}
+
+export async function getTeacherDisciplinesGroups(teacherId) {
+    const endPoint = `/teacher/disciplines-groups?teacherId=${teacherId}`;
+    return await sendGet(endPoint);
+}
+
+export async function getUserRole(telegramId) {
+    const endPoint = `/check-role?telegramId=${telegramId}`;
+    return await sendGet(endPoint);
+}
+
+export async function authTeacher(telegramId) {
+    const endPoint = '/authorization-telegram/teacher';
+    const data = { telegramId: telegramId };
     return await sendPost(endPoint, data);
 }

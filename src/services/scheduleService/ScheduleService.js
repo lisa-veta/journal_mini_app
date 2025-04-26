@@ -321,13 +321,11 @@ export class ScheduleService {
 
     async FindCurrentLesson(groupId) {
         const parsedData = this.schedule;
-        console.log("внутри определения findcurrentlesson", parsedData)
 
         const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
         if(!now.getFullYear()) {
             return;
         }
-        console.log("now: ", now);
         for (let i = 0; i < parsedData.length; i++) {
             if (this.IsCurrentLesson(now, parsedData[i])) {
                 return parsedData[i];
@@ -339,14 +337,12 @@ export class ScheduleService {
 
     async getAttendanceId(schedule, classLessonId){
         const currentLesson = schedule.find((schedule) => schedule.isLessonCurrent === true);
-        console.log(schedule, "schedule", currentLesson)
         if(currentLesson) {
             const [day, month] = currentLesson.date.split('.');
             const [hour, minute] = currentLesson.time.split(':');
 
             const currentYear = new Date().getFullYear();
             const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;
-            console.log(timedate)
             try {
                 return await getIdAttendanceIfExist(classLessonId, timedate);
             } catch (error) {
