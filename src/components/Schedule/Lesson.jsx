@@ -1,6 +1,8 @@
 ﻿import { useNavigate } from "react-router-dom";
+import {useSelector} from "react-redux";
 function Lesson(props) {
     const navigate = useNavigate();
+    const userRole = useSelector((state) => state.userRole);
 
     if (!props.lesson) {
         return (
@@ -48,7 +50,8 @@ function Lesson(props) {
                 <div className='lesson-room-and-type'>{props.lesson.room}, {lessonType}</div>
             </div>
             <div className='lesson-teacher'>
-                {props.lesson.teachers.map(t => t.lastname).join(', ')}
+                {userRole === 'student' ? props.lesson.teachers.map(t => t.lastname).join(', ')
+                : props.lesson.group_name}
             </div>
         </div>
     );

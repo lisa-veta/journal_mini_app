@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {authTeacher, getUserRole} from "../api/send";
+import {getUserRole} from "../api/send";
 
 export const fetchUserRole = createAsyncThunk(
     'app/fetchUserRole',
@@ -7,17 +7,6 @@ export const fetchUserRole = createAsyncThunk(
         try {
             const userRole = await getUserRole(telegramId);
             return userRole[0].check_role;
-        } catch (error) {
-            return rejectWithValue(error.message);
-        }
-    }
-);
-
-export const fetchTeacherId = createAsyncThunk(
-    'app/fetchTeacherId',
-    async (telegramId, { rejectWithValue }) => {
-        try {
-            return await authTeacher(telegramId);
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -40,6 +29,9 @@ const appSlice = createSlice({
         },
         setIsHeadman: (state, action) => {
             state.isHeadman = action.payload;
+        },
+        setTeacherId: (state, action) => {
+            state.teacherId = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -50,14 +42,10 @@ const appSlice = createSlice({
             .addCase(fetchUserRole.rejected, (state, action) => {
                 console.log('ошибка в определении роли: ', action.payload);
             })
-            .addCase(fetchTeacherId.fulfilled, (state, action) => {
-                state.teacherId = action.payload;
-            })
-            .addCase(fetchTeacherId.rejected, (state, action) => {
-                console.log('ошибка в определении teacherId: ', action.payload);
-            });
     }
 });
 
-export const {setGroupId, setIsHeadman} = appSlice.actions;
+export const {setGroupId,
+    setIsHeadman,
+    setTeacherId} = appSlice.actions;
 export default appSlice.reducer;

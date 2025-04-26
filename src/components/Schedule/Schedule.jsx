@@ -2,19 +2,18 @@
 import { Day, Lesson } from "components/index.jsx";
 import { ScheduleService } from 'services/scheduleService/ScheduleService.js';
 import {incrementOpenCurrentLesson} from "../../services/api/send";
+import {useSelector} from "react-redux";
 
 function Schedule(props) {
     const style = { backgroundColor: 'var(--colorRed)' };
     const telegramId = props.telegramId;
     const [week, setWeek] = useState(() => {
-        // Найти неделю, где is_even=true
         const evenWeek = props.weeks.find(w => w.is_even === true);
         return evenWeek || props.weeks[0];
     });
-
     const [currentLesson, setCurrentLesson] = useState(null);
+    const userRole = useSelector(state => state.userRole);
 
-    // Для обновления локального состояния при обновлении недель во внешнем компоненте
     useEffect(() => {
         const evenWeek = props.weeks.find(w => w.is_even === true);
         setWeek(evenWeek || props.weeks[0]);
@@ -34,35 +33,50 @@ function Schedule(props) {
         }
     };
 
-    const addTranstparentClass = () => {
-
+    const addTransparentClass = () => {
         document.querySelector('.schedule-days-container').classList.add('semi-transparent');
     };
 
     const removeTransparentClass = () => {
-
         document.querySelector('.schedule-days-container').classList.remove('semi-transparent');
     };
 
     useEffect(() => {
         (async () => {
             try {
-                // Поменять номер группы в будущем
-                console.debug(props.date, "!!!!!!!!!!!!!!!!!!!!!!1")
-                const currentLesson = await new ScheduleService(null, null, null, null, props.date, props.schedule).FindCurrentLesson(props.groupId);
+                const currentLesson = await new ScheduleService(null, null, null, null, props.date, props.schedule).FindCurrentLesson();
                 if (!currentLesson) {
                     setCurrentLesson(null);
                 } else {
+                    if(userRole === 'student') {
+                        setCurrentLesson(
+                            {
+                                name: currentLesson.lesson,
+                                id_lesson: currentLesson.id_lesson,
+                                room: currentLesson.classroom,
+                                teachers: currentLesson.teachers.map(t => t),
+                                type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
+                                        (currentLesson.type_lesson === "Практика") ? 2 :
+                                        (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
+                                start_time: currentLesson.lesson_start_time,
+                                end_time: currentLesson.lesson_end_time,
+                                id: currentLesson.id,
+                                style: { backgroundColor: 'var(--colorBlue)'}
+                            }
+                        );
+                        return;
+                    }
+
                     setCurrentLesson(
                         {
                             name: currentLesson.lesson,
                             id_lesson: currentLesson.id_lesson,
                             room: currentLesson.classroom,
-                            teachers: currentLesson.teachers.map(t => t),
+                            group_id: currentLesson.group_id,
+                            group_name: currentLesson.abbr_group,
                             type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
-                                (currentLesson.type_lesson === "Практика") ? 2 :
+                                    (currentLesson.type_lesson === "Практика") ? 2 :
                                     (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
-                            //building_id: 1,
                             start_time: currentLesson.lesson_start_time,
                             end_time: currentLesson.lesson_end_time,
                             id: currentLesson.id,
@@ -96,7 +110,7 @@ function Schedule(props) {
                 <select className='select-list'
                         value={selectedWeekIndex}
                     onChange={handleWeekChange}
-                    onFocus={addTranstparentClass}
+                    onFocus={addTransparentClass}
                     onBlur={removeTransparentClass}
                 >
                     <option className='select-list__item' value='1'>1 неделя</option>
@@ -107,7 +121,6 @@ function Schedule(props) {
             <div className='current-lesson-label'>Текущая пара</div>
             <div className='current-lesson-container day-container'>
                 <Lesson lesson={currentLesson} style={style} incrementMethod={() => {
-                    console.log("Типа клик на текущую пару");
                     incrementOpenCurrentLesson(telegramId);
                 }
                 } >
@@ -121,6 +134,6 @@ function Schedule(props) {
             </div>
         </div>
     );
-};
+}
 
 export default Schedule;

@@ -319,7 +319,7 @@ export class ScheduleService {
     }
 
 
-    async FindCurrentLesson(groupId) {
+    async FindCurrentLesson() {
         const parsedData = this.schedule;
 
         const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
@@ -368,5 +368,17 @@ export class ScheduleService {
             : diffInWeeks % 2 !== 0
                 ? 2
                 : 1;
+    }
+
+    FindLessonInfoFromLessonName(schedule, teacherLessons) {
+        for(let i = 0; i < schedule.length; i++) {
+            for(let j = 0; j < teacherLessons.length; j++) {
+                if(schedule[i].lesson === teacherLessons[j].discipline_name) {
+                    schedule[i].id_lesson = teacherLessons[j].discipline_id;
+                    schedule[i].group_id = teacherLessons[j].group_id;
+                }
+            }
+        }
+        return schedule;
     }
 }

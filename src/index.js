@@ -93,8 +93,10 @@ const root = createRoot(container);
 
 const urlParams = new URLSearchParams(window.location.search);
 let tgUserId = urlParams.get('userId');
-//tgUserId = 1789426376;
-console.log('ид из телеги', tgUserId);
+//тест студента(я)
+// tgUserId = 1789426376;
+//для тестов препода (барабанщиков)
+// tgUserId = 1345;
 
 if (!tgUserId) {
     root.render(<div>Нет доступа к журналу.</div>);

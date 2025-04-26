@@ -2,10 +2,17 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AttendancePage, SchedulePage } from "./pages/index.jsx"
 import { useState, useEffect } from 'react';
-import {authorizationTelegram, authTeacher, getTeacherTimetable, timeTable} from './services/api/send.js';
+import {
+    authorizationTelegram,
+    authTeacher,
+    getTeacherDisciplinesGroups,
+    getTeacherTimetable,
+    timeTable
+} from './services/api/send.js';
 import { CurrentTime } from './services/api/timeApi.js';
 import {useDispatch, useSelector} from "react-redux";
-import {fetchUserRole, setGroupId, setIsHeadman} from "./services/store/appSlice";
+import {fetchUserRole, setGroupId, setIsHeadman, setTeacherId} from "./services/store/appSlice";
+import {ScheduleService} from "./services/scheduleService/ScheduleService";
 
 function App(props) {
     const dispatch = useDispatch();
@@ -56,9 +63,21 @@ function App(props) {
                     setSchedule(await timeTable(groupId));
                 }
                 else {
-                    const teacherId = await authTeacher(props.telegramId);
-                    dispatch(setIsHeadman(false));
-                    setSchedule(await getTeacherTimetable(teacherId));
+                    const authData = await authTeacher(props.telegramId);
+                    const teacherId = authData.teacher_id;
+                    dispatch(setTeacherId(teacherId));
+                    dispatch(setIsHeadman(true));
+
+                    const teacherLessonsData = await getTeacherDisciplinesGroups(teacherId);
+                    let teacherSchedule = await getTeacherTimetable(teacherId);
+                    for (let i = 0; i < teacherSchedule.length; i++) {
+                        teacherSchedule[i].lesson = teacherSchedule[i].discipline_name;
+                        teacherSchedule[i].id = i;
+                        delete teacherSchedule[i].discipline_name;
+                    }
+                    new ScheduleService().FindLessonInfoFromLessonName(teacherSchedule, teacherLessonsData);
+                    console.log(teacherSchedule);
+                    setSchedule(teacherSchedule);
                 }
             } catch (error) {
                 console.error(error);
@@ -67,9 +86,8 @@ function App(props) {
     }, [userRole]);
 
     if(schedule === null) {
-        return (<>Загрузка расписания...</>);
+        return <div>Загрузка расписания</div>;
     }
-
     return (
       <Router>
           <Routes>
