@@ -42,7 +42,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -59,8 +59,10 @@ export class ScheduleService {
 
 
             const currentDate = `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getFullYear()).slice(-2)}`;
+            console.log("currentDate", currentDate)
             if (isCurrentLesson) {
                 for (const entry of schedule) {
+                    console.log("now", now)
                     if (entry.date === currentDate && entry.time === this.formatTime(lessonStart)) {
                          if (now >= lessonStart && now <= lessonEnd) {
                             entry.isLessonCurrent = true;
@@ -104,7 +106,7 @@ export class ScheduleService {
         } catch (error) {
             console.error("Ошибка при вызове IsLessonCurrent:", error);
         }
-        //isCurrentLesson = true;
+        isCurrentLesson = true;
         for (const pair of this.schedulePair) {
             const lessonStart = new Date(
                 now.getFullYear(),
@@ -189,6 +191,12 @@ export class ScheduleService {
 
     // Метод для получения посещаемости студентов
     getAttendStudents(schedule) {
+        console.log("this.attendance", this.attendance)
+        console.log("this.schedulePair", this.schedulePair)
+        console.log("this.lesson", this.lesson)
+        console.log("this.studentsList", this.studentsList)
+        console.log("this.date", this.date)
+        console.log("this.schedule", this.schedule)
         const attendstudents = this.attendance.map((entry) => {
             const student = this.studentsList.find(
                 (student) => student.lastname === entry.lastname

@@ -1,7 +1,7 @@
-import { doneAttendance, incrementCurrentAttendance } from "../services/api/send";
+import {confirmAttendance, doneAttendance, incrementCurrentAttendance} from "../services/api/send";
 import { ScheduleService } from "../services/scheduleService/ScheduleService";
 
-export const useSaveAttendance = (schedule, lesson, telegramId) => {
+export const useSaveAttendance = (schedule, lesson, telegramId, userRole) => {
 
     const transformCondition = (condition) => {
         switch (condition) {
@@ -20,15 +20,19 @@ export const useSaveAttendance = (schedule, lesson, telegramId) => {
                 id: student.studentId,
             }));
 
-            console.log("updatedStudents", updatedStudents);
-
             const scheduleService = new ScheduleService();
             const id = await scheduleService.getAttendanceId(schedule, lesson.id);
-            await doneAttendance(id, updatedStudents);
-            console.log("Посещаемость сохранена успешно!");
+            if(userRole === 'student'){
+                await doneAttendance(id, updatedStudents);
+                console.log("Посещаемость сохранена успешно!");
 
-            await incrementCurrentAttendance(telegramId);
-            console.log("Типа инкремент сохранения произошел");
+                await incrementCurrentAttendance(telegramId);
+                console.log("Типа инкремент сохранения произошел");
+            } else {
+                await confirmAttendance(id);
+                console.log("Посещаемость подтверждена успешно!");
+            }
+
 
             if (setHasChanges) setHasChanges(false);
         } catch (error) {

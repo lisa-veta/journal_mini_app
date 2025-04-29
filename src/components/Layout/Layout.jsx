@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {ScheduleService} from "../../services/scheduleService/ScheduleService";
-import {doneAttendance, incrementCurrentAttendance} from "../../services/api/send";
 import {useSaveAttendance} from "../../hooks/useSaveAttendance";
+import {useSelector} from "react-redux";
 
 const Layout = ({ children, schedule, currentLessonData, telegramId, lesson, hasChanges, isHeadman }) => {
     const { saveAttendance } = useSaveAttendance(schedule, lesson, telegramId);
+    const userRole = useSelector((state) => state.userRole);
     const handleSaveAttendance = async () => {
-        if (hasChanges && isHeadman) {
+        if (hasChanges && isHeadman && userRole==='student') {
             await saveAttendance(currentLessonData);
         }
     };

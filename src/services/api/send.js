@@ -203,6 +203,20 @@ async function sendPost(endPoint, data) {
     }
 }
 
+async function sendPut(endPoint, data) {
+    try {
+        const response = await fetch(url + endPoint, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return await response.json();
+    } catch (error) {
+        console.log(error.message);
+        throw error; // Лучше пробросить ошибку для обработки выше
+    }
+}
+
 async function sendPostWithoutResult(endPoint, data) {
     try {
         await fetch(url + endPoint, {
@@ -296,4 +310,12 @@ export async function authTeacher(telegramId) {
     const endPoint = '/authorization-telegram/teacher';
     const data = { telegramId: telegramId };
     return await sendPost(endPoint, data);
+}
+
+/// PUT /teacher/attendance/confirm
+// query parametr: attendanceId
+// Описание: подтверждение уже существующей посещаемости
+export async function confirmAttendance(attendanceId) {
+    const endPoint = `/teacher/attendance/confirm?attendanceId=${attendanceId}`;
+    return await sendPut(endPoint, {});
 }

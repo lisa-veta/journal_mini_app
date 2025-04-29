@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 import { ScheduleService } from "../../services/scheduleService/ScheduleService";
 import { schedulePair } from "./config"
 const AttendancePage = (props) => {
-    const groupId = props.groupId;
     const date = props.date;
     const location = useLocation();
     const lesson = location.state?.lesson;
@@ -17,6 +16,7 @@ const AttendancePage = (props) => {
     const timeTable = props.schedule;
     const isHeadman = props.isHeadman;
     const telegramId = props.telegramId;
+    const groupId = props.groupId || lesson.group_id;
 
     console.log("timeTable", timeTable)
 
