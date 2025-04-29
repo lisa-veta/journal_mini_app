@@ -35,13 +35,12 @@ function App(props) {
             (async () => {
                 try {
                     const data = await CurrentTime();
-                    const parsedData = JSON.parse(JSON.stringify(data));
                     const date = {
-                        year: parseInt(parsedData.currentLocalTime.split('-')[0]),
-                        month: parseInt(parsedData.currentLocalTime.split('-')[1]),
-                        day: parseInt(parsedData.currentLocalTime.split('T')[0].split('-')[2]),
-                        hour: parseInt(parsedData.currentLocalTime.split('T')[1].split(':')[0]),
-                        minute: parseInt(parsedData.currentLocalTime.split('T')[1].split(':')[1])
+                        year: parseInt(data.year),
+                        month: parseInt(data.month),
+                        day: parseInt(data.day),
+                        hour: parseInt(data.hour),
+                        minute: parseInt(data.minute)
                     };
                     setDate(date);
                 } catch (e) {
