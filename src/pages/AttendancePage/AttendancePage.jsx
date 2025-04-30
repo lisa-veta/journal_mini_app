@@ -18,8 +18,6 @@ const AttendancePage = (props) => {
     const telegramId = props.telegramId;
     const groupId = props.groupId || lesson.group_id;
 
-    console.log("timeTable", timeTable)
-
     useEffect(() => {
         (async () => {
             try {

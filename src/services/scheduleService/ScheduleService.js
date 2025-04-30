@@ -191,12 +191,6 @@ export class ScheduleService {
 
     // Метод для получения посещаемости студентов
     getAttendStudents(schedule) {
-        console.log("this.attendance", this.attendance)
-        console.log("this.schedulePair", this.schedulePair)
-        console.log("this.lesson", this.lesson)
-        console.log("this.studentsList", this.studentsList)
-        console.log("this.date", this.date)
-        console.log("this.schedule", this.schedule)
         const attendstudents = this.attendance.map((entry) => {
             const student = this.studentsList.find(
                 (student) => student.lastname === entry.lastname

@@ -1,7 +1,7 @@
 import {confirmAttendance, doneAttendance, incrementCurrentAttendance} from "../services/api/send";
 import { ScheduleService } from "../services/scheduleService/ScheduleService";
 
-export const useSaveAttendance = (schedule, lesson, telegramId, userRole) => {
+export const useSaveAttendance = () => {
 
     const transformCondition = (condition) => {
         switch (condition) {
@@ -11,7 +11,7 @@ export const useSaveAttendance = (schedule, lesson, telegramId, userRole) => {
         }
     };
 
-    const saveAttendance = async (currentLessonData, setHasChanges) => {
+    const saveAttendance = async (schedule, lesson, telegramId, userRole, currentLessonData, hasChanges) => {
         try {
             if (!currentLessonData || currentLessonData.length === 0) return;
 
@@ -21,6 +21,7 @@ export const useSaveAttendance = (schedule, lesson, telegramId, userRole) => {
             }));
 
             const scheduleService = new ScheduleService();
+            console.log(userRole, schedule, lesson.id)
             const id = await scheduleService.getAttendanceId(schedule, lesson.id);
             if(userRole === 'student'){
                 await doneAttendance(id, updatedStudents);
@@ -28,15 +29,19 @@ export const useSaveAttendance = (schedule, lesson, telegramId, userRole) => {
 
                 await incrementCurrentAttendance(telegramId);
                 console.log("Типа инкремент сохранения произошел");
+                return true;
             } else {
+                if(hasChanges) {
+                    await doneAttendance(id, updatedStudents);
+                    console.log("Посещаемость сохранена успешно!");
+                }
                 await confirmAttendance(id);
                 console.log("Посещаемость подтверждена успешно!");
+                return true;
             }
-
-
-            if (setHasChanges) setHasChanges(false);
         } catch (error) {
-            console.error("Ошибка при создании посещаемости:", error);
+            console.error("Ошибка при создании посещаемости:", userRole, error);
+            return false;
         }
     };
 
