@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasChanges, lesson, isHeadman, telegramId}) => {
     const [showPopup, setShowPopup] = useState(false);
     const userRole = useSelector((state) => state.userRole);
-    const { saveAttendance } = useSaveAttendance(schedule, lesson, telegramId, userRole);
+    const { saveAttendance } = useSaveAttendance();
     const popupClass = showPopup ? 'buttonSave__popup-visible' : 'buttonSave__popup-hidden';
     const currentLesson = schedule.find(item => item.isLessonCurrent === true);
 
@@ -19,8 +19,11 @@ const SaveAttendanceButton = ({ schedule, currentLessonData, hasChanges, setHasC
         }
     }, [showPopup]);
     const handleSave = async () => {
-        await saveAttendance(currentLessonData, setHasChanges);
-        setShowPopup(true);
+        const isSuccess = await saveAttendance(schedule, lesson, telegramId, userRole, currentLessonData, hasChanges);
+        if (isSuccess) {
+            setHasChanges(false);
+            setShowPopup(true);
+        }
     };
 
     if (currentLesson) {

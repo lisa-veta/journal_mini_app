@@ -213,7 +213,7 @@ async function sendPut(endPoint, data) {
         return await response.json();
     } catch (error) {
         console.log(error.message);
-        throw error; // Лучше пробросить ошибку для обработки выше
+        throw error;
     }
 }
 
