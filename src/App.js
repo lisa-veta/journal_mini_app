@@ -71,11 +71,10 @@ function App(props) {
                     let teacherSchedule = await getTeacherTimetable(teacherId);
                     for (let i = 0; i < teacherSchedule.length; i++) {
                         teacherSchedule[i].lesson = teacherSchedule[i].discipline_name;
-                        teacherSchedule[i].id = i;
                         delete teacherSchedule[i].discipline_name;
                     }
+                    console.log(userRole, teacherSchedule)
                     new ScheduleService().FindLessonInfoFromLessonName(teacherSchedule, teacherLessonsData);
-                    console.log(teacherSchedule);
                     setSchedule(teacherSchedule);
                 }
             } catch (error) {
@@ -87,6 +86,7 @@ function App(props) {
     if(schedule === null) {
         return <div>Загрузка расписания</div>;
     }
+
     return (
       <Router>
           <Routes>
