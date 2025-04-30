@@ -1,4 +1,4 @@
-﻿import { Lesson } from "components/index.jsx";
+import { Lesson } from "components/index.jsx";
 
 function Day(props) {
 

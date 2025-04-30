@@ -2,11 +2,14 @@ import React, {useEffect, useState, useRef} from "react";
 import "./AttendanceTable.css";
 import { getCellText, getCellStyle } from "./config";
 import {CustomInfo, SaveAttendanceButton, Layout} from "../index";
+import {useSelector} from "react-redux";
 
-const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman, telegramId }) => {
+const AttendanceTable = ({ students, schedule, attendStudents, lesson, telegramId }) => {
     const [cellStates, setCellStates] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
     const currentLessonRef = useRef(null);
+    const userRole = useSelector((state) => state.userRole);
+    const isHeadman = useSelector((state) => state.isHeadman);
 
     useEffect(() => {
         if (currentLessonRef.current) {
@@ -80,10 +83,21 @@ const AttendanceTable = ({ students, schedule, attendStudents, lesson, isHeadman
             <div className="attendancePage">
                 <p className="attendancePage__subject-name">{lesson.name}</p>
                 <div className="attendancePage__teacher">
-                    {lesson.teachers.map((teacher) => (
-                        <CustomInfo caption="Преподаватель"
-                                    content={teacher.lastname + " " + teacher.name + " " + teacher.patronymic}/>
-                    ))}
+                    {userRole === 'student' ? (
+                        lesson.teachers?.map((teacher) => (
+                            <CustomInfo
+                                key={`${teacher.id}-${teacher.lastname}`}
+                                caption="Преподаватель"
+                                content={`${teacher.lastname} ${teacher.name} ${teacher.patronymic}`}
+                            />
+                        ))
+                    ) : (
+                        <CustomInfo
+                            key={`group-${lesson.id}`}
+                            caption="Группа"
+                            content={lesson.group_name || 'Не указана'}
+                        />
+                    )}
                 </div>
                 <div>
                     <div className="attendancePrev">

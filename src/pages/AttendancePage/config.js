@@ -6,5 +6,5 @@ export const schedulePair = [
     { id: 5, start_time: "15:00", end_time: "16:35", lesson: "5 пара" },
     { id: 6, start_time: "16:40", end_time: "18:15", lesson: "6 пара" },
     { id: 7, start_time: "18:20", end_time: "19:55", lesson: "7 пара" },
-    { id: 8, start_time: "19:55", end_time: "21:30", lesson: "8 пара" },
+    { id: 8, start_time: "19:55", end_time: "00:00", lesson: "8 пара" },
 ];
