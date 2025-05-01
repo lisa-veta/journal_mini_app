@@ -11,7 +11,7 @@ function Schedule(props) {
         const evenWeek = props.weeks.find(w => w.is_even === true);
         return evenWeek || props.weeks[0];
     });
-    const [currentLesson, setCurrentLesson] = useState(null);
+    const [currentLessons, setCurrentLessons] = useState([]);
     const userRole = useSelector(state => state.userRole);
 
     useEffect(() => {
@@ -44,45 +44,46 @@ function Schedule(props) {
     useEffect(() => {
         (async () => {
             try {
-                const currentLesson = await new ScheduleService(null, null, null, null, props.date, props.schedule).FindCurrentLesson();
-                if (!currentLesson) {
-                    setCurrentLesson(null);
-                } else {
+                const currentLessons = await new ScheduleService(null, null, null, null, props.date, props.schedule).FindCurrentLessons();
+                if (currentLessons.length !== 0) {
                     if(userRole === 'student') {
-                        setCurrentLesson(
-                            {
-                                name: currentLesson.lesson,
-                                id_lesson: currentLesson.id_lesson,
-                                room: currentLesson.classroom,
-                                teachers: currentLesson.teachers.map(t => t),
-                                type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
-                                        (currentLesson.type_lesson === "Практика") ? 2 :
-                                        (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
-                                start_time: currentLesson.lesson_start_time,
-                                end_time: currentLesson.lesson_end_time,
-                                id: currentLesson.id,
+                        const lessons = currentLessons.map((lesson) => {
+                            return {
+                                name: lesson.lesson,
+                                id_lesson: lesson.id_lesson,
+                                room: lesson.classroom,
+                                teachers: lesson.teachers.map(t => t),
+                                type_id: (lesson.type_lesson === "Лекция") ? 1 :
+                                    (lesson.type_lesson === "Практика") ? 2 :
+                                        (lesson.type_lesson === "Лабораторная работа") ? 3 : 4,
+                                start_time: lesson.lesson_start_time,
+                                end_time: lesson.lesson_end_time,
+                                id: lesson.id,
                                 style: { backgroundColor: 'var(--colorBlue)'}
                             }
-                        );
+                        });
+                        setCurrentLessons(lessons);
                         return;
                     }
 
-                    setCurrentLesson(
-                        {
-                            name: currentLesson.lesson,
-                            id_lesson: currentLesson.id_lesson,
-                            room: currentLesson.classroom,
-                            group_id: currentLesson.group_id,
-                            group_name: currentLesson.abbr_group,
-                            type_id: (currentLesson.type_lesson === "Лекция") ? 1 :
-                                    (currentLesson.type_lesson === "Практика") ? 2 :
-                                    (currentLesson.type_lesson === "Лабораторная работа") ? 3 : 4,
-                            start_time: currentLesson.lesson_start_time,
-                            end_time: currentLesson.lesson_end_time,
-                            id: currentLesson.id,
+                    const lessons = currentLessons.map((lesson) => {
+                        return {
+                            name: lesson.lesson,
+                            id_lesson: lesson.id_lesson,
+                            room: lesson.classroom,
+                            group_id: lesson.group_id,
+                            group_name: lesson.abbr_group,
+                            type_id: (lesson.type_lesson === "Лекция") ? 1 :
+                            (lesson.type_lesson === "Практика") ? 2 :
+                                (lesson.type_lesson === "Лабораторная работа") ? 3 : 4,
+                            start_time: lesson.lesson_start_time,
+                            end_time: lesson.lesson_end_time,
+                            id: lesson.id,
+                            class_id: lesson.class_id,
                             style: { backgroundColor: 'var(--colorBlue)'}
                         }
-                    )
+                    });
+                    setCurrentLessons(lessons);
                 }
             } catch (error) {
                 console.error("Ошибка при получении текущей пары:", error);
@@ -118,13 +119,25 @@ function Schedule(props) {
                 </select>
             </div>
 
-            <div className='current-lesson-label'>Текущая пара</div>
+            <div className='current-lesson-label'>
+                {currentLessons.length === 2 ? 'Текущие пары' : 'Текущая пара'}
+            </div>
             <div className='current-lesson-container day-container'>
-                <Lesson lesson={currentLesson} style={style} incrementMethod={() => {
-                    incrementOpenCurrentLesson(telegramId);
+                {currentLessons.length === 0 ?
+                    (
+                        <div className='lesson-container' style={props.style}>
+                            Нет текущей пары
+                        </div>
+                    ) : (
+                        currentLessons.map((lesson) => {
+                            return (
+                                <Lesson lesson={lesson} style={style} incrementMethod={() => {
+                                    incrementOpenCurrentLesson(telegramId);}} >
+                                </Lesson>
+                            )
+                        })
+                    )
                 }
-                } >
-                </Lesson>
             </div>
 
             <div className='schedule-days-container'>

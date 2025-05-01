@@ -42,6 +42,12 @@ function App(props) {
                         hour: parseInt(data.hour),
                         minute: parseInt(data.minute)
                     };
+                    // тест отметок
+                    // date.month = 4;
+                    // date.day = 28;
+                    // date.hour = 18;
+                    // date.minute = 50;
+                    // console.log(date);
                     setDate(date);
                 } catch (e) {
                     console.log('Ошибка в получении даты: ', e.message);
@@ -72,6 +78,7 @@ function App(props) {
                     for (let i = 0; i < teacherSchedule.length; i++) {
                         teacherSchedule[i].lesson = teacherSchedule[i].discipline_name;
                         delete teacherSchedule[i].discipline_name;
+                        teacherSchedule[i].id = teacherSchedule[i].class_id;
                     }
                     console.log(userRole, teacherSchedule)
                     new ScheduleService().FindLessonInfoFromLessonName(teacherSchedule, teacherLessonsData);
