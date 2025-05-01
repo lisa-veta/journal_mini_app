@@ -80,6 +80,7 @@ function Schedule(props) {
                             start_time: currentLesson.lesson_start_time,
                             end_time: currentLesson.lesson_end_time,
                             id: currentLesson.id,
+                            class_id: currentLesson.class_id,
                             style: { backgroundColor: 'var(--colorBlue)'}
                         }
                     )

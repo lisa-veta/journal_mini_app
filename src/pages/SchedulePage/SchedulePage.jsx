@@ -68,7 +68,8 @@ const SchedulePage = (props) => {
                                         (parsedData[i].type_lesson === "Лабораторная работа") ? 3 : 4,
                                 start_time: parsedData[i].lesson_start_time,
                                 end_time: parsedData[i].lesson_end_time,
-                                id: parsedData[i].id
+                                id: parsedData[i].id,
+                                class_id: parsedData[i].class_id
                             }
                         );
                     }
