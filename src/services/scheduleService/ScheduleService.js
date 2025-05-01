@@ -321,20 +321,22 @@ export class ScheduleService {
     }
 
 
-    async FindCurrentLesson() {
+    async FindCurrentLessons() {
         const parsedData = this.schedule;
 
         const now = new Date(this.date.year, this.date.month - 1, this.date.day, this.date.hour, this.date.minute);
         if(!now.getFullYear()) {
-            return;
+            return [];
         }
+
+        const currentLessons = [];
         for (let i = 0; i < parsedData.length; i++) {
             if (this.IsCurrentLesson(now, parsedData[i])) {
-                return parsedData[i];
+                currentLessons.push(parsedData[i]);
             }
         }
 
-        return null;
+        return currentLessons;
     }
 
     async getAttendanceId(schedule, classLessonId){
