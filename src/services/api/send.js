@@ -212,7 +212,11 @@ async function sendPut(endPoint, data) {
         });
         return await response.json();
     } catch (error) {
-        console.log(error.message);
+        console.error('Error in sendPut:', {
+            url: url + endPoint,
+            method: 'PUT',
+            error: error.message
+        });
         throw error;
     }
 }

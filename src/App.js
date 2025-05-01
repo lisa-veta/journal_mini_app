@@ -80,8 +80,8 @@ function App(props) {
                         delete teacherSchedule[i].discipline_name;
                         teacherSchedule[i].id = teacherSchedule[i].class_id;
                     }
+                    console.log(userRole, teacherSchedule)
                     new ScheduleService().FindLessonInfoFromLessonName(teacherSchedule, teacherLessonsData);
-                    console.log(teacherSchedule);
                     setSchedule(teacherSchedule);
                 }
             } catch (error) {
@@ -93,6 +93,7 @@ function App(props) {
     if(schedule === null) {
         return <div>Загрузка расписания</div>;
     }
+
     return (
       <Router>
           <Routes>

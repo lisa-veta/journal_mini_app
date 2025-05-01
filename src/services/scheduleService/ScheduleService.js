@@ -24,7 +24,6 @@ export class ScheduleService {
             const formattedDate = `${day}.${month}.${year.slice(-2)}`;
             const formattedTime = fullTime.slice(0, 5);
             const lesson = this.getPairNumber(formattedTime);
-
             return {
                 id: index,
                 isLessonCurrent: false,
@@ -57,12 +56,9 @@ export class ScheduleService {
                 ...pair.end_time.split(":").map(Number)
             );
 
-
             const currentDate = `${String(now.getDate()).padStart(2, "0")}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getFullYear()).slice(-2)}`;
-            console.log("currentDate", currentDate)
             if (isCurrentLesson) {
                 for (const entry of schedule) {
-                    console.log("now", now)
                     if (entry.date === currentDate && entry.time === this.formatTime(lessonStart)) {
                          if (now >= lessonStart && now <= lessonEnd) {
                             entry.isLessonCurrent = true;
@@ -71,7 +67,6 @@ export class ScheduleService {
                     }
                 }
             }
-            console.debug(now, lessonStart, lessonEnd)
             if (now >= lessonStart && now <= lessonEnd) {
                 if (isCurrentLesson) {
                     const newEntry = {
@@ -81,7 +76,6 @@ export class ScheduleService {
                         time: pair.start_time,
                         lesson: pair.lesson,
                     };
-
                     if(schedule) {
                         schedule.push(newEntry);
                     }
@@ -286,13 +280,10 @@ export class ScheduleService {
     }
 
     async IsLessonCurrent(lessonId, groupId) {
-        // Найти занятие по ID
         const parsedData = this.schedule;
 
         let targetLesson = parsedData.find(parsedData => parsedData.id === lessonId);
         let now = new Date(this.date.year, this.date.month-1, this.date.day, this.date.hour, this.date.minute);
-        //console.debug("fff", targetLesson)
-
         if (!targetLesson) {
             console.error(`Lesson with ID ${lessonId} not found`);
             return false;
@@ -347,6 +338,7 @@ export class ScheduleService {
 
             const currentYear = new Date().getFullYear();
             const timedate = `${currentYear}-${month}-${day} ${hour}:${minute}:00`;
+            console.log("timedate", timedate, classLessonId);
             try {
                 return await getIdAttendanceIfExist(classLessonId, timedate);
             } catch (error) {
