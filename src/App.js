@@ -73,15 +73,14 @@ function App(props) {
                     dispatch(setTeacherId(teacherId));
                     dispatch(setIsHeadman(true));
 
-                    const teacherLessonsData = await getTeacherDisciplinesGroups(teacherId);
-                    let teacherSchedule = await getTeacherTimetable(teacherId);
+                    const teacherSchedule = await getTeacherTimetable(teacherId);
                     for (let i = 0; i < teacherSchedule.length; i++) {
-                        teacherSchedule[i].lesson = teacherSchedule[i].discipline_name;
+                        teacherSchedule[i].lesson = teacherSchedule[i].discipline_name;                    schedule[i].id_lesson = teacherLessons[j].discipline_id;
+                        schedule[i].id_lesson = teacherSchedule[i].discipline_id;
                         delete teacherSchedule[i].discipline_name;
                         teacherSchedule[i].id = teacherSchedule[i].class_id;
                     }
                     console.log(userRole, teacherSchedule)
-                    new ScheduleService().FindLessonInfoFromLessonName(teacherSchedule, teacherLessonsData);
                     setSchedule(teacherSchedule);
                 }
             } catch (error) {
