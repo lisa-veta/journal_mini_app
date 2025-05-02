@@ -4,14 +4,6 @@ function Lesson(props) {
     const navigate = useNavigate();
     const userRole = useSelector((state) => state.userRole);
 
-    if (!props.lesson) {
-        return (
-            <div className='lesson-container' style={props.style}>
-                Нет текущей пары
-            </div>
-        );
-    }
-
     let lessonType;
     switch (props.lesson.type_id) {
         case 1:

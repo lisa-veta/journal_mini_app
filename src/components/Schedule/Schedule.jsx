@@ -125,7 +125,7 @@ function Schedule(props) {
             <div className='current-lesson-container day-container'>
                 {currentLessons.length === 0 ?
                     (
-                        <div className='lesson-container' style={props.style}>
+                        <div className='lesson-container' style={style}>
                             Нет текущей пары
                         </div>
                     ) : (
