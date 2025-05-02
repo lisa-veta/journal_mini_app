@@ -75,12 +75,11 @@ function App(props) {
 
                     const teacherSchedule = await getTeacherTimetable(teacherId);
                     for (let i = 0; i < teacherSchedule.length; i++) {
-                        teacherSchedule[i].lesson = teacherSchedule[i].discipline_name;                    schedule[i].id_lesson = teacherLessons[j].discipline_id;
-                        schedule[i].id_lesson = teacherSchedule[i].discipline_id;
+                        teacherSchedule[i].lesson = teacherSchedule[i].discipline_name;
+                        teacherSchedule[i].id_lesson = teacherSchedule[i].discipline_id;
                         delete teacherSchedule[i].discipline_name;
                         teacherSchedule[i].id = teacherSchedule[i].class_id;
                     }
-                    console.log(userRole, teacherSchedule)
                     setSchedule(teacherSchedule);
                 }
             } catch (error) {
